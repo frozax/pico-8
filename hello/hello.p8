@@ -1,10 +1,13 @@
 pico-8 cartridge // http://www.pico-8.com
 version 29
 __lua__
+-- hello pico-8
+-- by frozax
 
--- made by @frozax
+-- @frozax
 -- use at your own risk
 -- have fun
+
 function _update60()
 end
 
