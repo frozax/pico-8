@@ -11,6 +11,44 @@ __lua__
 #include ../libs/vec2.p8
 #include ../libs/fps.p8
 #include ../libs/tostring.p8
+#include ../libs/change_interval.p8
+#include ../libs/benchmark.p8
+
+cols = {
+    [0]={
+        [0]={7, 6},
+        [1]={10, 9},
+        [2]={9, 4},
+        [3]={4, 2},
+        [4]={2, 5},
+    },
+    [1]={
+        [0]={7, 6},
+        [1]={10, 9},
+        [2]={11, 3},
+        [3]={3, 5},
+        [4]={5, 0},
+    }
+    }
+
+-- c between 0..4
+function set3dcol(i, c)
+    pal(7, cols[i][c][1])
+    pal(6, cols[i][c][2])
+end
+
+function rotate_2d(p, center, angle)
+  s = sin(angle);
+  c = cos(angle);
+
+  -- translate point back to origin:
+  p.x -= center.x;
+  p.y -= center.y;
+
+  -- rotate point
+  return vec2(p.x * c - p.y * s, p.x * s + p.y * c);
+
+end
 
 transf = {}
 
@@ -44,21 +82,13 @@ function compute_rotation_matrix(pitch, roll, yaw)
         Azx=Azx, Azy=Azy, Azz=Azz}
 end
 
-function _update()
-    transf = {}
-    cam_z = 3
-    persp_scale = 100
-
-    ti = time()
-    mat = compute_rotation_matrix(0,0,ti/4) -- ti, ti/2, ti/4)
-    mat = compute_rotation_matrix(0,ti/4,0) -- ti, ti/2, ti/4)
-    mat = compute_rotation_matrix(ti/4,0,0) -- ti, ti/2, ti/4)
-    mat = compute_rotation_matrix(ti/4,ti/2,ti/8) -- ti, ti/2, ti/4)
-
-    -- transform parts in 3D and project
-    for part in all(parts) do
+function draw_obj(a1, a2, a3, world_pos, obj)
+    mat = compute_rotation_matrix(a1, a2, a3)
+    for part in all(obj.parts) do
         -- scale
-        p = vec3(part.x, part.y, part.z)
+        --scale = 0.7
+        --p = vec3(part.p.x * scale, part.p.y * scale, part.p.z * scale)
+        p = part.p
 
         -- rotate
         rotp = vec3(
@@ -67,47 +97,104 @@ function _update()
             mat.Azx*p.x + mat.Azy*p.y + mat.Azz*p.z)
 
         -- translate (z)
-        rotp.z += cam_z;
-
-        --printh(tostring(p).."->"..tostring(rotp))
+        rotp.x += world_pos.x
+        rotp.y += world_pos.y
+        rotp.z += world_pos.z + cam_z;
 
         -- persp
-        trsf = vec3(rotp.x * persp_scale / rotp.z, rotp.y * persp_scale / rotp.z, rotp.z)
+        -- z = 0: far away, 1: close
+        z = change_interval(rotp.z, 2.5, 6.5, 1, 0)
+        trsf = vec3(rotp.x * persp_scale / rotp.z, rotp.y * persp_scale / rotp.z, z)
 
         -- to screen
         trsf.x += 64
         trsf.y += 64
 
-        if trsf.x >= 0 and trsf.y >= 0 and trsf.x < 128 and trsf.y < 128 then
-            add(transf, trsf)
-        end
+        --if trsf.x >= 0 and trsf.y >= 0 and trsf.x < 128 and trsf.y < 128 then
+            add(transf, {p=trsf, c=part.c})
+        --end
     end
+end
+
+function _update()
+    bm:reset()
+
+    transf = {}
+    cam_z = 4.8
+    persp_scale = 100
+
+    ti = time()/2
+    -- transform points in 3D and project
+
+    wp1 = vec3(sin(-ti/2) * 2, cos(ti/2)*2, sin(ti/4) * 0.65)
+    wp2 = vec3(-sin(ti/4) * 2, -cos(ti/2 + 0.1)*2, sin(ti + 0.12) * 0.75)
+
+    bm("draw_obj")
+    draw_obj(ti/4, ti/2, ti/8, wp1, objs[1])
+    draw_obj(ti/4, -ti, ti/8, wp2, objs[2])
+    bm()
 end
 
 function _draw()
-    cls()
+    cls(1)
 
+    bm("draw")
     color(colors.white)
-    print(#transf)
     for part in all(transf) do
-        printh(part.z)
-        --color(flr(part.z))
-        pset(part.x, part.y)
+        --printh(part.z)
+        ispr = 0
+        if part.p.z > 0.75 then
+            ispr = 3
+        elseif part.p.z > 0.5 then
+            ispr = 2
+        elseif part.p.z > 0.25 then
+            ispr = 1
+        end
+        set3dcol(part.c[1], part.c[2])
+        spr(ispr, part.p.x - 4, part.p.y - 4)
     end
+    bm()
 
-    showfps()
+    --showfps()
+
+    bm:draw()
 end
 
 function _init()
-    parts = {}
+    objs = {}
 
-    for x=-2,2 do
-        for y=-2,2 do
-            for z=-2,2 do
-                add(parts, vec3(x+0.5, y+0.5, z))
+    cube = {}
+    step = 0.75
+    s = 0.6
+    for x=-2,2,step do
+        for y=-2,2,step do
+            for z=-2,2,step do
+                add(cube, {p=vec3(x*s+0.5, y*s+0.5, z*s), c={0, flr(y+2)}})
             end
         end
     end
+    add(objs, {parts=cube})
+
+    torus = {}
+    large_radius = 2.3
+    small_radius = 1.0
+    center = vec2(0, 0)
+    s = 0.4
+
+    for small_angle=0,1,0.08 do
+        currentradius = large_radius + (small_radius * cos(small_angle));
+        zval = small_radius * sin(small_angle);
+
+        for large_angle=0,1,0.04 do
+            p = vec3(currentradius * cos(large_angle), currentradius*sin(large_angle), zval)
+            p = vec3(p.x*s, p.y*s, p.z*s)
+            add(torus, {p=p,c={1,flr(large_angle*3.5 + 0.5)}})
+        end
+    end
+
+    add(objs, {parts=torus})
+
+    bm:toggle()
 
 end
 
