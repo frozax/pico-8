@@ -29,7 +29,10 @@ cols = {
         [3]={3, 5},
         [4]={5, 0},
     }
-    }
+}
+col_index1 = 0
+col_index2 = 1
+nb_col_index = 2
 
 -- c between 0..4
 function set3dcol(i, c)
@@ -82,7 +85,7 @@ function compute_rotation_matrix(pitch, roll, yaw)
         Azx=Azx, Azy=Azy, Azz=Azz}
 end
 
-function draw_obj(a1, a2, a3, world_pos, obj)
+function draw_obj(a1, a2, a3, world_pos, obj, col_index)
     mat = compute_rotation_matrix(a1, a2, a3)
     for part in all(obj.parts) do
         -- scale
@@ -111,13 +114,20 @@ function draw_obj(a1, a2, a3, world_pos, obj)
         trsf.y += 64
 
         --if trsf.x >= 0 and trsf.y >= 0 and trsf.x < 128 and trsf.y < 128 then
-            add(transf, {p=trsf, c=part.c})
+            add(transf, {p=trsf, c={col_index, part.c}})
         --end
     end
 end
 
 function _update()
     bm:reset()
+
+    if btnp(4) then
+        col_index1 = (col_index1 + 1) % nb_col_index
+    end
+    if btnp(5) then
+        col_index2 = (col_index2 + 1) % nb_col_index
+    end
 
     transf = {}
     cam_z = 4.8
@@ -130,8 +140,8 @@ function _update()
     wp2 = vec3(-sin(ti/4) * 2, -cos(ti/2 + 0.1)*2, sin(ti + 0.12) * 0.75)
 
     bm("draw_obj")
-    draw_obj(ti/4, ti/2, ti/8, wp1, objs[1])
-    draw_obj(ti/4, -ti, ti/8, wp2, objs[2])
+    draw_obj(ti/4, ti/2, ti/8, wp1, objs[1], col_index1)
+    draw_obj(ti/4, -ti, ti/8, wp2, objs[2], col_index2)
     bm()
 end
 
@@ -169,7 +179,7 @@ function _init()
     for x=-2,2,step do
         for y=-2,2,step do
             for z=-2,2,step do
-                add(cube, {p=vec3(x*s+0.5, y*s+0.5, z*s), c={0, flr(y+2)}})
+                add(cube, {p=vec3(x*s+0.5, y*s+0.5, z*s), c=flr(y+2)})
             end
         end
     end
@@ -188,7 +198,7 @@ function _init()
         for large_angle=0,1,0.04 do
             p = vec3(currentradius * cos(large_angle), currentradius*sin(large_angle), zval)
             p = vec3(p.x*s, p.y*s, p.z*s)
-            add(torus, {p=p,c={1,flr(large_angle*3.5 + 0.5)}})
+            add(torus, {p=p,c=flr(large_angle*3.5 + 0.5)})
         end
     end
 
