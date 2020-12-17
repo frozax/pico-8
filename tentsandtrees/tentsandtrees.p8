@@ -12,8 +12,10 @@ __lua__
 
 #include level.p8
 #include draw.p8
+#include game_input.p8
 
 function _update()
+    check_input()
 end
 
 function _draw()
@@ -22,6 +24,7 @@ function _draw()
     draw_numbers()
     draw_cell_bgs()
     draw_cell_sprites()
+    draw_input()
 
     showpct(0)
 end
@@ -29,6 +32,8 @@ end
 function _init()
     cell_inner_size = 11
     cell_size = 12
+    tree_height = 14
+
     bg_col = 15
     grass_col = 11
     unknown_col = 13
@@ -36,6 +41,8 @@ function _init()
     numbers_wip_col = 1
     numbers_error_col = 8
     numbers_ok_col = 9
+    input_col = 0
+
     GR = 0
     TE = 1
     TR = 2
@@ -48,6 +55,7 @@ function _init()
         {TE,GR,GR,GR,TR},
     }
     load_level(l)
+    init_input()
 end
 
 

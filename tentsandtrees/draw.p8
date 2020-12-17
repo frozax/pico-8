@@ -46,8 +46,6 @@ function draw_cell_sprites()
             if stt == TE then
                 sspr(0, 0, cell_inner_size, cell_inner_size, xs, ys)
             elseif stt == TR then
-                tree_height = 14
-                --sspr(0, 12, cell_inner_size, tree_height, xs, ys + cell_inner_size - tree_height)
                 sspr(0, 11, cell_inner_size, tree_height, xs, ys + cell_inner_size - tree_height - 1)
             end
             xs += cell_size
