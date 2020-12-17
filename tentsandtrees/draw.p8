@@ -16,9 +16,11 @@ end
 function draw_numbers()
     for i=0, level.size-1 do
         -- rows
-        print(level.rows[i+1].nb, origin.x - cell_size/2, origin.y + (i + 0.5) * cell_size - 2, numbers_wip_col)
+        row = level:compute_row_infos(i+1)
+        print(row.nb, origin.x - cell_size/2, origin.y + (i + 0.5) * cell_size - 2, row.color)
         -- cols
-        print(level.cols[i+1].nb, origin.x + (i + 0.5) * cell_size - 1, origin.y - cell_size * 0.5, numbers_wip_col)
+        col = level:compute_col_infos(i+1)
+        print(col.nb, origin.x + (i + 0.5) * cell_size - 1, origin.y - cell_size * 0.5, col.color)
     end
 end
 

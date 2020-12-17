@@ -25,6 +25,8 @@ function _draw()
     draw_cell_bgs()
     draw_cell_sprites()
     draw_input()
+    completion = level:get_completion()
+    print(completion, 10, 10, 0)
 
     showpct(0)
 end
