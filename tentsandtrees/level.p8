@@ -13,10 +13,27 @@ function load_level(ldef)
     level = {}
     level.size = #ldef
     level.def = ldef
-    level.state = ldef  -- user state
-    _reset_state(level.state)
+    -- compute numbers
     level.rows = {}
     level.cols = {}
+    for i=1, level.size do
+        r, c = 0, 0
+        for j=1, level.size do
+            -- row
+            if level.def[i][j] == TE then
+                r += 1
+            end
+            -- col
+            if level.def[j][i] == TE then
+                c += 1
+            end
+        end
+        add(level.rows, {nb=r})
+        add(level.cols, {nb=c})
+    end
+    level.state = ldef  -- user state
+    _reset_state(level.state)
+
     function level:get_cell_state(x, y) -- lua: index is 1-based
         return self.state[y][x]
     end
