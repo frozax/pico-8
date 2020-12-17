@@ -23,4 +23,35 @@ function draw_numbers()
 end
 
 function draw_cell_bgs()
+    ys = origin.y + 1
+    size = cell_inner_size - 1 -- because it's final pixel, not size of rect
+    for y=1, level.size do
+        xs = origin.x + 1
+        for x=1, level.size do
+            c = level:get_cell_bg_color(x, y)
+            rectfill(xs, ys, xs + size, ys + size, c)
+            xs += cell_size
+        end
+        ys += cell_size
+    end
+end
+
+function draw_cell_sprites()
+    ys = origin.y + 1
+    size = cell_inner_size - 1 -- because it's final pixel, not size of rect
+    for y=1, level.size do
+        xs = origin.x + 1
+        for x=1, level.size do
+            stt = level:get_cell_state(x, y)
+            if stt == TE then
+                sspr(0, 0, cell_inner_size, cell_inner_size, xs, ys)
+            elseif stt == TR then
+                tree_height = 14
+                --sspr(0, 12, cell_inner_size, tree_height, xs, ys + cell_inner_size - tree_height)
+                sspr(0, 11, cell_inner_size, tree_height, xs, ys + cell_inner_size - tree_height - 1)
+            end
+            xs += cell_size
+        end
+        ys += cell_size
+    end
 end

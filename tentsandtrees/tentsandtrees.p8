@@ -4,7 +4,7 @@ __lua__
 -- tents and trees
 -- by frozax
 
--- try the original mobile game at https://www.frozax.com/tato
+-- try the original mobile game at https://www.frozax.com/tat
 
 #include ../libs/colors.p8
 #include ../libs/vec2.p8
@@ -21,6 +21,7 @@ function _draw()
     draw_grid()
     draw_numbers()
     draw_cell_bgs()
+    draw_cell_sprites()
 
     showpct(0)
 end
@@ -38,6 +39,7 @@ function _init()
     GR = 0
     TE = 1
     TR = 2
+    UN = 3
     l = {
         {GR,GR,GR,TE,GR},
         {TE,TR,GR,TR,GR},
