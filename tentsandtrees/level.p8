@@ -59,10 +59,15 @@ function load_level(ldef)
         stt = self:get_cell_state(x, y)
         if stt == UN then
             self:set_cell_state(x, y, GR)
+            return true
         elseif stt == GR then
             self:set_cell_state(x, y, TE)
+            return true
         elseif stt == TE then
             self:set_cell_state(x, y, UN)
+            return true
+        else
+            return false
         end
     end
     -- returns "wip", "success", "error"

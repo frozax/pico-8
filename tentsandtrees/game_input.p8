@@ -7,25 +7,41 @@ function check_input()
     if btnp(0) then
         if input.pos.x > 0 then
             input.pos.x -= 1
+            sound_move()
+        else
+            sound_move_error()
         end
     end
     if btnp(1) then
         if input.pos.x < level.size - 1 then
             input.pos.x += 1
+            sound_move()
+        else
+            sound_move_error()
         end
     end
     if btnp(2) then
         if input.pos.y > 0 then
             input.pos.y -= 1
+            sound_move()
+        else
+            sound_move_error()
         end
     end
     if btnp(3) then
         if input.pos.y < level.size - 1 then
             input.pos.y += 1
+            sound_move()
+        else
+            sound_move_error()
         end
     end
     if btnp(4) or btnp(5) then
-        level:cycle_cell(input.pos.x + 1, input.pos.y + 1)
+        if level:cycle_cell(input.pos.x + 1, input.pos.y + 1) then
+            sound_toggle()
+        else
+            sound_toggle_error()
+        end
     end
 end
 
