@@ -12,26 +12,30 @@ __lua__
 #include ../libs/buttons.p8
 #include ../libs/vec2.p8
 #include ../libs/fps.p8
+#include ../libs/menu.p8
 
 #include sfx.p8
 #include level.p8
 #include input_game.p8
-#include menu.p8
 #include draw_game.p8
 
 function _update()
     if mode == "home" then
-        input_menu()
+        menu:input()
     elseif mode == "game" then
         input_game()
     end
+end
+
+function draw_title()
+    rectfill(1, 1, 126, 40, 8)
 end
 
 function _draw()
     if mode == "home" then
         cls(bg_col)
         draw_title()
-        draw_mainmenu(60)
+        menu:draw(60)
     elseif mode == "game" then
         cls(bg_col)
         draw_grid()
@@ -69,7 +73,7 @@ function _init()
     end
     function b2:click()
     end
-    init_menu({b1,b2})
+    menu = create_menu({b1,b2})
 
     GR = 0
     TE = 1
