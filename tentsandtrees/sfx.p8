@@ -25,3 +25,7 @@ end
 function sound_toggle_error()
     sound_move_error()
 end
+
+function sound_menu_error()
+    sound_move_error()
+end

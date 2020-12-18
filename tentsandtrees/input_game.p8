@@ -3,7 +3,7 @@ function init_input()
     input.pos = vec2(0, 0) -- lua: 0-based
 end
 
-function check_input()
+function input_game()
     if btnp(0) then
         if input.pos.x > 0 then
             input.pos.x -= 1
