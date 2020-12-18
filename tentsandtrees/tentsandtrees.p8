@@ -13,15 +13,19 @@ __lua__
 #include ../libs/vec2.p8
 #include ../libs/fps.p8
 #include ../libs/menu.p8
+#include ../libs/util.p8
 
 #include sfx.p8
 #include level.p8
 #include input_game.p8
 #include draw_game.p8
+#include level_select.p8
 
 function _update()
     if mode == "home" then
         menu:input()
+    elseif mode == "level_select" then
+        level_select:input()
     elseif mode == "game" then
         input_game()
     end
@@ -36,6 +40,9 @@ function _draw()
         cls(bg_col)
         draw_title()
         menu:draw(60)
+    elseif mode == "level_select" then
+        draw_title()
+        level_select:draw(60)
     elseif mode == "game" then
         cls(bg_col)
         draw_grid()
@@ -51,7 +58,7 @@ function _draw()
 end
 
 function _init()
-    mode = "home"
+    mode = "level_select"
     cell_inner_size = 11
     cell_size = 12
     tree_height = 14
@@ -69,7 +76,7 @@ function _init()
     b1 = {text="play"}
     b2 = {text="how to play"}
     function b1:click()
-        mode = "game"
+        mode = "level_select"
     end
     function b2:click()
     end
@@ -87,7 +94,11 @@ function _init()
         {TE,GR,GR,GR,TR},
     }
     load_level(l)
+
+    levels = {l}
     init_input()
+    --level_select = create_level_select(#levels)
+    level_select = create_level_select(20)
 end
 
 
@@ -312,7 +323,4 @@ __sfx__
 0012000015753047000500005700070000770009000097000b0000b7000c0000c7000c000180000c000180000c000180000c00018000210022100221002000000000000000000000000000000000000000000000
 000600002336311000103330400010705107031070513005306041070310705000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 00010000137371c537142371d737155471e147167471f547161571f757175572015718767215671916722767115771a177127771b57718100210001950022100140001d500151001e000165001f1001700020500
-__music__
-00 4b424344
-00 4c424344
 
