@@ -6,6 +6,7 @@ function blink(speed, c0, c1)
     return c1
 end
 
+-- code from democart
 function draw_rwin(_x,_y,_w,_h,_c1,_c2)
  -- would check screen bounds but may want to scroll window on?
  if (_w<12 or _h<12) return(false) -- min size
@@ -34,4 +35,26 @@ function draw_rwin(_x,_y,_w,_h,_c1,_c2)
  -- top and bottom!
  line(_x+5,_y,_x+_w-5,_y,_c2) -- x top
  line(_x+5,_y+_h,_x+_w-5,_y+_h,_c2) -- x bottom
+end
+
+-------------------------------
+-- string width with glyphs
+function strwidth(str)
+ local px=0
+ for i=1,#str do
+  px+=(ord(str,i)<128 and 4 or 8)
+ end
+ --remove px after last char
+ return px-1
+end
+-------------------------------
+-- get centered on screen width
+function center_x(str)
+ return 64 - strwidth(str)/2
+end
+-------------------------------
+function printc(_str,_y,_c)
+ where=center_x(_str)
+ if (where<0) where=0
+ print(_str,where,_y,_c)
 end

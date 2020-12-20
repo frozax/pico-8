@@ -1,9 +1,8 @@
 function draw_tutorial(page)
     cls(bg_col)
 
-    text_color = 5
     color(0)
-    print("\x8b  instructions "..page.."/3  \x91", 13, 2)
+    printc("\x8b  instructions "..page.."/3  \x91", 2)
 
     height = 7
     top = 17
@@ -44,14 +43,14 @@ function draw_tutorial(page)
             tuto_level.state[1][4] = TE
         end
         tuto_level:draw()
-        color(text_color)
+        color(text_col)
         print("trees are placed in a grid.", left, top)
         top += height
         print("you have to place a tent next\nto each tree.", left, top)
         top = 100
         print("the numbers around the grid\ntell you the number of tents\nin the corresponding row or\ncolumn.", left, top)
     elseif page == 2 then
-        color(text_color)
+        color(text_col)
         top += 5
         print("each tent must be in one of\nthe four adjacent cells of its\nassociated tree (horizontally\nor vertically but not\ndiagonally).", left, top)
         l = {
@@ -79,7 +78,7 @@ function draw_tutorial(page)
         tuto_level:draw()
     elseif page == 3 then
         top += 5
-        print("tent cannot touch each other,\nnot even diagonally", left, top, text_color)
+        print("tent cannot touch each other,\nnot even diagonally", left, top, text_col)
         l = {
             {GR,GR,TR,TE},
             {TR,TE,GR,TE},
