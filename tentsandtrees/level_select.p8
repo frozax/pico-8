@@ -12,7 +12,6 @@ function create_level_select(nb_levels)
     level_select.origin_x = (128 - level_select.total_width) / 2
 
     function level_select:draw(origin_y)
-        cls(bg_col)
         i = 0
         for y=0,rows-1 do
             for x=0,level_per_row-1 do

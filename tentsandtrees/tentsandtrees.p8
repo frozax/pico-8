@@ -41,8 +41,9 @@ function _draw()
         draw_title()
         menu:draw(60)
     elseif mode == "level_select" then
+        cls(bg_col)
         draw_title()
-        level_select:draw(60)
+        level_select:draw(53)
     elseif mode == "game" then
         cls(bg_col)
         draw_grid()
