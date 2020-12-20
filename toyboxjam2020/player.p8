@@ -1,12 +1,14 @@
 player = {}
 
 player.p = vec2(64, 64)
-player.speed = 2.2    -- pix / frame
+player.speed = 2.0    -- pix / frame
 player.size = 8
-player.idle_down = create_anim({238, 239})
-player.idle_up = create_anim({253, 254})
-player.idle_left = create_anim({246, 247}, {true, true})
-player.idle_right = create_anim({246, 247})
+player.minp = vec2(player.size/2, player.size/2)
+player.maxp = vec2(world.w * 8 - player.size * 0.5, world.h * 8 - player.size * 0.5)
+player.idle_down = create_anim({238, 238, 238, 239})
+player.idle_up = create_anim({253, 253, 253, 254})
+player.idle_left = create_anim({246, 246, 246, 247}, {true, true, true, true})
+player.idle_right = create_anim({246, 246, 246, 247})
 player.walk_down = create_anim({240, 240}, {true, false})
 player.walk_up = create_anim({255, 255}, {true, false})
 player.walk_left = create_anim({248, 249}, {true, true})
@@ -39,11 +41,22 @@ function player:update()
         self.anim = self.idle
     else
         dir = (self.speed / #dir) * dir
-        self.p = self.p + dir
+        self:move(dir)
     end
+end
+
+function player:move(dir)
+    -- move depending on collision
+    self.p = self.p + dir
+    if self.p.x < self.minp.x then self.p.x = self.minp.x end
+    if self.p.x > self.maxp.x then self.p.x = self.maxp.x end
+    if self.p.y < self.minp.y then self.p.y = self.minp.y end
+    if self.p.y > self.maxp.y then self.p.y = self.maxp.y end
 end
 
 function player:draw()
     self.anim:update()
-    self.anim:draw(self.p - vec2(player.size * 0.5, player.size * 0.5))
+    --pal(2, 12)
+    --pal(14, 1)
+    self.anim:draw(self.p - world.origin - vec2(player.size * 0.5, player.size * 0.5))
 end

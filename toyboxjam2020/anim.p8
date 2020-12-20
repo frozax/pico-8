@@ -1,11 +1,13 @@
 anims = {}
 
 anims.twoframe=0 --two frame anims
-anims.threeframe=2 -- three frame anims
-anims.fourframe=1 -- four frame anims
-anims.fiveframe=3 -- five frame anims
-anims.sixframe=4 -- six frame anims
-anims.maxdelay=8
+anims.threeframe=0
+anims.fourframe=0
+anims.fiveframe=0
+anims.sixframe=0
+anims.sevenframe=0
+anims.eightframe=0
+anims.maxdelay=4
 anims.framedelay=anims.maxdelay-1
 
 function anims:update()
@@ -17,6 +19,8 @@ function anims:update()
         self.fourframe = (self.fourframe+1) % 4 -- four frame anims
         self.fiveframe = (self.fiveframe+1) % 5 -- five frame anims
         self.sixframe = (self.sixframe+1) % 6 -- six frame anims
+        self.sevenframe = (self.sevenframe+1) % 7
+        self.eightframe = (self.eightframe+1) % 8
         self.framedelay=self.maxdelay
     end
 end
@@ -53,6 +57,12 @@ function create_anim(frames, flips_x, flips_y)
             mod = anims.fourframe
         elseif #self.frames == 5 then
             mod = anims.fiveframe
+        elseif #self.frames == 6 then
+            mod = anims.sixframe
+        elseif #self.frames == 7 then
+            mod = anims.sevenframe
+        elseif #self.frames == 8 then
+            mod = anims.eightframe
         else
             assert(false, "unhandled nb frames")
         end

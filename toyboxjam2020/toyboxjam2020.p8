@@ -12,11 +12,12 @@ __lua__
 #include ../libs/tostring.p8
 
 #include anim.p8
-#include player.p8
 #include world.p8
+#include player.p8
 
 function _update()
     anims:update()
+    -- draw player before to center the world properly
     player:update()
     world:update()
 end
