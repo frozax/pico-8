@@ -1,14 +1,30 @@
+-- size
+level_number_w, level_number_h = 13, 13
+
+-- 0-based
+function draw_level_number(x, y, number)
+    --if save:completed(i) TODO
+    if is_level_completed(number) then
+        c = 3
+    else
+        c = 5
+    end
+    rectfill(x, y, x + level_number_w - 1, y + level_number_h - 1, c)
+
+    text = tostr(number + 1)
+    x_text_shift = (level_number_w - (#text * 4 - 1)) / 2
+    print(text, x_text_shift + x, level_number_h / 2 - 5 / 2 + y, colors.white)
+end
+
 function create_level_select(nb_levels)
     level_select = {}
     level_select.nb_levels = nb_levels
     level_select.selection = 0 -- 0-based
     level_per_row = 5
     rows = ceil(nb_levels / level_per_row)
-    -- size
-    level_select.w, level_select.h = 13, 13
     -- spacing
-    level_select.sx, level_select.sy = level_select.w + 4, level_select.h + 4
-    level_select.total_width = level_select.sx * (level_per_row - 1) + level_select.w
+    level_select.sx, level_select.sy = level_number_w + 4, level_number_h + 4
+    level_select.total_width = level_select.sx * (level_per_row - 1) + level_number_w
     level_select.origin_x = (128 - level_select.total_width) / 2
 
     function level_select:draw(origin_y)
@@ -17,19 +33,10 @@ function create_level_select(nb_levels)
             for x=0,level_per_row-1 do
                 if i == self.selection then
                     c = blink(5, 0, 7)
-                    rect(self.origin_x + x * self.sx - 1, origin_y + y * self.sy - 1, self.origin_x + x * self.sx + self.w, origin_y + y * self.sx + self.h, c)
+                    rect(self.origin_x + x * self.sx - 1, origin_y + y * self.sy - 1, self.origin_x + x * self.sx + level_number_w, origin_y + y * self.sx + level_number_h, c)
                 end
-                --if save:completed(i) TODO
-                if is_level_completed(i) then
-                    c = 3
-                else
-                    c = 5
-                end
-                rectfill(self.origin_x + x * self.sx, origin_y + y * self.sy, self.origin_x + x * self.sx + self.w - 1, origin_y + y * self.sx + self.h - 1, c)
 
-                text = tostr(i + 1)
-                x_text_shift = (self.w - (#text * 4 - 1)) / 2
-                print(i + 1, x_text_shift + self.origin_x + x * self.sx, self.h / 2 - 5 / 2 + origin_y + y * self.sy, colors.white)
+                draw_level_number(self.origin_x + x * self.sx, origin_y + y * self.sy, i)
 
                 i += 1
             end
@@ -71,6 +78,8 @@ function create_level_select(nb_levels)
         end
         if btnp(buttons.b1) then
             --load_level()
+            sound_menu_valid()
+            level_number = self.selection
             mode = "game"
         end
         if btnp(buttons.b2) then

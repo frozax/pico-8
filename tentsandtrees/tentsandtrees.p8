@@ -61,6 +61,7 @@ function _draw()
         elseif mode == "game" then
             cls(bg_col)
             game_level:draw()
+            draw_level_number(127 - level_number_w, 1, level_number)
             if pause then
                 border = 30
                 y = 40
@@ -78,8 +79,9 @@ function _draw()
 end
 
 function _init()
-    mode = "game"
-    tutorial = 3
+    mode = "level_select"
+    tutorial = 0
+    level_number = 0
     cell_inner_size = 11
     cell_size = 12
     tree_height = 14
