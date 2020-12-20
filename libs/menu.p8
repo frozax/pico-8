@@ -40,6 +40,7 @@ function create_menu(mis)
             end
         end
         if btnp(buttons.b1) then
+            sound_menu_valid()
             self.items[self.selection].click()
         end
     end
