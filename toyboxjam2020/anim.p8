@@ -1,14 +1,14 @@
-anim = {}
+anims = {}
 
-anim.twoframe=0 --two frame anims
-anim.threeframe=2 -- three frame anims
-anim.fourframe=1 -- four frame anims
-anim.fiveframe=3 -- five frame anims
-anim.sixframe=4 -- six frame anims
-anim.maxdelay=16
-anim.framedelay=anim.maxdelay-1
+anims.twoframe=0 --two frame anims
+anims.threeframe=2 -- three frame anims
+anims.fourframe=1 -- four frame anims
+anims.fiveframe=3 -- five frame anims
+anims.sixframe=4 -- six frame anims
+anims.maxdelay=8
+anims.framedelay=anims.maxdelay-1
 
-function anim:update()
+function anims:update()
     -- update state, check input
     self.framedelay-=1
     if (self.framedelay==0) then
@@ -19,4 +19,51 @@ function anim:update()
         self.sixframe = (self.sixframe+1) % 6 -- six frame anims
         self.framedelay=self.maxdelay
     end
+end
+
+function create_anim(frames, flips_x, flips_y)
+    if flips_x == nil then
+        flips_x = {}
+        for i=1,#frames do add(flips_x, false) end
+    end
+    if flips_y == nil then
+        flips_y = {}
+        for i=1,#frames do add(flips_y, false) end
+    end
+    if type(frames[1]) == "number" then
+        -- if frame numbers, convert to rects
+        new_frames = {}
+        for i=1,#frames do
+            x = (frames[i] % 16) * 8
+            y = (frames[i] \ 16) * 8
+            add(new_frames, {x=x, y=y, w=8, h=8})
+        end
+        frames = new_frames
+    end
+
+    anim = {frames=frames, flips_x=flips_x, flips_y=flips_y}
+
+    function anim:update()
+        mod = 1
+        if #self.frames == 2 then
+            mod = anims.twoframe
+        elseif #self.frames == 3 then
+            mod = anims.threeframe
+        elseif #self.frames == 4 then
+            mod = anims.fourframe
+        elseif #self.frames == 5 then
+            mod = anims.fiveframe
+        else
+            assert(false, "unhandled nb frames")
+        end
+        self.frame = self.frames[mod + 1]
+        self.flip_x = self.flips_x[mod + 1]
+        self.flip_y = self.flips_y[mod + 1]
+    end
+
+    function anim:draw(p)
+        sspr(self.frame.x, self.frame.y, self.frame.w, self.frame.h, p.x, p.y, self.frame.w, self.frame.h, self.flip_x, self.flip_y)
+    end
+
+    return anim
 end

@@ -5,16 +5,23 @@ __lua__
 -- by frozax
 -- for toy box jam 2
 
-#include anim.p8
+#include ../libs/vec2.p8
+#include ../libs/buttons.p8
 #include ../libs/colors.p8
 #include ../libs/fps.p8
+#include ../libs/tostring.p8
+
+#include anim.p8
+#include player.p8
 
 function _update()
-    anim:update()
+    anims:update()
+    player:update()
 end
 
 function _draw()
     cls(0)
+    player:draw()
     showpct(7)
 end
 

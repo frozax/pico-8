@@ -23,5 +23,6 @@ vec2mt={
 vec2mt.__index=vec2mt
 
 function vec2(x,y)
-    return setmetatable({x=x,y=y},vec2mt)
+    v = setmetatable({x=x,y=y},vec2mt)
+    return v
 end
