@@ -1,0 +1,3 @@
+[submodule "pico8reloader"]
+	path = pico8reloader
+	url = git@github.com:frozax/pico8reloader.git
