@@ -3,7 +3,7 @@ function init_input()
     input.pos = vec2(0, 0) -- lua: 0-based
 end
 
-function input_game()
+function input_game(level)
     if btnp(0) then
         if input.pos.x > 0 then
             input.pos.x -= 1
@@ -46,8 +46,8 @@ function input_game()
 end
 
 function draw_input()
-    top_left = vec2(origin.x + input.pos.x * cell_size,
-        origin.y + input.pos.y * cell_size)
+    top_left = vec2(game_level.origin.x + input.pos.x * cell_size,
+        game_level.origin.y + input.pos.y * cell_size)
     size = cell_size
 
     if (flr(time() * 3.0) % 2) == 0 then

@@ -1,11 +1,11 @@
 -- remove tents and grass
-function _reset_state()
+function _reset_state(level, clear)
     level.state = {}
     for y=1,#level.def do
         row = {}
         for x=1,#level.def[y] do
             stt = level.def[y][x]
-            if stt == TE or stt == GR then
+            if (stt == TE or stt == GR) and clear then
                 stt = UN
             end
             add(row, stt)
@@ -14,10 +14,14 @@ function _reset_state()
     end
 end
 
-function load_level(ldef)
+function load_level(ldef, reset)
     level = {}
+    level.show_numbers = true
     level.size = #ldef
     level.def = ldef
+    pix_size = level.size * (cell_size + 1)
+    level.origin = vec2((128 - pix_size)/2, (128 - pix_size)/2)
+
     -- compute numbers
     level.rows = {}
     level.cols = {}
@@ -36,7 +40,12 @@ function load_level(ldef)
         add(level.rows, {nb=r})
         add(level.cols, {nb=c})
     end
-    _reset_state()
+    if reset == nil or reset then
+        clear = true
+    else
+        clear = false
+    end
+    _reset_state(level, clear)
 
     function level:get_expected_state(x, y) -- lua: index is 1-based
         return self.def[y][x]
@@ -122,4 +131,15 @@ function load_level(ldef)
         end
         return numbers_wip_col
     end
+
+    function level:draw()
+        draw_grid(self)
+        if self.show_numbers then
+            draw_numbers(self)
+        end
+        draw_cell_bgs(self)
+        draw_cell_sprites(self)
+    end
+
+    return level
 end

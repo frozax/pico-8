@@ -18,48 +18,57 @@ __lua__
 #include sfx.p8
 #include level.p8
 #include input_game.p8
-#include draw_game.p8
 #include level_select.p8
+#include save.p8
+#include tutorial.p8
+#include draw_level.p8
+
 
 function _update()
-    if mode == "home" then
-        menu:input()
-    elseif mode == "level_select" then
-        level_select:input()
-    elseif mode == "game" then
-        input_game()
+    if tutorial != 0 then
+        input_tutorial()
+    else
+        if mode == "home" then
+            menu:input()
+        elseif mode == "level_select" then
+            level_select:input()
+        elseif mode == "game" then
+            input_game(game_level)
+        end
     end
 end
 
 function draw_title()
-    rectfill(1, 1, 126, 40, 8)
+    rectfill(1, 1, 126, 35, 8)
 end
 
 function _draw()
-    if mode == "home" then
-        cls(bg_col)
-        draw_title()
-        menu:draw(60)
-    elseif mode == "level_select" then
-        cls(bg_col)
-        draw_title()
-        level_select:draw(53)
-    elseif mode == "game" then
-        cls(bg_col)
-        draw_grid()
-        draw_numbers()
-        draw_cell_bgs()
-        draw_cell_sprites()
-        draw_input()
-        completion = level:get_completion()
-        print(completion, 10, 10, 0)
+    if tutorial != 0 then
+        draw_tutorial(tutorial)
+    else
+        if mode == "home" then
+            cls(bg_col)
+            draw_title()
+            menu:draw(50)
+        elseif mode == "level_select" then
+            cls(bg_col)
+            draw_title()
+            level_select:draw(53)
+        elseif mode == "game" then
+            cls(bg_col)
+            game_level:draw()
+            draw_input()
+            completion = level:get_completion()
+            print(completion, 10, 10, 0)
+        end
     end
 
     showpct(0)
 end
 
 function _init()
-    mode = "level_select"
+    mode = "game"
+    tutorial = 0
     cell_inner_size = 11
     cell_size = 12
     tree_height = 14
@@ -80,6 +89,7 @@ function _init()
         mode = "level_select"
     end
     function b2:click()
+        tutorial = 1
     end
     menu = create_menu({b1,b2})
 
@@ -94,7 +104,7 @@ function _init()
         {TR,TR,TE,GR,TE},
         {TE,GR,GR,GR,TR},
     }
-    load_level(l)
+    game_level = load_level(l)
 
     levels = {l}
     init_input()

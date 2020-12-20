@@ -20,7 +20,7 @@ function create_level_select(nb_levels)
                     rect(self.origin_x + x * self.sx - 1, origin_y + y * self.sy - 1, self.origin_x + x * self.sx + self.w, origin_y + y * self.sx + self.h, c)
                 end
                 --if save:completed(i) TODO
-                if i == 4 then
+                if is_level_completed(i) then
                     c = 3
                 else
                     c = 5
@@ -70,7 +70,12 @@ function create_level_select(nb_levels)
             end
         end
         if btnp(buttons.b1) then
-            self.items[self.selection].click()
+            --load_level()
+            mode = "game"
+        end
+        if btnp(buttons.b2) then
+            sound_menu_back()
+            mode = "home"
         end
     end
 

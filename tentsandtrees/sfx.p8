@@ -2,6 +2,10 @@ function sound_move()
     sfx(8)
 end
 
+function sound_menu_back()
+    sfx(12)
+end
+
 function sound_menu_valid()
     sfx(13)
 end
