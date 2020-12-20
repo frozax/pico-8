@@ -13,14 +13,16 @@ __lua__
 
 #include anim.p8
 #include player.p8
+#include world.p8
 
 function _update()
     anims:update()
     player:update()
+    world:update()
 end
 
 function _draw()
-    cls(0)
+    world:draw()
     player:draw()
     showpct(7)
 end
