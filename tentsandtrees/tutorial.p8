@@ -77,18 +77,36 @@ function draw_tutorial(page)
             tuto_level.state[1][2] = TE
         end
         tuto_level:draw()
-        top += height * 3
     elseif page == 3 then
-        top += height * 5
-        print("tent cannot touch each other,\nnot even diagonally", left, top)
+        top += 5
+        print("tent cannot touch each other,\nnot even diagonally", left, top, text_color)
+        l = {
+            {GR,GR,TR,TE},
+            {TR,TE,GR,TE},
+            {TE,GR,GR,TR},
+            {TR,GR,GR,GR},
+        }
+        tuto_level = load_level(l, false)
+        tuto_level.origin.x -= 4
+        tuto_level.origin.y += 10
+        tuto_level.show_numbers = false
+        tuto_level:draw()
+        ti = flr(time() * 3)
+        if ti % 2 == 0 then
+            sx, sy, sw, sh = 11, 0, 11, 11
+            sspr(sx, sy, sw, sh, tuto_level.origin.x + 3 * 12 + 1, tuto_level.origin.y + 1)
+            sspr(sx, sy, sw, sh, tuto_level.origin.x + 1 * 12 + 1, tuto_level.origin.y + 1 * 12 + 1)
+        end
     end
 end
 
 function input_tutorial()
     if btnp(buttons.b1) or btnp(buttons.b2) or btnp(buttons.right) then
+        sound_menu_valid()
         tutorial = (tutorial + 1) % 4
     end
     if btnp(buttons.left) and tutorial != 1 then
+        sound_menu_valid()
         tutorial = tutorial - 1
     end
 end

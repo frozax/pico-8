@@ -36,12 +36,17 @@ function input_game(level)
             sound_move_error()
         end
     end
-    if btnp(4) or btnp(5) then
+    if btnp(buttons.b1) then
         if level:cycle_cell(input.pos.x + 1, input.pos.y + 1) then
             sound_toggle()
         else
             sound_toggle_error()
         end
+    end
+    if btnp(buttons.b2) then
+        sound_menu_back()
+        pause_menu.selection = 1
+        pause = true
     end
 end
 
