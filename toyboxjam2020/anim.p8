@@ -49,7 +49,9 @@ function create_anim(frames, flips_x, flips_y)
 
     function anim:update()
         mod = 1
-        if #self.frames == 2 then
+        if #self.frames == 1 then
+            mod = 0
+        elseif #self.frames == 2 then
             mod = anims.twoframe
         elseif #self.frames == 3 then
             mod = anims.threeframe

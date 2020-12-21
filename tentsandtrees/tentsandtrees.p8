@@ -101,13 +101,13 @@ function _draw()
         end
     end
 
-    showpct(0)
+    --showpct(0)
 end
 
 function _init()
     mode = "home"
     tutorial = 0
-    credits = true
+    credits = false
     level_number = 0
     cell_inner_size = 11
     cell_size = 12

@@ -26,20 +26,25 @@ world.border = 40
 
 -- items on specific cells with collisions
 world.items = {}        
-for x=1,world.w do
-    row = {}
-    for y=1,world.h do
+for x=0,world.w-1 do
+    col = {}
+    for y=0,world.h-1 do
         r = flr(rnd(100))
+        -- TODO REMOVE
+        r = 100
+        if x < 4 and (y > 2 and y < 10) then r = 9 end
+        if x > 8 and (y > 2 and y < 10) then r = 4 end
+        if x == 6 and y == 4 then r = 4 end
         if r < 5 then
-            item = {type="tree",dmg=0}
+            item = {type="tree",dmg=0,x=x,y=y}
         elseif r < 10 then
-            item = {type="rock",dmg=0}
+            item = {type="rock",dmg=0,x=x,y=y}
         else
-            item = {}
+            item = {x=x,y=y}
         end
-        add(row, item)
+        col[y]=item
     end
-    add (world.items, row)
+    world.items[x]=col
 end
 
 -- scenery, can be placed anywhere, no collision
@@ -86,6 +91,17 @@ function world:draw()
     --draw_test()
 end
 
+function world:debug()
+    color(1)
+    for i=0,world.w-1 do
+        line(-self.origin.x + i*8, 0, -self.origin.x + i*8, 127)
+        line(-self.origin.x + i*8+7, 0, -self.origin.x + i*8+7, 127)
+        line(0, -self.origin.y + i*8, 127, -self.origin.y + i*8)
+        line(0, -self.origin.y + i*8+7, 127, -self.origin.y + i*8+7)
+    end
+
+end
+
 function world:draw_scenery()
     for scenery in all(self.scenery) do
         spr(scenery.spr, scenery.x-self.origin.x, scenery.y - self.origin.y)
@@ -94,18 +110,21 @@ end
 
 function world:draw_items()
     for xc=start_x,start_x+128/8 do
-        if xc + 1 <= self.w then
+        if xc <= self.w then
             for yc=start_y,start_y+128/8 do
-                item = self.items[xc + 1][yc + 1]
+                item = self.items[xc][yc]
                 if item != nil then
-                    self:draw_item(item, xc * 8 - self.origin.x, yc * 8 - self.origin.y)
+                    self:draw_item(item)
                 end
             end
         end
     end
 end
 
-function world:draw_item(item, x, y)
+function world:draw_item(item)
+    --, xc * 8 - self.origin.x, yc * 8 - self.origin.y)
+    x = item.x * 8 - self.origin.x
+    y = item.y * 8 - self.origin.y
     if item.type == "rock" then
         spr(spr_stone, x, y)
         palt(6, true)
@@ -150,6 +169,10 @@ function world:draw_item(item, x, y)
         palt(6, false)
     elseif item.type == "tree" then
         spr(spr_tree, x, y)
+    elseif item.type == "debug" then
+        spr(196, x, y)
+        print(self.debug_print, x+2, y+2, 1)
+        self.debug_print += 1
     end
 end
 

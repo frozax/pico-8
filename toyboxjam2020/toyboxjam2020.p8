@@ -24,6 +24,7 @@ end
 
 function _draw()
     world:draw()
+    world:debug()
     player:draw()
     showpct(7)
 end
