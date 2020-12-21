@@ -123,6 +123,7 @@ function _draw()
                 draw_input()
                 completion = level:get_completion()
                 if completion == "success" then
+                    set_level_completed(level_number)
                     eol_menu.selection = 1
                     eol_anim_start = time()
                     particles:start()

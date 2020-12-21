@@ -2,7 +2,6 @@ particles = {}
 particles.p = {}
 
 function particles:start()
-    printh("start")
     self.p = {}
     for ip=1,500 do
         left_side = rnd(1) < 0.5
@@ -23,7 +22,6 @@ function particles:start()
         }
         add(self.p, p)
     end
-    printh(#self.p)
 end
 
 function particles:update()
