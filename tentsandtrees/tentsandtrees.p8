@@ -42,6 +42,9 @@ function _update()
         elseif mode == "game" then
             if pause then
                 pause_menu:input()
+            elseif eol_anim then
+            elseif eol then
+                eol_menu:input()
             else
                 input_game(game_level)
             end
@@ -93,10 +96,26 @@ function _draw()
                 y = 40
                 draw_rwin(32, y, 127-64, 50, 5, 0)
                 pause_menu:draw(y + 10)
+            elseif eol_anim then
+                if time() - eol_anim_start > 2 then
+                    eol_anim = false
+                    eol = true
+                end
+            elseif eol then
+                y = 40
+                draw_rwin(28, y, 127-56, 50, 5, 0)
+                draw_rwin(28, y, 127-56, 50, 5, 0)
+                printc("congratulations!", y + 7, 7)
+                eol_menu:draw(y + 20)
             else
                 draw_input()
                 completion = level:get_completion()
                 print(completion, 10, 10, 0)
+                if completion == "success" then
+                    eol_menu.selection = 1
+                    eol_anim_start = time()
+                    eol_anim = true
+                end
             end
             if game_level.size < 8 then
                 -- draw input
@@ -150,11 +169,20 @@ function _init()
     bquit = {text="quit"}
     function bquit:click()
         pause = false
+        eol = false
+        eol_anim = false
         mode = "home"
     end
-
     pause_menu = create_menu({bres, bhtp, bquit})
     pause = false
+
+    bnl = {text="next level"}
+    function bnl:click()
+        eol = false
+    end
+    eol_menu = create_menu({bnl, bquit})
+    eol = false
+    eol_anim = false
 
     GR = 0
     TE = 1
@@ -167,7 +195,8 @@ function _init()
         {TR,TR,TE,GR,TE},
         {TE,GR,GR,GR,TR},
     }
-    game_level = load_level(l)
+    game_level = load_level(l, false)   -- DEBUG
+    --game_level.state[1][1] = UN         -- DEBUG
 
     levels = {l}
     init_input()
