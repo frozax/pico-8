@@ -6,12 +6,14 @@ __lua__
 -- for toy box jam 2
 
 #include ../libs/vec2.p8
+#include ../libs/util.p8
 #include ../libs/buttons.p8
 #include ../libs/colors.p8
 #include ../libs/fps.p8
 #include ../libs/tostring.p8
 
 #include anim.p8
+#include inventory.p8
 #include world_item.p8
 #include world.p8
 #include player.p8
@@ -21,12 +23,14 @@ function _update()
     -- draw player before to center the world properly
     player:update()
     world:update()
+    inventory:update()
 end
 
 function _draw()
     world:draw()
     --world:debug()
     player:draw()
+    inventory:draw()
     showpct(7)
 end
 

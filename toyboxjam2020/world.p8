@@ -3,9 +3,6 @@ world = {}
 -- sprites stuff
 spr_grass = {10, 11, 12}
 spr_scenery = {194, 195, 220, 10, 11, 12}
-spr_tree = 32
-spr_stone = 63
-spr_stone_dmg = 204
 
 -- colors stuff
 bg_green = 1 -- slot where we put the new green
@@ -31,14 +28,14 @@ for x=0,world.w-1 do
     for y=0,world.h-1 do
         r = flr(rnd(100))
         -- TODO REMOVE
-        r = 100
-        if x < 4 and (y > 2 and y < 10) then r = 9 end
-        if x > 8 and (y > 2 and y < 10) then r = 4 end
-        if x == 6 and y == 4 then r = 4 end
+        --r = 100
+        --if x < 4 and (y > 2 and y < 10) then r = 9 end
+        --if x > 8 and (y > 2 and y < 10) then r = 4 end
+        --if x == 6 and y == 4 then r = 4 end
         if r < 5 then
             item = create_item({type="tree",x=x,y=y})
         elseif r < 10 then
-            item = create_item({type="rock",x=x,y=y})
+            item = create_item({type="stone",x=x,y=y})
         else
             item = create_item({x=x,y=y})
         end

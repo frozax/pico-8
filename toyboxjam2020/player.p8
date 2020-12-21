@@ -64,7 +64,7 @@ function player:update()
             self.coll_item:damage()
             new_ds = self.coll_item:get_damage_state()
             if old_ds != new_ds then
-                --inventory.win_item(self.coll_item.type)
+                inventory:get_resource(self.coll_item.type, 1)
             end
         end
     end

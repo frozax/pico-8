@@ -18,7 +18,8 @@ function showpct(c)
     pct = tostr(pct)
     if #pct == 1 then pct = "0"..pct end
     palt(0, false)
-    rectfill(0, 0, 4*#pct, 6, 1)
+    y = 121
+    rectfill(0, y, 4*#pct, 6+y, 1)
     palt(0, true)
-    print(pct, 1, 1, c)
+    print(pct, 1, y+1, c)
 end
