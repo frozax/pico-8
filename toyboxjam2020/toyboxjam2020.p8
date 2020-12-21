@@ -12,6 +12,7 @@ __lua__
 #include ../libs/tostring.p8
 
 #include anim.p8
+#include world_item.p8
 #include world.p8
 #include player.p8
 
@@ -24,7 +25,7 @@ end
 
 function _draw()
     world:draw()
-    world:debug()
+    --world:debug()
     player:draw()
     showpct(7)
 end

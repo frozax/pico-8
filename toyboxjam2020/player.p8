@@ -14,6 +14,11 @@ player.walk_down = create_anim({240, 240}, {true, false})
 player.walk_up = create_anim({255, 255}, {true, false})
 player.walk_left = create_anim({248, 249}, {true, true})
 player.walk_right = create_anim({248, 249})
+player.destroy_down = create_anim({241, 242})
+player.destroy_left = create_anim({250, 251}, {true, true})
+player.destroy_right = create_anim({250, 251})
+player.destroy_up = create_anim({253, 254})
+player.destroy = player.destroy_down
 player.idle = player.idle_down
 
 function player:update()
@@ -22,21 +27,25 @@ function player:update()
         dir.x = -1
         self.anim = self.walk_left
         self.idle = self.idle_left
+        self.destroy = self.destroy_left
     end
     if btn(buttons.right) then
         dir.x = 1
         self.anim = self.walk_right
         self.idle = self.idle_right
+        self.destroy = self.destroy_right
     end
     if btn(buttons.up) then
         dir.y = -1
         self.anim = self.walk_up
         self.idle = self.idle_up
+        self.destroy = self.destroy_up
     end
     if btn(buttons.down) then
         dir.y = 1
         self.anim = self.walk_down
         self.idle = self.idle_down
+        self.destroy = self.destroy_down
     end
     if #dir == 0 then
         self.anim = self.idle
@@ -48,6 +57,16 @@ function player:update()
         dir.x = dirx.x
         dir.y = diry.y
         self:move(dir)
+
+        if self.coll_item != nil then
+            self.anim = self.destroy
+            old_ds = self.coll_item:get_damage_state()
+            self.coll_item:damage()
+            new_ds = self.coll_item:get_damage_state()
+            if old_ds != new_ds then
+                --inventory.win_item(self.coll_item.type)
+            end
+        end
     end
 end
 
@@ -145,23 +164,22 @@ function player:collide(old, dir)
 end
 
 function player:draw()
-    world.debug_print = 1
     --for item in all(self:get_items_to_check(self.p, vec2(-1,-1))) do
     --    world:draw_item({type="debug",x=item.x, y=item.y})
     --end
 
     -- DEBUG
-    self.anim = create_anim({218})
+    --self.anim = create_anim({218})
     self.anim:update()
     --pal(2, 12)
     --pal(14, 1)
     self.anim:draw(self.p - world.origin - vec2(self.hsize, self.hsize))
-    print(tostring(self.p), 1, 10, 7)
+    --print(tostring(self.p), 1, 10, 7)
     --print(flr((self.p.x-self.hsize)/8).." "..flr((self.p.y-self.hsize)/8), 1, 20, 7)
-    printh(self.coll_item)
-    if self.coll_item != nil then
-        world:draw_item({type="debug",x=self.coll_item.x, y=self.coll_item.y})
-    end
+    --if self.coll_item != nil then
+    --    item = create_item({type="debug",x=self.coll_item.x, y=self.coll_item.y})
+    --    item:draw()
+    --end
 
     --minx, miny, maxx, maxy = self:get_bounds(self.p)
     --rect(minx, miny, maxx, maxy, 7)

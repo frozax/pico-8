@@ -36,11 +36,11 @@ for x=0,world.w-1 do
         if x > 8 and (y > 2 and y < 10) then r = 4 end
         if x == 6 and y == 4 then r = 4 end
         if r < 5 then
-            item = {type="tree",dmg=0,x=x,y=y}
+            item = create_item({type="tree",x=x,y=y})
         elseif r < 10 then
-            item = {type="rock",dmg=0,x=x,y=y}
+            item = create_item({type="rock",x=x,y=y})
         else
-            item = {x=x,y=y}
+            item = create_item({x=x,y=y})
         end
         col[y]=item
     end
@@ -113,66 +113,9 @@ function world:draw_items()
         if xc <= self.w then
             for yc=start_y,start_y+128/8 do
                 item = self.items[xc][yc]
-                if item != nil then
-                    self:draw_item(item)
-                end
+                item:draw()
             end
         end
-    end
-end
-
-function world:draw_item(item)
-    --, xc * 8 - self.origin.x, yc * 8 - self.origin.y)
-    x = item.x * 8 - self.origin.x
-    y = item.y * 8 - self.origin.y
-    if item.type == "rock" then
-        spr(spr_stone, x, y)
-        palt(6, true)
-        dmg = item.dmg * 6 / 100
-        if dmg == 0 then
-        else
-            x = (spr_stone_dmg % 16) * 8
-            y = (spr_stone_dmg \ 16) * 8
-            w, h = 8, 8
-            dx, dy = 20, 90
-            if dmg == 1 then
-                x+=2
-                y+=2
-                w-=4
-                h-=6
-                dx+=2
-                dy+=2
-            elseif dmg == 2 then
-                x+=2
-                y+=2
-                w-=4
-                h-=4
-                dx+=2
-                dy+=2
-            elseif dmg == 3 then
-                x+=1
-                y+=1
-                w-=2
-                h-=3
-                dx+=1
-                dy+=1
-            elseif dmg == 4 then
-                x+=1
-                y+=1
-                w-=2
-                h-=2
-                dx+=1
-                dy+=1
-            end
-            sspr(x, y, w, h, dx, dy)
-        end
-        palt(6, false)
-    elseif item.type == "tree" then
-        spr(spr_tree, x, y)
-    elseif item.type == "debug" then
-        spr(196, x, y)
-        print(self.debug_print, x+2, y+2, 1)
-        self.debug_print += 1
     end
 end
 
