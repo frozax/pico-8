@@ -8,6 +8,7 @@ __lua__
 
 -- try the original mobile game at https://www.frozax.com/tat
 
+#include ../libs/tostring.p8
 #include ../libs/colors.p8
 #include ../libs/buttons.p8
 #include ../libs/vec2.p8
@@ -15,6 +16,7 @@ __lua__
 #include ../libs/menu.p8
 #include ../libs/util.p8
 
+#include particles.p8
 #include sfx.p8
 #include level.p8
 #include input_game.p8
@@ -43,7 +45,9 @@ function _update()
             if pause then
                 pause_menu:input()
             elseif eol_anim then
+                particles:update()
             elseif eol then
+                particles:update()
                 eol_menu:input()
             else
                 input_game(game_level)
@@ -53,7 +57,6 @@ function _update()
 end
 
 function draw_title()
-    --rectfill(1, 1, 126, 35, 8)
     palt(0, false)
     palt(7, true)
     sspr(0, 32, 128, 16*3, 0, 0)
@@ -97,6 +100,7 @@ function _draw()
                 draw_rwin(32, y, 127-64, 50, 5, 0)
                 pause_menu:draw(y + 10)
             elseif eol_anim then
+                particles:draw()
                 if time() - eol_anim_start > 2 then
                     eol_anim = false
                     eol = true
@@ -107,13 +111,14 @@ function _draw()
                 draw_rwin(28, y, 127-56, 50, 5, 0)
                 printc("congratulations!", y + 7, 7)
                 eol_menu:draw(y + 20)
+                particles:draw()
             else
                 draw_input()
                 completion = level:get_completion()
-                print(completion, 10, 10, 0)
                 if completion == "success" then
                     eol_menu.selection = 1
                     eol_anim_start = time()
+                    particles:start()
                     eol_anim = true
                 end
             end
@@ -144,7 +149,7 @@ function _init()
     grid_col = 5
     numbers_wip_col = 1
     numbers_error_col = 8
-    numbers_ok_col = 9
+    numbers_ok_col = 3
     input_col = 0
     text_col = 5
 
@@ -195,8 +200,7 @@ function _init()
         {TR,TR,TE,GR,TE},
         {TE,GR,GR,GR,TR},
     }
-    game_level = load_level(l, false)   -- DEBUG
-    --game_level.state[1][1] = UN         -- DEBUG
+    game_level = load_level(l)
 
     levels = {l}
     init_input()
