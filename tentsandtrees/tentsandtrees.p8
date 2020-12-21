@@ -25,6 +25,11 @@ __lua__
 #include tutorial.p8
 #include draw_level.p8
 
+GR = 0
+TE = 1
+TR = 2
+UN = 3
+#include levels.p8
 
 function _update()
     if tutorial != 0 then
@@ -92,8 +97,10 @@ function _draw()
             level_select:draw(56)
         elseif mode == "game" then
             cls(bg_col)
+            if game_level.size < 9 then
+                draw_level_number(127 - level_number_w, 1, level_number)
+            end
             game_level:draw()
-            draw_level_number(127 - level_number_w, 1, level_number)
             if pause then
                 border = 30
                 y = 40
@@ -135,7 +142,7 @@ function _draw()
 end
 
 function _init()
-    mode = "level_select"
+    mode = "home"
     tutorial = 0
     credits = false
     cell_inner_size = 11
@@ -194,18 +201,6 @@ function _init()
     eol = false
     eol_anim = false
 
-    GR = 0
-    TE = 1
-    TR = 2
-    UN = 3
-    l = {
-        {GR,GR,GR,TE,GR},
-        {TE,TR,GR,TR,GR},
-        {GR,GR,GR,GR,GR},
-        {TR,TR,TE,GR,TE},
-        {TE,GR,GR,GR,TR},
-    }
-    levels = {l}
     load_level(0)
     init_input()
     --level_select = create_level_select(#levels)

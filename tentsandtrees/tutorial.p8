@@ -14,7 +14,7 @@ function draw_tutorial(page)
             {TR,GR,GR,GR},
             {TE,TR,TE,GR}
         }
-        tuto_level = load_level(l)
+        tuto_level = load_level_from_def(l)
         tuto_level.origin.y += 8
         ti = flr(time()*2) % 10
         if ti > 1 then
@@ -58,7 +58,7 @@ function draw_tutorial(page)
             {GR,TR,GR},
             {GR,GR,GR},
         }
-        tuto_level = load_level(l, false)
+        tuto_level = load_level_from_def(l, false)
         tuto_level.origin.x -= 4
         tuto_level.origin.y += 17
         tuto_level.show_numbers = false
@@ -85,7 +85,7 @@ function draw_tutorial(page)
             {TE,GR,GR,TR},
             {TR,GR,GR,GR},
         }
-        tuto_level = load_level(l, false)
+        tuto_level = load_level_from_def(l, false)
         tuto_level.origin.x -= 4
         tuto_level.origin.y += 10
         tuto_level.show_numbers = false

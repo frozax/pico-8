@@ -24,8 +24,8 @@ function load_level_from_def(ldef, reset)
     level.show_numbers = true
     level.size = #ldef
     level.def = ldef
-    pix_size = level.size * (cell_size + 1)
-    level.origin = vec2((128 - pix_size)/2, (128 - pix_size)/2)
+    pix_size = level.size * (cell_size)
+    level.origin = vec2((128 - pix_size)/2, (128 - pix_size)/2 + 2)
 
     -- compute numbers
     level.rows = {}
