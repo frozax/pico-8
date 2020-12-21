@@ -98,6 +98,12 @@ function _draw()
                 completion = level:get_completion()
                 print(completion, 10, 10, 0)
             end
+            if game_level.size < 8 then
+                -- draw input
+                printc("\x8b\x91\x94\x83: select a cell", 105, text_col)
+                printc("c/\x8e: change cell state", 111, text_col)
+                printc("v/\x97: display menu", 117, text_col)
+            end
         end
     end
 
@@ -105,7 +111,7 @@ function _draw()
 end
 
 function _init()
-    mode = "home"
+    mode = "game"
     tutorial = 0
     credits = false
     level_number = 0
