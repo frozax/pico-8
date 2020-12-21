@@ -77,9 +77,8 @@ function create_level_select(nb_levels)
             end
         end
         if btnp(buttons.b1) then
-            --load_level()
             sound_menu_valid()
-            level_number = self.selection
+            load_level(self.selection)
             mode = "game"
         end
         if btnp(buttons.b2) then

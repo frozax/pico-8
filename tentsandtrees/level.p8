@@ -14,7 +14,12 @@ function _reset_state(level, clear)
     end
 end
 
-function load_level(ldef, reset)
+function load_level(number, reset)
+    level_number = number
+    game_level = load_level_from_def(levels[level_number+1], reset)
+end
+
+function load_level_from_def(ldef, reset)
     level = {}
     level.show_numbers = true
     level.size = #ldef

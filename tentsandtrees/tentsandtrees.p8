@@ -83,7 +83,7 @@ function _draw()
                 printc("francois guibert - @frozax", y+7, 0)
                 printc("art:", y+25, 0)
                 printc("vincent guibert", y+32, 0)
-                printc("music/sfx:", y+50, 0)
+                printc("sound:", y+50, 0)
                 printc("@gruber_music", y+57, 0)
             end
         elseif mode == "level_select" then
@@ -135,10 +135,9 @@ function _draw()
 end
 
 function _init()
-    mode = "game"
+    mode = "level_select"
     tutorial = 0
     credits = false
-    level_number = 0
     cell_inner_size = 11
     cell_size = 12
     tree_height = 14
@@ -183,6 +182,12 @@ function _init()
 
     bnl = {text="next level"}
     function bnl:click()
+        if level_number+1 < #levels then
+            load_level(level_number+1)
+        else
+            -- no more levels, back home
+            mode = "home"
+        end
         eol = false
     end
     eol_menu = create_menu({bnl, bquit})
@@ -200,9 +205,8 @@ function _init()
         {TR,TR,TE,GR,TE},
         {TE,GR,GR,GR,TR},
     }
-    game_level = load_level(l)
-
     levels = {l}
+    load_level(0)
     init_input()
     --level_select = create_level_select(#levels)
     level_select = create_level_select(20)
