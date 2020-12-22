@@ -64,10 +64,13 @@ function player:update()
             self.coll_item:damage()
             new_ds = self.coll_item:get_damage_state()
             if old_ds != new_ds then
-                inventory:get_resource(self.coll_item.type, 1)
+                ui:add_resource(self.coll_item.type, 1)
             end
         end
     end
+
+    -- check if on a buildable cell
+    self.below_item = world.items[self.p.x\8][self.p.y\8]
 end
 
 function player:move(dir)
@@ -173,6 +176,7 @@ function player:draw()
     --for item in all(self:get_items_to_check(self.p, vec2(-1,-1))) do
     --    world:draw_item({type="debug",x=item.x, y=item.y})
     --end
+    self.below_item:draw(true)
 
     -- DEBUG
     --self.anim = create_anim({218})
@@ -186,6 +190,10 @@ function player:draw()
     --    item = create_item({type="debug",x=self.coll_item.x, y=self.coll_item.y})
     --    item:draw()
     --end
+    cbr, has_rsc = self.below_item:can_build_rail()
+    if cbr then
+        ui:draw_build_rail(has_rsc)
+    end
 
     --minx, miny, maxx, maxy = self:get_bounds(self.p)
     --rect(minx, miny, maxx, maxy, 7)

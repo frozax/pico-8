@@ -1,6 +1,6 @@
 spr_tree = 32
 spr_stone = 63
-spr_coins = 48
+spr_coins = 128
 spr_stone_dmg = 204
 spr_rail_h = 37
 spr_clock = 171
@@ -37,7 +37,7 @@ function create_item(infos)
         return self.type == "stone" or self.type == "tree"
     end
 
-    function item:draw()
+    function item:draw(debug)
         --, xc * 8 - self.origin.x, yc * 8 - self.origin.y)
         dx = self.x * 8 - world.origin.x
         dy = self.y * 8 - world.origin.y
@@ -116,10 +116,58 @@ function create_item(infos)
             spr(spr_gare_left, dx, dy)
         elseif self.type == "gare_right" then
             spr(spr_gare_right, dx, dy)
-        elseif self.type == "debug" then
-            spr(196, dx, dy)
-            print(self.x..self.y, dx+2, dy+2, 1)
         end
+        if debug then
+            spr(196, dx, dy)
+            print(self.x..self.y, dx+1, dy+2, 1)
+        end
+    end
+
+
+    function item:right()
+        if self.x+1 < world.w then
+            return world.items[self.x+1][self.y]
+        else
+            return create_item({})
+        end
+    end
+
+    function item:left()
+        if self.x > 0 then
+            return world.items[self.x-1][self.y]
+        else
+            return create_item({})
+        end
+    end
+
+    function item:top()
+        if self.y > 0 then
+            return world.items[self.x][self.y-1]
+        else
+            return create_item({})
+        end
+    end
+
+    function item:bottom()
+        if self.y < world.w then
+            return world.items[self.x][self.y+1]
+        else
+            return create_item({})
+        end
+    end
+
+    function item:is_rail()
+        return self.type == "railh" or self.type == "railv"
+    end
+
+    -- returns true/false,true/false
+    -- 1st one is true if we are on a proper cell to build
+    -- 2nd one is true if we have enough resources
+    function item:can_build_rail()
+        if self:left():is_rail() or self:top():is_rail() or self:bottom():is_rail() or self:right():is_rail() then
+            return true, false
+        end
+        return false, false
     end
 
     return item

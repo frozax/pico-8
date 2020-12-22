@@ -13,7 +13,7 @@ __lua__
 #include ../libs/tostring.p8
 
 #include anim.p8
-#include inventory.p8
+#include ui.p8
 #include city.p8
 #include world_item.p8
 #include world.p8
@@ -34,14 +34,14 @@ function _update()
     -- draw player before to center the world properly
     player:update()
     world:update()
-    inventory:update()
+    ui:update()
 end
 
 function _draw()
     world:draw()
     --world:debug()
+    ui:draw()
     player:draw()
-    inventory:draw()
     showpct(7)
     --printo(tostring(world.items[player.p.x\8][player.p.y\8].type), 1, 1, 1, 7)
 end
