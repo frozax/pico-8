@@ -43,7 +43,7 @@ function _draw()
     player:draw()
     inventory:draw()
     showpct(7)
-    printo(tostring(world.items[player.p.x\8][player.p.y\8].type), 1, 1, 1, 7)
+    --printo(tostring(world.items[player.p.x\8][player.p.y\8].type), 1, 1, 1, 7)
 end
 
 __gfx__

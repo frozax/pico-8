@@ -7,14 +7,13 @@ cur_city = 0
 city_w, city_h=4,4
 city_names = {"paris", "dallas", "tokyo", "london", "berlin", "roma", "madrid", "sydney"}
 
-function create_city()
-    city = {name=city_names[cur_city + 1]}
+function create_city(position)
+    city = position
+    city.name=city_names[cur_city + 1]
     city.flip1 = rnd({true,false})
     city.flip2 = rnd({true,false})
     city.gare_x = rnd({0, 1, 2})
     cur_city = (cur_city + 1) % #city_names
-    city.x=cur_city*5 - 2
-    city.y=7
 
     function city:update()
     end

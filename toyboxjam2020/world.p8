@@ -1,5 +1,8 @@
 world = {}
 
+-- always same city for now
+srand(1)
+
 -- sprites stuff
 spr_grass = {10, 11, 12}
 spr_scenery = {194, 195, 220, 10, 11, 12}
@@ -14,8 +17,8 @@ pal(new_green, old_green, 1)
 pal(old_green, hidden_pal_green, 1)
 
 -- gen world
-world.w = 32
-world.h = 32
+world.w = 48
+world.h = 48
 world.origin = vec2(0, 0) -- origin for draw
 world.min_origin = vec2(0, 0)
 world.max_origin = vec2(world.w * 8 - 128, world.h * 8 - 128)
@@ -32,16 +35,46 @@ for x=0,world.w-1 do
         --if x < 4 and (y > 2 and y < 10) then r = 9 end
         --if x > 8 and (y > 2 and y < 10) then r = 4 end
         --if x == 6 and y == 4 then r = 4 end
-        if r < 5 then
-            item = create_item({type="tree",x=x,y=y})
-        elseif r < 10 then
-            item = create_item({type="stone",x=x,y=y})
-        else
-            item = create_item({x=x,y=y})
-        end
-        col[y]=item
+        --if r < 5 then
+        --    item = create_item({type="tree",x=x,y=y})
+        --elseif r < 10 then
+        --    item = create_item({type="stone",x=x,y=y})
+        --else
+        --    item = create_item({x=x,y=y})
+        --end
+        col[y]=create_item({x=x,y=y})
     end
     world.items[x]=col
+end
+
+-- create quarry and forests
+nbs = 16
+for i=1,nbs*2 do
+    if i % 2 == 0 then t = "tree" else t = "stone" end
+    rshape = (i \ 2) % nbs
+    if rshape == 0 then
+        shape = {{1, 1, 1},{1,1,1}}
+    elseif rshape == 1 then
+        shape = {{1, 0, 1, 1},{1, 1, 1, 0}, {0, 1, 1, 0}}
+    elseif rshape == 2 then
+        shape = {{0, 1, 1, 1, 0}, {1, 1, 1, 1, 0}, {1, 1, 1, 1, 1}, {0, 1, 1, 1, 1}, {1, 1, 1, 0, 0}}
+    elseif rshape == 3 then
+        shape = {{0, 1, 1}, {1, 1, 1}, {0, 1, 1}}
+    elseif rshape == 4 then
+        shape = {{0, 1, 1, 0}, {0, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 0, 0}}
+    end
+    xw = flr(rnd(world.w))
+    yw = flr(rnd(world.h))
+    for y=1,#shape do
+        for x=1,#shape[y] do
+            ix = x+xw-1
+            iy = y+yw-1
+            if ix >= 0 and ix < world.w and iy >= 0 and iy < world.h and
+                shape[y][x] == 1 then
+                world.items[ix][iy] = create_item({type=t,x=ix,y=iy})
+            end
+        end
+    end
 end
 
 -- scenery, can be placed anywhere, no collision
@@ -51,8 +84,9 @@ for s=1,(world.w*world.h)/10 do
 end
 
 world.cities = {}
+cities_pos = {{2, 5}, {40, 9}, {6, 23}, {25, 26}, {40, 40}}
 for c=1,5 do
-    city = create_city()
+    city = create_city({x=cities_pos[c][1], y=cities_pos[c][2]})
     add(world.cities, city)
     for x=0,city_w-1 do
         for y=0,-(city_h-1),-1 do
@@ -121,10 +155,12 @@ end
 
 function world:draw_items()
     for xc=start_x,start_x+128/8 do
-        if xc <= self.w then
+        if xc < self.w then
             for yc=start_y,start_y+128/8 do
-                item = self.items[xc][yc]
-                item:draw()
+                if yc < self.h then
+                    item = self.items[xc][yc]
+                    item:draw()
+                end
             end
         end
     end

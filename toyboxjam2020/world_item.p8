@@ -84,9 +84,28 @@ function create_item(infos)
             palt(6, false)
         elseif self.type == "tree" then
             dmg = self:get_damage_state()
+
+            -- v1
             x = (spr_tree % 16) * 8
             y = (spr_tree \ 16) * 8
             sspr(x, y+dmg, 8, 8-dmg, dx, dy+dmg)
+
+            -- v2
+            --spr(spr_tree, dx, dy)
+            --if dmg != 0 then
+            --    if dy % 2 == 0 then
+            --        if dmg == 1 then fillp(0b0111110111111101.1) end
+            --        if dmg == 2 then fillp(0b0101011011101101.1) end
+            --        if dmg == 3 then fillp(0b1010010110100101.1) end
+            --        if dmg == 4 then fillp(0b1000010010100101.1) end
+            --    else
+            --        if dmg == 1 then fillp(0b0111110111111101.1) end
+            --        if dmg == 2 then fillp(0b0101011011101101.1) end
+            --        if dmg == 3 then fillp(0b1010010110100101.1) end
+            --        if dmg == 4 then fillp(0b1000010010100101.1) end
+            --    rectfill(dx, dy, dx+7, dy+7, 0, 0)
+            --    fillp()
+            --end
         elseif self.type == "railh" then
             spr(spr_rail_h, dx, dy)
         elseif self.type == "house" then

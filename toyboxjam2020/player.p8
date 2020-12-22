@@ -1,7 +1,7 @@
 player = {}
 
 player.p = vec2(64, 64) -- p is center of perso
-player.speed = 1.0    -- pix / frame
+player.speed = 2.0    -- pix / frame
 player.size = 8
 player.hsize = 4
 player.minp = vec2(player.hsize, player.hsize)
@@ -10,8 +10,8 @@ player.idle_down = create_anim({238, 238, 238, 239})
 player.idle_up = create_anim({253, 253, 253, 254})
 player.idle_left = create_anim({246, 246, 246, 247}, {true, true, true, true})
 player.idle_right = create_anim({246, 246, 246, 247})
-player.walk_down = create_anim({240, 240}, {true, false})
-player.walk_up = create_anim({255, 255}, {true, false})
+player.walk_down = create_anim({240, 238, 240, 238}, {true, false, false, false})
+player.walk_up = create_anim({255, 253, 255, 253}, {true, false, false, false})
 player.walk_left = create_anim({248, 249}, {true, true})
 player.walk_right = create_anim({248, 249})
 player.destroy_down = create_anim({241, 242})
@@ -102,27 +102,31 @@ function player:get_items_to_check(p, dir)
     items = {}
     if dir.x != 0 then
         if dir.x < 0 then xidx = minx else xidx = maxx end
-        add(items, world.items[xidx][miny])
-        if miny != maxy then
-            add(items, world.items[xidx][maxy])
-            if self.p.y\8 == items[2].y then
-                -- swap to do it in order
-                tmp = items[2]
-                items[2] = items[1]
-                items[1] = tmp
+        if xidx >= 0 and xidx < world.w then
+            add(items, world.items[xidx][miny])
+            if miny != maxy then
+                add(items, world.items[xidx][maxy])
+                if self.p.y\8 == items[2].y then
+                    -- swap to do it in order
+                    tmp = items[2]
+                    items[2] = items[1]
+                    items[1] = tmp
+                end
             end
         end
     end
     if dir.y != 0 then
         if dir.y < 0 then yidx = miny else yidx = maxy end
-        add(items, world.items[minx][yidx])
-        if minx != maxx then
-            add(items, world.items[maxx][yidx])
-            if self.p.x\8 == items[2].x then
-                -- swap to do it in order
-                tmp = items[2]
-                items[2] = items[1]
-                items[1] = tmp
+        if yidx >= 0 and yidx < world.h then
+            add(items, world.items[minx][yidx])
+            if minx != maxx then
+                add(items, world.items[maxx][yidx])
+                if self.p.x\8 == items[2].x then
+                    -- swap to do it in order
+                    tmp = items[2]
+                    items[2] = items[1]
+                    items[1] = tmp
+                end
             end
         end
     end

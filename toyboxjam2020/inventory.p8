@@ -3,17 +3,35 @@ inventory.tree = 0
 inventory.stone = 0
 inventory.coins = 0
 
+function getspr(spr)
+    x = (spr % 16) * 8
+    y = (spr \ 16) * 8
+    return x, y
+end
+
 function inventory:update()
 end
 
 function inventory:draw()
-    draw_rwin(0, -10, 127, 20, 1, 2)
-    spr(spr_tree, 8, 1)
-    print(self.tree, 18, 3, 7)
-    spr(spr_stone, 38, 1)
-    print(self.stone, 48, 3, 7)
-    spr(spr_coins, 68, 1)
-    print(self.coins, 78, 3, 7)
+    scale = 5
+    draw_win(-1, -1, 58, 8, 1, 2)
+
+    dx = 1
+    dy = 1
+    x, y = getspr(spr_tree)
+    sspr(x, y, 8, 8, dx, dy, scale, scale)
+    print(self.tree, dx + scale + 1, dy, 7)
+
+    dx += scale + 2 + 3*4
+    x, y = getspr(spr_stone)
+    sspr(x, y, 8, 8, dx, dy, scale, scale)
+    print(self.stone, dx + scale + 1, dy, 7)
+
+    dx += scale + 2 + 3*4
+    x, y = getspr(spr_coins)
+    sspr(x, y, 8, 8, dx, dy, scale, scale)
+    print(self.coins, dx + scale + 1, dy, 7)
+
 end
 
 function inventory:get_resource(type, count)

@@ -37,6 +37,11 @@ function draw_rwin(_x,_y,_w,_h,_c1,_c2)
  line(_x+5,_y+_h,_x+_w-5,_y+_h,_c2) -- x bottom
 end
 
+function draw_win(_x,_y,_w,_h,_c1,_c2)
+ rectfill(_x,_y,_x+_w,_y+_h,_c1)
+ rect(_x,_y,_x+_w,_y+_h,_c2)
+end
+
 -------------------------------
 -- string width with glyphs
 function strwidth(str)
