@@ -3,6 +3,8 @@ spr_stone = 63
 spr_coins = 128
 spr_stone_dmg = 204
 spr_rail_h = 37
+spr_rail_v = 36
+spr_rail_corner = 39
 spr_clock = 171
 spr_house = 22
 spr_column = 55
@@ -106,8 +108,33 @@ function create_item(infos)
             --    rectfill(dx, dy, dx+7, dy+7, 0, 0)
             --    fillp()
             --end
-        elseif self.type == "railh" then
-            spr(spr_rail_h, dx, dy)
+        elseif self.type == "rail" then
+            flipx, flipy=false
+            s = spr_rail_h
+            if self:top():is_rail() then
+                if self:left():is_rail() then
+                    s = spr_rail_corner
+                    flipx, flipy = true, true
+                elseif self:right():is_rail() then
+                    s = spr_rail_corner
+                    flipx, flipy = false, true
+                else
+                    s = spr_rail_v
+                end
+            elseif self:bottom():is_rail() then
+                if self:left():is_rail() then
+                    s = spr_rail_corner
+                    flipx, flipy = true, false
+                elseif self:right():is_rail() then
+                    s = spr_rail_corner
+                    flipx, flipy = false, false
+                else
+                    s = spr_rail_v
+                end
+            else
+                s = spr_rail_h
+            end
+            spr(s, dx, dy, 1, 1, flipx, flipy)
         elseif self.type == "house" then
             spr(spr_house, dx, dy)
         elseif self.type == "gare_col" then
@@ -122,7 +149,6 @@ function create_item(infos)
             print(self.x..self.y, dx+1, dy+2, 1)
         end
     end
-
 
     function item:right()
         if self.x+1 < world.w then
@@ -157,7 +183,7 @@ function create_item(infos)
     end
 
     function item:is_rail()
-        return self.type == "railh" or self.type == "railv"
+        return self.type == "rail"
     end
 
     -- returns true/false,true/false
@@ -173,7 +199,7 @@ function create_item(infos)
     end
 
     function item:build_rail()
-        self.type = "railh"
+        self.type = "rail"
     end
 
     return item

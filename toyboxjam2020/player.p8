@@ -65,6 +65,8 @@ function player:update()
             new_ds = self.coll_item:get_damage_state()
             if old_ds != new_ds then
                 ui:add_resource(self.coll_item.type, 1)
+                if self.coll_item.type == "stone" then sfx_gather_stone() end
+                if self.coll_item.type == "tree" then sfx_gather_tree() end
             end
         end
     end
@@ -74,12 +76,11 @@ function player:update()
 
     if btnp(buttons.b1) then
         cbr, has_rsc = self.below_item:can_build_rail()
-        printh("cbr"..tostring(cbr).." hasrsc"..tostring(has_rsc))
         if cbr and has_rsc then
             ui:spend_resource("tree", rail_cost_tree)
             ui:spend_resource("stone", rail_cost_stone)
             self.below_item:build_rail()
-            sfx_valid()
+            sfx_build_rail()
         else
             sfx_error()
         end

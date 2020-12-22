@@ -84,14 +84,13 @@ for s=1,(world.w*world.h)/10 do
 end
 
 world.cities = {}
-cities_pos = {{2, 5}, {40, 9}, {6, 23}, {25, 26}, {40, 40}}
+cities_pos = {{1, 4}, {40, 9}, {8, 13}, {25, 26}, {40, 40}}
 for c=1,5 do
     city = create_city({x=cities_pos[c][1], y=cities_pos[c][2]})
     add(world.cities, city)
     for x=0,city_w-1 do
         for y=0,-(city_h-1),-1 do
             item = city:gen_item(vec2(x,y))
-            printh(tostring(item))
             world.items[item.x][item.y] = item
         end
     end

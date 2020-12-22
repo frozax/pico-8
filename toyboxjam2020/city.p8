@@ -66,7 +66,7 @@ function create_city(position)
                 return create_item({type="gare_right", city=self, x=x,y=y})
             end
         elseif local_coords.y == 0 then
-            return create_item({type="railh", city=self, x=x,y=y})
+            return create_item({type="rail", city=self, x=x,y=y})
         end
         return create_item({x=x,y=y,city=self})
     end

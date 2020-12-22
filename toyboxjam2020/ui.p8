@@ -3,6 +3,21 @@ ui.tree = 0
 ui.stone = 0
 ui.coins = 0
 
+obj_count = 15
+o1={icon=spr_tree,t1="gather "..obj_count,t2="trees"}
+o2={icon=spr_stone,t1="gather "..obj_count,t2="stones"}
+o3={icon=spr_rail_h,t1="connect paris",t2="to tokyo"}
+function o1:completed()
+    return ui.tree >= obj_count
+end
+function o2:completed()
+    return ui.stone >= obj_count
+end
+function o3:completed()
+    return false
+end
+ui.objectives = {o1, o2, o3}
+
 rail_cost_stone = 2
 rail_cost_tree = 3
 
@@ -13,20 +28,31 @@ function getspr(spr)
 end
 
 function ui:refresh_objective()
-    self.objective = "connect paris to tokyo"
+    self.objective = nil
+    for i=1,#self.objectives do
+        if not self.objectives[i].done then
+            if self.objectives[i].completed() then
+                self.objectives[i].done = true
+            else
+                self.objective = self.objectives[i]
+                break
+            end
+        end
+    end
 end
 
 function ui:update()
     self:refresh_objective()
 end
 
-ui_col1 = 1
-ui_col2 = 2
+ui_col1 = 13
+ui_col2 = 1
 ui_text_col=7
+ui_text_col2=13
 
-function draw_small_icon(icon, dx, dy)
-    _x, _y = getspr(icon)
-    sspr(_x, _y, 8, 8, dx, dy, scale, scale)
+function draw_small_icon(__icon, __dx, __dy)
+    _x, _y = getspr(__icon)
+    sspr(_x, _y, 8, 8, __dx, __dy, scale, scale)
 end
 
 function ui:draw()
@@ -48,8 +74,17 @@ function ui:draw()
     print(self.coins, dx + scale + 1, dy, ui_text_col)
 
     -- objective
-    --draw_win(64, -1, 58, 8, 1, 2)
-    --print(self.objective, 65, 1, 7)
+    if self.objective then
+        xo = 60
+        ho = 14
+        if self.objective.t2 == 0 then
+            ho = 8
+        end
+        draw_win(xo, -1, 128-xo, ho, ui_col1, ui_col2)
+        draw_small_icon(self.objective.icon, xo+2, 1)
+        print(self.objective.t1, xo+2+6, 1, ui_text_col)
+        print(self.objective.t2, xo+2, 7, ui_text_col)
+    end
 end
 
 function ui:draw_build_rail(has_rsc)

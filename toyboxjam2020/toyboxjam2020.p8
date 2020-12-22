@@ -13,12 +13,15 @@ __lua__
 #include ../libs/tostring.p8
 
 #include anim.p8
-#include ui.p8
 #include city.p8
 #include world_item.p8
+-- after world_item for sprites
+#include ui.p8
 #include world.p8
 #include player.p8
 #include sfx.p8
+
+#include debug.p8
 
 -------------------------------
 function printo(str, x, y, c0, c1)
