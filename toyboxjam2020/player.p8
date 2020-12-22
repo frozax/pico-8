@@ -71,6 +71,19 @@ function player:update()
 
     -- check if on a buildable cell
     self.below_item = world.items[self.p.x\8][self.p.y\8]
+
+    if btnp(buttons.b1) then
+        cbr, has_rsc = self.below_item:can_build_rail()
+        printh("cbr"..tostring(cbr).." hasrsc"..tostring(has_rsc))
+        if cbr and has_rsc then
+            ui:spend_resource("tree", rail_cost_tree)
+            ui:spend_resource("stone", rail_cost_stone)
+            self.below_item:build_rail()
+            sfx_valid()
+        else
+            sfx_error()
+        end
+    end
 end
 
 function player:move(dir)
@@ -176,7 +189,7 @@ function player:draw()
     --for item in all(self:get_items_to_check(self.p, vec2(-1,-1))) do
     --    world:draw_item({type="debug",x=item.x, y=item.y})
     --end
-    self.below_item:draw(true)
+    --self.below_item:draw(true)
 
     -- DEBUG
     --self.anim = create_anim({218})

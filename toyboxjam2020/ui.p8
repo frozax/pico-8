@@ -79,3 +79,12 @@ function ui:add_resource(type, count)
         assert(false, "unknown resource "..type)
     end
 end
+
+function ui:spend_resource(type, count)
+    if type == "tree" then self.tree -= count
+    elseif type == "stone" then self.stone -= count
+    elseif type == "coins" then self.coins -= count
+    else
+        assert(false, "unknown resource "..type)
+    end
+end

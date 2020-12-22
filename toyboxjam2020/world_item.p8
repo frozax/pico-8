@@ -164,10 +164,16 @@ function create_item(infos)
     -- 1st one is true if we are on a proper cell to build
     -- 2nd one is true if we have enough resources
     function item:can_build_rail()
-        if self:left():is_rail() or self:top():is_rail() or self:bottom():is_rail() or self:right():is_rail() then
-            return true, false
+        if not self:is_rail() and not self:is_collidable() then
+            if self:left():is_rail() or self:top():is_rail() or self:bottom():is_rail() or self:right():is_rail() then
+                return true, ui.stone >= rail_cost_stone and ui.tree >= rail_cost_tree
+            end
         end
         return false, false
+    end
+
+    function item:build_rail()
+        self.type = "railh"
     end
 
     return item
