@@ -50,6 +50,19 @@ for s=1,(world.w*world.h)/10 do
     add(world.scenery, {spr=rnd(spr_scenery), x=rnd(world.w*8), y=rnd(world.h*8)})
 end
 
+world.cities = {}
+for c=1,5 do
+    city = create_city()
+    add(world.cities, city)
+    for x=0,city_w-1 do
+        for y=0,-(city_h-1),-1 do
+            item = city:gen_item(vec2(x,y))
+            printh(tostring(item))
+            world.items[item.x][item.y] = item
+        end
+    end
+end
+
 function world:update()
     -- if player is outside center square, shift the origin
     pp = player.p - vec2(player.size*0.5, player.size*0.5)
@@ -85,6 +98,7 @@ function world:draw()
 
     self:draw_scenery()
     self:draw_items()
+    self:draw_cities()
     --draw_test()
 end
 
@@ -116,33 +130,8 @@ function world:draw_items()
     end
 end
 
-function draw_test()
-    spr(spr_grass[1], 10, 10)
-    spr(spr_grass[2], 18, 10)
-    spr(spr_grass[3], 40, 10)
-    spr(spr_scenery[1], 20, 40)
-    spr(spr_scenery[2], 30, 40)
-    spr(spr_scenery[3], 40, 40)
-    spr(spr_tree, 40, 60)
-
-    spr(63, 10, 80)
-    spr(80, 20, 80)
-    spr(85, 30, 80)
-    spr(114, 40, 80)
-    spr(188, 50, 80)
-    spr(203, 60, 80)
-    spr(204, 70, 80)
-    spr(205, 80, 80)
-    spr(227, 90, 80)
-
-    spr(63, 10, 90)
-    palt(6, true)
-    spr(204, 10, 90)
-    palt(6, false)
-
-
-    spr(spr_tree, 30, 90)
-
-
-    --pal()
+function world:draw_cities()
+    for city in all(self.cities)do
+        city:draw()
+    end
 end

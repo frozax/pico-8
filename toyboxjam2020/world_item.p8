@@ -2,6 +2,12 @@ spr_tree = 32
 spr_stone = 63
 spr_coins = 48
 spr_stone_dmg = 204
+spr_rail_h = 37
+spr_clock = 171
+spr_house = 22
+spr_column = 55
+spr_gare_left = 119
+spr_gare_right = 121
 
 function create_item(infos)
     item = infos
@@ -19,6 +25,16 @@ function create_item(infos)
         function item:get_damage_state()
             return self.dmg \ 20
         end
+    end
+
+    function item:is_collidable()
+        return self.type == "stone" or self.type == "tree" or
+            self.type == "citypart" or self.type == "house" or
+            self.type == "gare_left" or self.type == "gare_right" or self.type == "gare_col"
+    end
+
+    function item:is_breakable()
+        return self.type == "stone" or self.type == "tree"
     end
 
     function item:draw()
@@ -71,6 +87,16 @@ function create_item(infos)
             x = (spr_tree % 16) * 8
             y = (spr_tree \ 16) * 8
             sspr(x, y+dmg, 8, 8-dmg, dx, dy+dmg)
+        elseif self.type == "railh" then
+            spr(spr_rail_h, dx, dy)
+        elseif self.type == "house" then
+            spr(spr_house, dx, dy)
+        elseif self.type == "gare_col" then
+            spr(spr_column, dx, dy)
+        elseif self.type == "gare_left" then
+            spr(spr_gare_left, dx, dy)
+        elseif self.type == "gare_right" then
+            spr(spr_gare_right, dx, dy)
         elseif self.type == "debug" then
             spr(196, dx, dy)
             print(self.x..self.y, dx+2, dy+2, 1)

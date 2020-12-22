@@ -136,9 +136,11 @@ function player:collide(old, dir)
     items = self:get_items_to_check(new, dir)
     minx, miny, maxx, maxy = self:get_bounds(new)
     for item in all(items)do
-        if item.type != nil then
-            if self.coll_item == nil then
-                self.coll_item = item
+        if item:is_collidable() then
+            if item:is_breakable() then
+                if self.coll_item == nil then
+                    self.coll_item = item
+                end
             end
             if dir.x > 0 and maxx >= item.x*8 then
                 maxnewx = (item.x * 8 - self.hsize)
