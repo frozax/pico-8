@@ -1,7 +1,7 @@
 world = {}
 
 -- always same city for now
-srand(1)
+srand(12)
 
 -- sprites stuff
 spr_grass = {10, 11, 12}
@@ -17,8 +17,11 @@ pal(new_green, old_green, 1)
 pal(old_green, hidden_pal_green, 1)
 
 -- gen world
-world.w = 48
-world.h = 48
+world.area_size = 20
+world.nb_area_w = 3
+world.nb_area_h = 2
+world.w = world.area_size * world.nb_area_w
+world.h = world.area_size * world.nb_area_h
 world.origin = vec2(0, 0) -- origin for draw
 world.min_origin = vec2(0, 0)
 world.max_origin = vec2(world.w * 8 - 128, world.h * 8 - 128)
@@ -84,7 +87,7 @@ for s=1,(world.w*world.h)/10 do
 end
 
 world.cities = {}
-cities_pos = {{1, 4}, {40, 9}, {8, 13}, {25, 26}, {40, 40}}
+cities_pos = {{1, 4}, {40, 9}, {8, 16}, {25, 26}, {40, 40}}
 for c=1,5 do
     city = create_city({x=cities_pos[c][1], y=cities_pos[c][2]})
     add(world.cities, city)

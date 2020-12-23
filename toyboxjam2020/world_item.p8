@@ -10,6 +10,10 @@ spr_house = 22
 spr_column = 55
 spr_gare_left = 119
 spr_gare_right = 121
+spr_loco_h = 40
+spr_loco_v = 41
+spr_wagon_h = 42
+spr_wagon_v = 43
 
 function create_item(infos)
     item = infos
@@ -175,7 +179,7 @@ function create_item(infos)
     end
 
     function item:bottom()
-        if self.y < world.w then
+        if self.y + 1 < world.h then
             return world.items[self.x][self.y+1]
         else
             return create_item({})
