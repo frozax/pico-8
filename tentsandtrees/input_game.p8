@@ -53,13 +53,13 @@ end
 function draw_input()
     top_left = vec2(game_level.origin.x + input.pos.x * cell_size,
         game_level.origin.y + input.pos.y * cell_size)
-    size = cell_size
+    size = cell_size-1
 
     if (flr(time() * 3.0) % 2) == 0 then
         c = 0
     else
         c = 7
+        --rect(top_left.x, top_left.y, top_left.x + size, top_left.y + size, c)
     end
-
-    rect(top_left.x, top_left.y, top_left.x + size, top_left.y + size, c)
+    rect(top_left.x+1, top_left.y+1, top_left.x + size, top_left.y + size, c)
 end

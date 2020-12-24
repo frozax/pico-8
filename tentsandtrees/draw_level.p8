@@ -43,11 +43,26 @@ function draw_cell_sprites(level)
         xs = level.origin.x + 1
         for x=1, level.size do
             stt = level:get_cell_state(x, y)
-            if stt == TE then
-                sspr(0, 0, cell_inner_size, cell_inner_size, xs, ys)
-            elseif stt == TR then
-                sspr(0, 11, cell_inner_size, tree_height, xs, ys + cell_inner_size - tree_height - 1)
+            anm = level:get_anim(x,y)
+            if anm != nil and anm.frames then
+                if anm.cur_frame < (#anm.frames*2) then
+                    anm.cur_frame += 1
+                end
+                if anm.cur_frame > 1 then
+                    anm.frame = anm.frames[anm.cur_frame \ 2]
+                    anm:draw(vec2(xs, ys))
+                end
             end
+            --if stt != UN then
+            --    if stt == TE then
+            --        anim = tent_show
+            --        tent_show.frame = tent_show.frames[4]
+            --    elseif stt == TR then
+            --        anim = tree_show
+            --        tree_show.frame = tree_show.frames[4]
+            --    end
+            --    anim:draw(vec2(xs, ys))
+            --end
             xs += cell_size
         end
         ys += cell_size

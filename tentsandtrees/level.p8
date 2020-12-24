@@ -1,16 +1,20 @@
 -- remove tents and grass
 function _reset_state(level, clear)
     level.state = {}
+    level.anims = {}
     for y=1,#level.def do
         row = {}
+        row_anim = {}
         for x=1,#level.def[y] do
             stt = level.def[y][x]
             if (stt == TE or stt == GR) and clear then
                 stt = UN
             end
             add(row, stt)
+            add(row_anim, {})
         end
         add(level.state, row)
+        add(level.anims, row_anim)
     end
 end
 
@@ -52,13 +56,39 @@ function load_level_from_def(ldef, reset)
     end
     _reset_state(level, clear)
 
+    function level:launch_start_anim()
+        for y=1,self.size do
+            for x=1,self.size do
+                if self:get_cell_state(x, y) == TR then
+                    self:set_cell_state(x, y, TR)
+                end
+            end
+        end
+    end
+
     function level:get_expected_state(x, y) -- lua: index is 1-based
         return self.def[y][x]
     end
     function level:get_cell_state(x, y) -- lua: index is 1-based
         return self.state[y][x]
     end
+    function level:get_anim(x, y) -- lua: index is 1-based
+        return self.anims[y][x]
+    end
     function level:set_cell_state(x, y, stt) -- lua: index is 1-based
+        old = self.state[y][x]
+        if stt == TE then
+            self.anims[y][x] = create_anim(tent_show)
+            self.anims[y][x].cur_frame = 1
+        elseif stt == TR then
+            self.anims[y][x] = create_anim(tree_show)
+            self.anims[y][x].cur_frame = flr(rnd(9)) - 11
+        elseif old == TE then
+            self.anims[y][x] = create_anim(tent_hide)
+            self.anims[y][x].cur_frame = 1
+        else
+            self.anims[y][x] = {}
+        end
         self.state[y][x] = stt
     end
     function level:get_cell_bg_color(x, y) -- lua: index is 1-based
@@ -138,13 +168,15 @@ function load_level_from_def(ldef, reset)
     end
 
     function level:draw()
-        draw_grid(self)
+        --draw_grid(self)
         if self.show_numbers then
             draw_numbers(self)
         end
         draw_cell_bgs(self)
         draw_cell_sprites(self)
     end
+
+    level:launch_start_anim()
 
     return level
 end
