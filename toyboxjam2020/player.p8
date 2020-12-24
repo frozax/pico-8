@@ -79,8 +79,9 @@ function player:update()
         if cbr and has_rsc then
             ui:spend_resource("tree", rail_cost_tree)
             ui:spend_resource("stone", rail_cost_stone)
-            self.below_item:build_rail()
+            self.below_item:set_rail()
             sfx_build_rail()
+            world:refresh_connections()
         else
             sfx_error()
         end

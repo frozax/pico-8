@@ -11,8 +11,8 @@ __lua__
 #include ../libs/colors.p8
 #include ../libs/fps.p8
 #include ../libs/tostring.p8
+#include ../libs/anim.p8
 
-#include anim.p8
 #include city.p8
 #include world_item.p8
 -- after world_item for sprites
@@ -51,7 +51,7 @@ function _draw()
 end
 
 function _init()
-    music(0)
+    --music(0)
 end
 
 __gfx__

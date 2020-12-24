@@ -87,17 +87,31 @@ for s=1,(world.w*world.h)/10 do
 end
 
 world.cities = {}
-cities_pos = {{1, 4}, {40, 9}, {8, 16}, {25, 26}, {40, 40}}
+fc = {3, 7}
+cities_pos = {fc, {40, 9}, {10, 16}, {25, 26}, {40, 40}}
 for c=1,5 do
     city = create_city({x=cities_pos[c][1], y=cities_pos[c][2]})
     add(world.cities, city)
     for x=0,city_w-1 do
         for y=0,-(city_h-1),-1 do
             item = city:gen_item(vec2(x,y))
+            --del world.items[item.x][item.y].type
+            if item.x == 2 then
+                printh(tostring(item))
+            end
             world.items[item.x][item.y] = item
         end
     end
 end
+
+-- place rails
+world.items[fc[1]-1][fc[2]]:set_rail()
+world.items[fc[1]-2][fc[2]]:set_rail()
+world.items[fc[1]-2][fc[2]-1]:set_rail()
+world.items[fc[1]-2][fc[2]-2]:set_rail()
+world.items[fc[1]-2][fc[2]-3]:set_rail()
+world.items[fc[1]-2][fc[2]-3].type = "entrepot"
+--world.items[fc[1]-2][fc[2]-4].type = "entrepot_hammer"
 
 function world:update()
     -- if player is outside center square, shift the origin
@@ -172,4 +186,8 @@ function world:draw_cities()
     for city in all(self.cities)do
         city:draw()
     end
+end
+
+function world:refresh_connections()
+    
 end

@@ -74,6 +74,7 @@ function create_anim(frames, flips_x, flips_y)
     end
 
     function anim:draw(p)
+        --printh(tostring(self))
         sspr(self.frame.x, self.frame.y, self.frame.w, self.frame.h, p.x, p.y, self.frame.w, self.frame.h, self.flip_x, self.flip_y)
     end
 

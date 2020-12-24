@@ -4,6 +4,8 @@ spr_coins = 128
 spr_stone_dmg = 204
 spr_rail_h = 37
 spr_rail_v = 36
+spr_entrepot = 190
+spr_hammer = 28
 spr_rail_corner = 39
 spr_clock = 171
 spr_house = 22
@@ -36,7 +38,8 @@ function create_item(infos)
     function item:is_collidable()
         return self.type == "stone" or self.type == "tree" or
             self.type == "citypart" or self.type == "house" or
-            self.type == "gare_left" or self.type == "gare_right" or self.type == "gare_col"
+            self.type == "gare_left" or self.type == "gare_right" or self.type == "gare_col" or
+            self.type == "entrepot"
     end
 
     function item:is_breakable()
@@ -139,6 +142,11 @@ function create_item(infos)
                 s = spr_rail_h
             end
             spr(s, dx, dy, 1, 1, flipx, flipy)
+        elseif self.type == "entrepot_hammer" then
+            spr(spr_hammer, dx, dy)
+        elseif self.type == "entrepot" then
+            spr(spr_rail_v, dx, dy)
+            spr(spr_entrepot, dx, dy)
         elseif self.type == "house" then
             spr(spr_house, dx, dy)
         elseif self.type == "gare_col" then
@@ -158,7 +166,7 @@ function create_item(infos)
         if self.x+1 < world.w then
             return world.items[self.x+1][self.y]
         else
-            return create_item({})
+            return create_item({x=self.x+1,y=self.y})
         end
     end
 
@@ -166,7 +174,7 @@ function create_item(infos)
         if self.x > 0 then
             return world.items[self.x-1][self.y]
         else
-            return create_item({})
+            return create_item({x=self.x-1,y=self.y})
         end
     end
 
@@ -174,7 +182,7 @@ function create_item(infos)
         if self.y > 0 then
             return world.items[self.x][self.y-1]
         else
-            return create_item({})
+            return create_item({x=self.x,y=self.y-1})
         end
     end
 
@@ -182,12 +190,21 @@ function create_item(infos)
         if self.y + 1 < world.h then
             return world.items[self.x][self.y+1]
         else
-            return create_item({})
+            return create_item({x=self.x,y=self.y+1})
         end
     end
 
     function item:is_rail()
         return self.type == "rail"
+    end
+    
+    function item:nb_rails_nb()
+        _nb = 0
+        if self:left():is_rail() then _nb+=1 end
+        if self:right():is_rail() then _nb+=1 end
+        if self:bottom():is_rail() then _nb+=1 end
+        if self:top():is_rail() then _nb+=1 end
+        return _nb
     end
 
     -- returns true/false,true/false
@@ -195,14 +212,25 @@ function create_item(infos)
     -- 2nd one is true if we have enough resources
     function item:can_build_rail()
         if not self:is_rail() and not self:is_collidable() then
-            if self:left():is_rail() or self:top():is_rail() or self:bottom():is_rail() or self:right():is_rail() then
+            -- rail is possible if after placing it, nobody will have 3 nb with rails
+            il = self:left():is_rail()
+            it = self:top():is_rail()
+            ib = self:bottom():is_rail()
+            ir = self:right():is_rail()
+            l = self:left():nb_rails_nb()
+            t = self:top():nb_rails_nb()
+            b = self:bottom():nb_rails_nb()
+            r = self:right():nb_rails_nb()
+            if (l < 2 and t < 2 and b < 2 and r < 2) and
+            (ir or il or it or ib) then
+                printh("l"..l.."r"..r.."t"..t.."b"..b)
                 return true, ui.stone >= rail_cost_stone and ui.tree >= rail_cost_tree
             end
         end
         return false, false
     end
 
-    function item:build_rail()
+    function item:set_rail()
         self.type = "rail"
     end
 
