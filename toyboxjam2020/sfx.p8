@@ -14,6 +14,10 @@ function sfx_gather_tree()
     sfx(7)
 end
 
+function sfx_spawn_coins()
+    sfx_gather_coins()
+end
+
 function sfx_gather_coins()
     sfx(33)
 end

@@ -9,7 +9,7 @@ o1={icon=spr_tree,t1="gather "..obj_count,t2="trees"}
 o2={icon=spr_stone,t1="gather "..obj_count,t2="stones"}
 o3={icon=spr_rail_h,t1="connect paris",t2="to tokyo"}
 o4={icon=spr_loco_h,t1="drive the",t2="train to tokyo"}
-o5={icon=spr_coins,t1="earn "..coins_count.. "coins"}
+o5={icon=spr_coins,t1="earn "..coins_count.. " coins",t2=""}
 o6={icon=spr_coins,t1="unlock a new",t2="area"}
 function o1:completed()
     return ui.tree >= obj_count
@@ -97,7 +97,7 @@ function ui:draw()
     end
 
     cbr, has_rsc = player.below_item:can_build_rail()
-    cel = train:can_enter_loco(player.below_item)
+    cel = train:can_enter_loco(player.p)
     cll = train:can_leave_loco(player.below_item)
     if cbr then
         self:draw_build_rail(has_rsc)

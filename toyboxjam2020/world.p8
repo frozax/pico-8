@@ -90,7 +90,7 @@ function world:init()
     world.cities = {}
     first_city = vec2(3, 7)
     fc = {first_city.x, first_city.y}
-    cities_pos = {fc, {40, 9}, {10, 16}, {25, 26}, {40, 40}}
+    cities_pos = {fc, {40, 9}, {10, 16}, {25, 26}, {40, 38}}
     for c=1,5 do
         city = create_city({x=cities_pos[c][1], y=cities_pos[c][2]})
         add(world.cities, city)

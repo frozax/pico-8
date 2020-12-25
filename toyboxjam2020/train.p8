@@ -21,13 +21,13 @@ function train:init()
 end
 
 function train:update()
-    self.speed *= 0.85
+    self.speed *= 0.9
     if abs(self.speed) <= 0.01 then
         self.speed = 0
     else
         -- advance!
         self.pp += self.speed
-        if self.pp < 0 then self.pp = 0 end
+        self.pp=max(self.pp,(self.wagons+2)*8)
         if self.pp > self.max_pp then self.pp = self.max_pp end
     end
 
@@ -55,22 +55,26 @@ function train:update()
         end
     end
 
+    c = self:get_start_loco_cell()
+    addx,addy = self:compute_addxy(c)
+    self.start_loco_pos = vec2(c.x*8+addx,c.y*8+addy)
+    c = self:get_end_loco_cell()
+    addx,addy = self:compute_addxy(c)
+    self.end_loco_pos = vec2(c.x*8+addx,c.y*8+addy)
+
     if self:is_player_in_loco() then
-        c = self:get_start_loco_cell()
-        if self.state == "drive_end" then
-            c = self:get_end_loco_cell()
-        end
-        addx,addy = self:compute_addxy()
-        player.p = vec2(c.x*8+player.hsize+addx, c.y*8+player.hsize+addy)
+        p = self.start_loco_pos
+        if self.state == "drive_end" then p=self.end_loco_pos end
+        player.p = vec2(p.x+player.hsize, p.y+player.hsize)
     end
 end
 
-function train:compute_addxy()
+function train:compute_addxy(_cell)
     addx,addy=0,0
-    if cell.next_rail == cell:top() then addy-=self.inner_pp
-    elseif cell.next_rail == cell:bottom() then addy+=self.inner_pp
-    elseif cell.next_rail == cell:left() then addx-=self.inner_pp
-    elseif cell.next_rail == cell:right() then addx+=self.inner_pp end
+    if _cell.next_rail == _cell:top() then addy-=self.inner_pp
+    elseif _cell.next_rail == _cell:bottom() then addy+=self.inner_pp
+    elseif _cell.next_rail == _cell:left() then addx-=self.inner_pp
+    elseif _cell.next_rail == _cell:right() then addx+=self.inner_pp end
     return addx,addy
 end
 
@@ -95,7 +99,7 @@ function train:draw()
                 s = spr_wagon_v
             end
         end
-        addx,addy=self:compute_addxy()
+        addx,addy=self:compute_addxy(cell)
         spr(s, cell.x*8-world.origin.x+addx, cell.y*8-world.origin.y+addy,1,1,flipx,flipy)
         --printh(cell.prev_rail)
         if not cell.prev_rail then
@@ -117,12 +121,14 @@ function train:get_end_loco_cell()
     return c
 end
 
-function train:can_enter_loco(cell)
+loco_enter_dist=5
+function train:can_enter_loco(pos)
     if self:is_player_in_loco() then
         return false
     end
-    if cell == self:get_start_loco_cell() or
-        cell == self:get_end_loco_cell() then
+    local pos = pos - vec2(player.hsize, player.hsize)
+    if #(pos-self.start_loco_pos) < loco_enter_dist or
+         #(pos-self.end_loco_pos) < loco_enter_dist then
         return true
     end
     return false
@@ -136,10 +142,11 @@ function train:leave_loco()
     self.state = "stop"
 end
 
-function train:enter_loco(cell)
-    if cell == self:get_start_loco_cell() then
+function train:enter_loco(pos)
+    local pos = pos - vec2(player.hsize, player.hsize)
+    if #(pos-self.start_loco_pos) < loco_enter_dist then
         self.state = "drive_start"
-    elseif cell == self:get_end_loco_cell() then
+    elseif #(pos-self.end_loco_pos) < loco_enter_dist then
         self.state = "drive_end"
     end
 end

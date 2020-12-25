@@ -78,7 +78,7 @@ function player:update()
 
     if btnp(buttons.b1) then
         cbr, has_rsc = self.below_item:can_build_rail()
-        cel = train:can_enter_loco(self.below_item)
+        cel = train:can_enter_loco(self.p)
         iil = train:is_player_in_loco()
         if cbr and has_rsc then
             ui:spend_resource("tree", rail_cost_tree)
@@ -87,7 +87,7 @@ function player:update()
             sfx_build_rail()
             world:refresh_connections()
         elseif cel then
-            train:enter_loco(self.below_item)
+            train:enter_loco(self.p)
         elseif iil then
             train:advance()
         else

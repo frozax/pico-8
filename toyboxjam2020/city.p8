@@ -72,7 +72,7 @@ function create_city(position)
     end
 
     function city:spawn_coins()
-        printh("spawn coins")
+        sfx_spawn_coins()
         for x=self.x,self.x+3 do
             i = world.items[x][self.y-2]
             printh(i.type)
