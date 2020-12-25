@@ -71,5 +71,16 @@ function create_city(position)
         return create_item({x=x,y=y,city=self})
     end
 
+    function city:spawn_coins()
+        printh("spawn coins")
+        for x=self.x,self.x+3 do
+            i = world.items[x][self.y-2]
+            printh(i.type)
+            if i.type == nil or i.type == "" then
+                world.items[x][self.y-2] = create_item({x=x,y=self.y-2,type="coins",amount=25})
+            end
+        end
+    end
+
     return city
 end

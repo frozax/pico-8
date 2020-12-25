@@ -9,7 +9,8 @@ o1={icon=spr_tree,t1="gather "..obj_count,t2="trees"}
 o2={icon=spr_stone,t1="gather "..obj_count,t2="stones"}
 o3={icon=spr_rail_h,t1="connect paris",t2="to tokyo"}
 o4={icon=spr_loco_h,t1="drive the",t2="train to tokyo"}
-o5={icon=spr_coins,t1="earn "..coins_count,t2="coins"}
+o5={icon=spr_coins,t1="earn "..coins_count.. "coins"}
+o6={icon=spr_coins,t1="unlock a new",t2="area"}
 function o1:completed()
     return ui.tree >= obj_count
 end
@@ -94,6 +95,17 @@ function ui:draw()
         print(self.objective.t1, xo+2+6, 1, ui_text_col)
         print(self.objective.t2, xo+2, 7, ui_text_col)
     end
+
+    cbr, has_rsc = player.below_item:can_build_rail()
+    cel = train:can_enter_loco(player.below_item)
+    cll = train:can_leave_loco(player.below_item)
+    if cbr then
+        self:draw_build_rail(has_rsc)
+    elseif cel then
+        self:draw_enter_loco()
+    elseif cll then
+        self:draw_use_loco()
+    end
 end
 
 function ui:draw_build_rail(has_rsc)
@@ -113,6 +125,22 @@ function ui:draw_build_rail(has_rsc)
     draw_small_icon(spr_stone, x, y+8)
     if rail_cost_stone <= self.stone then c = enough_col else c = not_enough_col end
     print(rail_cost_stone, x+6, y+8, c)
+end
+
+function ui:draw_enter_loco()
+    y = 7
+    draw_win(-1, y, 30, 14, ui_col1, ui_col2)
+    print("\x8eenter", 1, y+2, ui_text_col)
+    draw_small_icon(spr_loco_h, 21, y+8)
+    print("train", 1, y+8)
+end
+
+function ui:draw_use_loco()
+    y = 7
+    draw_win(-1, y, 42, 14, ui_col1, ui_col2)
+    print("\x8espeed up", 1, y+2, ui_text_col)
+    print("\x97leave", 1, y+8, ui_text_col)
+    --draw_small_icon(spr_loco_h, 21, y+8)
 end
 
 function ui:add_resource(type, count)

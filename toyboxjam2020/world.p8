@@ -1,7 +1,7 @@
 world = {}
 
 -- always same city for now
-srand(12)
+srand(14)
 
 -- sprites stuff
 spr_grass = {10, 11, 12}
@@ -88,7 +88,8 @@ function world:init()
     end
 
     world.cities = {}
-    fc = {3, 7}
+    first_city = vec2(3, 7)
+    fc = {first_city.x, first_city.y}
     cities_pos = {fc, {40, 9}, {10, 16}, {25, 26}, {40, 40}}
     for c=1,5 do
         city = create_city({x=cities_pos[c][1], y=cities_pos[c][2]})
@@ -96,23 +97,19 @@ function world:init()
         for x=0,city_w-1 do
             for y=0,-(city_h-1),-1 do
                 item = city:gen_item(vec2(x,y))
-                --del world.items[item.x][item.y].type
-                if item.x == 2 then
-                    printh(tostring(item))
-                end
                 world.items[item.x][item.y] = item
             end
         end
     end
 
     -- place rails
-    self.train_start=vec2(fc[1]-2, fc[2]-3)
     world.items[fc[1]-1][fc[2]]:set_rail()
     world.items[fc[1]-2][fc[2]]:set_rail()
     world.items[fc[1]-2][fc[2]-1]:set_rail()
     world.items[fc[1]-2][fc[2]-2]:set_rail()
     world.items[fc[1]-2][fc[2]-3]:set_rail()
     world.items[fc[1]-2][fc[2]-3].type = "entrepot"
+    self.rail_start=vec2(fc[1]-2, fc[2]-3)
     --world.items[fc[1]-2][fc[2]-4].type = "entrepot_hammer"
     world:refresh_connections()
 end
@@ -192,9 +189,14 @@ function world:draw_cities()
     end
 end
 
+function world:get_rail_start_cell()
+    return self.items[self.rail_start.x][self.rail_start.y]
+end
+
 function world:refresh_connections()
     self.connected_cities = {}
-    c = self.items[self.train_start.x][self.train_start.y]
+    c = self:get_rail_start_cell()
+    nbcells = 0
     last_c = {}
     while(true) do
         if c:top():is_rail() and c:top() != last_c then
@@ -212,6 +214,10 @@ function world:refresh_connections()
         else
             break
         end
+        -- write linked list
+        c.prev_rail = last_c
+        last_c.next_rail = c
+        nbcells += 1
         if c.city then
             -- add if not inside
             if not array_contains(self.connected_cities, c.city.name) then
@@ -219,5 +225,6 @@ function world:refresh_connections()
             end
         end
     end
-    printh("connected_cities="..tostring(self.connected_cities))
+    train.max_pp = 8*nbcells
+    printh("connected_cities="..tostring(self.connected_cities).." nbcells="..nbcells)
 end

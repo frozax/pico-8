@@ -22,51 +22,53 @@ player.destroy = player.destroy_down
 player.idle = player.idle_down
 
 function player:update()
-    dir = vec2(0, 0)
-    if btn(buttons.left) then
-        dir.x = -1
-        self.anim = self.walk_left
-        self.idle = self.idle_left
-        self.destroy = self.destroy_left
-    end
-    if btn(buttons.right) then
-        dir.x = 1
-        self.anim = self.walk_right
-        self.idle = self.idle_right
-        self.destroy = self.destroy_right
-    end
-    if btn(buttons.up) then
-        dir.y = -1
-        self.anim = self.walk_up
-        self.idle = self.idle_up
-        self.destroy = self.destroy_up
-    end
-    if btn(buttons.down) then
-        dir.y = 1
-        self.anim = self.walk_down
-        self.idle = self.idle_down
-        self.destroy = self.destroy_down
-    end
-    if #dir == 0 then
-        self.anim = self.idle
-    else
-        dir = (self.speed / #dir) * dir
-        self.coll_item = nil
-        dirx = self:collide(self.p, vec2(dir.x, 0))
-        diry = self:collide(self.p, vec2(0, dir.y))
-        dir.x = dirx.x
-        dir.y = diry.y
-        self:move(dir)
+    if not train:is_player_in_loco() then
+        dir = vec2(0, 0)
+        if btn(buttons.left) then
+            dir.x = -1
+            self.anim = self.walk_left
+            self.idle = self.idle_left
+            self.destroy = self.destroy_left
+        end
+        if btn(buttons.right) then
+            dir.x = 1
+            self.anim = self.walk_right
+            self.idle = self.idle_right
+            self.destroy = self.destroy_right
+        end
+        if btn(buttons.up) then
+            dir.y = -1
+            self.anim = self.walk_up
+            self.idle = self.idle_up
+            self.destroy = self.destroy_up
+        end
+        if btn(buttons.down) then
+            dir.y = 1
+            self.anim = self.walk_down
+            self.idle = self.idle_down
+            self.destroy = self.destroy_down
+        end
+        if #dir == 0 then
+            self.anim = self.idle
+        else
+            dir = (self.speed / #dir) * dir
+            self.coll_item = nil
+            dirx = self:collide(self.p, vec2(dir.x, 0))
+            diry = self:collide(self.p, vec2(0, dir.y))
+            dir.x = dirx.x
+            dir.y = diry.y
+            self:move(dir)
 
-        if self.coll_item != nil then
-            self.anim = self.destroy
-            old_ds = self.coll_item:get_damage_state()
-            self.coll_item:damage()
-            new_ds = self.coll_item:get_damage_state()
-            if old_ds != new_ds then
-                ui:add_resource(self.coll_item.type, 2)
-                if self.coll_item.type == "stone" then sfx_gather_stone() end
-                if self.coll_item.type == "tree" then sfx_gather_tree() end
+            if self.coll_item != nil then
+                self.anim = self.destroy
+                old_ds = self.coll_item:get_damage_state()
+                self.coll_item:damage()
+                new_ds = self.coll_item:get_damage_state()
+                if old_ds != new_ds then
+                    ui:add_resource(self.coll_item.type, 2)
+                    if self.coll_item.type == "stone" then sfx_gather_stone() end
+                    if self.coll_item.type == "tree" then sfx_gather_tree() end
+                end
             end
         end
     end
@@ -76,15 +78,32 @@ function player:update()
 
     if btnp(buttons.b1) then
         cbr, has_rsc = self.below_item:can_build_rail()
+        cel = train:can_enter_loco(self.below_item)
+        iil = train:is_player_in_loco()
         if cbr and has_rsc then
             ui:spend_resource("tree", rail_cost_tree)
             ui:spend_resource("stone", rail_cost_stone)
             self.below_item:set_rail()
             sfx_build_rail()
             world:refresh_connections()
+        elseif cel then
+            train:enter_loco(self.below_item)
+        elseif iil then
+            train:advance()
         else
             sfx_error()
         end
+    end
+    if btnp(buttons.b2) then
+        cll = train:can_leave_loco()
+        if cll then
+            train:leave_loco()
+        end
+    end
+    if self.below_item.type == "coins" then
+        sfx_gather_coins()
+        ui:add_resource("coins", self.below_item.amount)
+        self.below_item.type = ""
     end
 end
 
@@ -198,17 +217,15 @@ function player:draw()
     self.anim:update()
     --pal(2, 12)
     --pal(14, 1)
-    self.anim:draw(self.p - world.origin - vec2(self.hsize, self.hsize))
+    if not train:is_player_in_loco() then
+        self.anim:draw(self.p - world.origin - vec2(self.hsize, self.hsize))
+    end
     --print(tostring(self.p), 1, 10, 7)
     --print(flr((self.p.x-self.hsize)/8).." "..flr((self.p.y-self.hsize)/8), 1, 20, 7)
     --if self.coll_item != nil then
     --    item = create_item({type="debug",x=self.coll_item.x, y=self.coll_item.y})
     --    item:draw()
     --end
-    cbr, has_rsc = self.below_item:can_build_rail()
-    if cbr then
-        ui:draw_build_rail(has_rsc)
-    end
 
     --minx, miny, maxx, maxy = self:get_bounds(self.p)
     --rect(minx, miny, maxx, maxy, 7)

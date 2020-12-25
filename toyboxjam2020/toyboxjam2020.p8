@@ -63,6 +63,7 @@ end
 function _init()
     world:init()
     train:init()
+    debug:init()
     --music(0)
 end
 

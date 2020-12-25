@@ -14,7 +14,7 @@ function sfx_gather_tree()
     sfx(7)
 end
 
-function sfx_gather_coin()
+function sfx_gather_coins()
     sfx(33)
 end
 

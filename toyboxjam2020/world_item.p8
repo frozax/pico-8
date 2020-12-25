@@ -1,6 +1,7 @@
 spr_tree = 32
 spr_stone = 63
 spr_coins = 128
+spr_coins2 = 129
 spr_stone_dmg = 204
 spr_rail_h = 37
 spr_rail_v = 36
@@ -155,6 +156,10 @@ function create_item(infos)
             spr(spr_gare_left, dx, dy)
         elseif self.type == "gare_right" then
             spr(spr_gare_right, dx, dy)
+        elseif self.type == "coins" then
+            s = flr(time()*8) % 2 + spr_coins
+            flipx = flr(time()*8)%4 < 2
+            spr(s, dx, dy, 1, 1, flipx)
         end
         if debug then
             spr(196, dx, dy)
