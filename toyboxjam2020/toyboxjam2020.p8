@@ -5,6 +5,13 @@ __lua__
 -- by frozax
 -- for toy box jam 2
 
+-- TODO
+-- DRAW AND DRIVE TRAIN
+-- EARN MONEY BY DRIVING
+-- PURCHASE MORE LAND
+-- BONUS: INCREASE WAGONS
+-- BONUS: ??
+
 #include ../libs/vec2.p8
 #include ../libs/util.p8
 #include ../libs/buttons.p8
@@ -13,6 +20,7 @@ __lua__
 #include ../libs/tostring.p8
 #include ../libs/anim.p8
 
+#include train.p8
 #include city.p8
 #include world_item.p8
 -- after world_item for sprites
@@ -35,6 +43,7 @@ end
 
 function _update()
     anims:update()
+    train:update()
     -- draw player before to center the world properly
     player:update()
     world:update()
@@ -43,6 +52,7 @@ end
 
 function _draw()
     world:draw()
+    train:draw()
     --world:debug()
     ui:draw()
     player:draw()
@@ -51,6 +61,8 @@ function _draw()
 end
 
 function _init()
+    world:init()
+    train:init()
     --music(0)
 end
 

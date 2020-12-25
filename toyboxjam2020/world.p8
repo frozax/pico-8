@@ -27,91 +27,95 @@ world.min_origin = vec2(0, 0)
 world.max_origin = vec2(world.w * 8 - 128, world.h * 8 - 128)
 world.border = 40
 
--- items on specific cells with collisions
-world.items = {}        
-for x=0,world.w-1 do
-    col = {}
-    for y=0,world.h-1 do
-        r = flr(rnd(100))
-        -- TODO REMOVE
-        --r = 100
-        --if x < 4 and (y > 2 and y < 10) then r = 9 end
-        --if x > 8 and (y > 2 and y < 10) then r = 4 end
-        --if x == 6 and y == 4 then r = 4 end
-        --if r < 5 then
-        --    item = create_item({type="tree",x=x,y=y})
-        --elseif r < 10 then
-        --    item = create_item({type="stone",x=x,y=y})
-        --else
-        --    item = create_item({x=x,y=y})
-        --end
-        col[y]=create_item({x=x,y=y})
+function world:init()
+    -- items on specific cells with collisions
+    world.items = {}        
+    for x=0,world.w-1 do
+        col = {}
+        for y=0,world.h-1 do
+            r = flr(rnd(100))
+            -- TODO REMOVE
+            --r = 100
+            --if x < 4 and (y > 2 and y < 10) then r = 9 end
+            --if x > 8 and (y > 2 and y < 10) then r = 4 end
+            --if x == 6 and y == 4 then r = 4 end
+            --if r < 5 then
+            --    item = create_item({type="tree",x=x,y=y})
+            --elseif r < 10 then
+            --    item = create_item({type="stone",x=x,y=y})
+            --else
+            --    item = create_item({x=x,y=y})
+            --end
+            col[y]=create_item({x=x,y=y})
+        end
+        world.items[x]=col
     end
-    world.items[x]=col
-end
 
--- create quarry and forests
-nbs = 16
-for i=1,nbs*2 do
-    if i % 2 == 0 then t = "tree" else t = "stone" end
-    rshape = (i \ 2) % nbs
-    if rshape == 0 then
-        shape = {{1, 1, 1},{1,1,1}}
-    elseif rshape == 1 then
-        shape = {{1, 0, 1, 1},{1, 1, 1, 0}, {0, 1, 1, 0}}
-    elseif rshape == 2 then
-        shape = {{0, 1, 1, 1, 0}, {1, 1, 1, 1, 0}, {1, 1, 1, 1, 1}, {0, 1, 1, 1, 1}, {1, 1, 1, 0, 0}}
-    elseif rshape == 3 then
-        shape = {{0, 1, 1}, {1, 1, 1}, {0, 1, 1}}
-    elseif rshape == 4 then
-        shape = {{0, 1, 1, 0}, {0, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 0, 0}}
-    end
-    xw = flr(rnd(world.w))
-    yw = flr(rnd(world.h))
-    for y=1,#shape do
-        for x=1,#shape[y] do
-            ix = x+xw-1
-            iy = y+yw-1
-            if ix >= 0 and ix < world.w and iy >= 0 and iy < world.h and
-                shape[y][x] == 1 then
-                world.items[ix][iy] = create_item({type=t,x=ix,y=iy})
+    -- create quarry and forests
+    nbs = 16
+    for i=1,nbs*2 do
+        if i % 2 == 0 then t = "tree" else t = "stone" end
+        rshape = (i \ 2) % nbs
+        if rshape == 0 then
+            shape = {{1, 1, 1},{1,1,1}}
+        elseif rshape == 1 then
+            shape = {{1, 0, 1, 1},{1, 1, 1, 0}, {0, 1, 1, 0}}
+        elseif rshape == 2 then
+            shape = {{0, 1, 1, 1, 0}, {1, 1, 1, 1, 0}, {1, 1, 1, 1, 1}, {0, 1, 1, 1, 1}, {1, 1, 1, 0, 0}}
+        elseif rshape == 3 then
+            shape = {{0, 1, 1}, {1, 1, 1}, {0, 1, 1}}
+        elseif rshape == 4 then
+            shape = {{0, 1, 1, 0}, {0, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 0, 0}}
+        end
+        xw = flr(rnd(world.w))
+        yw = flr(rnd(world.h))
+        for y=1,#shape do
+            for x=1,#shape[y] do
+                ix = x+xw-1
+                iy = y+yw-1
+                if ix >= 0 and ix < world.w and iy >= 0 and iy < world.h and
+                    shape[y][x] == 1 then
+                    world.items[ix][iy] = create_item({type=t,x=ix,y=iy})
+                end
             end
         end
     end
-end
 
--- scenery, can be placed anywhere, no collision
-world.scenery = {}
-for s=1,(world.w*world.h)/10 do
-    add(world.scenery, {spr=rnd(spr_scenery), x=rnd(world.w*8), y=rnd(world.h*8)})
-end
+    -- scenery, can be placed anywhere, no collision
+    world.scenery = {}
+    for s=1,(world.w*world.h)/10 do
+        add(world.scenery, {spr=rnd(spr_scenery), x=rnd(world.w*8), y=rnd(world.h*8)})
+    end
 
-world.cities = {}
-fc = {3, 7}
-cities_pos = {fc, {40, 9}, {10, 16}, {25, 26}, {40, 40}}
-for c=1,5 do
-    city = create_city({x=cities_pos[c][1], y=cities_pos[c][2]})
-    add(world.cities, city)
-    for x=0,city_w-1 do
-        for y=0,-(city_h-1),-1 do
-            item = city:gen_item(vec2(x,y))
-            --del world.items[item.x][item.y].type
-            if item.x == 2 then
-                printh(tostring(item))
+    world.cities = {}
+    fc = {3, 7}
+    cities_pos = {fc, {40, 9}, {10, 16}, {25, 26}, {40, 40}}
+    for c=1,5 do
+        city = create_city({x=cities_pos[c][1], y=cities_pos[c][2]})
+        add(world.cities, city)
+        for x=0,city_w-1 do
+            for y=0,-(city_h-1),-1 do
+                item = city:gen_item(vec2(x,y))
+                --del world.items[item.x][item.y].type
+                if item.x == 2 then
+                    printh(tostring(item))
+                end
+                world.items[item.x][item.y] = item
             end
-            world.items[item.x][item.y] = item
         end
     end
-end
 
--- place rails
-world.items[fc[1]-1][fc[2]]:set_rail()
-world.items[fc[1]-2][fc[2]]:set_rail()
-world.items[fc[1]-2][fc[2]-1]:set_rail()
-world.items[fc[1]-2][fc[2]-2]:set_rail()
-world.items[fc[1]-2][fc[2]-3]:set_rail()
-world.items[fc[1]-2][fc[2]-3].type = "entrepot"
---world.items[fc[1]-2][fc[2]-4].type = "entrepot_hammer"
+    -- place rails
+    self.train_start=vec2(fc[1]-2, fc[2]-3)
+    world.items[fc[1]-1][fc[2]]:set_rail()
+    world.items[fc[1]-2][fc[2]]:set_rail()
+    world.items[fc[1]-2][fc[2]-1]:set_rail()
+    world.items[fc[1]-2][fc[2]-2]:set_rail()
+    world.items[fc[1]-2][fc[2]-3]:set_rail()
+    world.items[fc[1]-2][fc[2]-3].type = "entrepot"
+    --world.items[fc[1]-2][fc[2]-4].type = "entrepot_hammer"
+    world:refresh_connections()
+end
 
 function world:update()
     -- if player is outside center square, shift the origin
@@ -189,5 +193,31 @@ function world:draw_cities()
 end
 
 function world:refresh_connections()
-    
+    self.connected_cities = {}
+    c = self.items[self.train_start.x][self.train_start.y]
+    last_c = {}
+    while(true) do
+        if c:top():is_rail() and c:top() != last_c then
+            last_c = c
+            c = c:top()
+        elseif c:bottom():is_rail() and c:bottom() != last_c then
+            last_c = c
+            c = c:bottom()
+        elseif c:left():is_rail() and c:left() != last_c then
+            last_c = c
+            c = c:left()
+        elseif c:right():is_rail() and c:right() != last_c then
+            last_c = c
+            c = c:right()
+        else
+            break
+        end
+        if c.city then
+            -- add if not inside
+            if not array_contains(self.connected_cities, c.city.name) then
+                add(self.connected_cities, c.city.name)
+            end
+        end
+    end
+    printh("connected_cities="..tostring(self.connected_cities))
 end

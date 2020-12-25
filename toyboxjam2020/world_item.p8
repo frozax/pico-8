@@ -162,8 +162,12 @@ function create_item(infos)
         end
     end
 
+    function item:valid(x,y)
+        return x >= 0 and y >= 0 and x < world.w and y < world.h
+    end
+
     function item:right()
-        if self.x+1 < world.w then
+        if self:valid(self.x+1, self.y) then
             return world.items[self.x+1][self.y]
         else
             return create_item({x=self.x+1,y=self.y})
@@ -171,7 +175,7 @@ function create_item(infos)
     end
 
     function item:left()
-        if self.x > 0 then
+        if self:valid(self.x-1,self.y) then
             return world.items[self.x-1][self.y]
         else
             return create_item({x=self.x-1,y=self.y})
@@ -179,7 +183,7 @@ function create_item(infos)
     end
 
     function item:top()
-        if self.y > 0 then
+        if self:valid(self.x, self.y-1) then
             return world.items[self.x][self.y-1]
         else
             return create_item({x=self.x,y=self.y-1})
@@ -187,7 +191,7 @@ function create_item(infos)
     end
 
     function item:bottom()
-        if self.y + 1 < world.h then
+        if self:valid(self.x, self.y+1) then
             return world.items[self.x][self.y+1]
         else
             return create_item({x=self.x,y=self.y+1})
@@ -223,7 +227,7 @@ function create_item(infos)
             r = self:right():nb_rails_nb()
             if (l < 2 and t < 2 and b < 2 and r < 2) and
             (ir or il or it or ib) then
-                printh("l"..l.."r"..r.."t"..t.."b"..b)
+                --printh("l"..l.."r"..r.."t"..t.."b"..b)
                 return true, ui.stone >= rail_cost_stone and ui.tree >= rail_cost_tree
             end
         end

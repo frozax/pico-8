@@ -64,7 +64,7 @@ function player:update()
             self.coll_item:damage()
             new_ds = self.coll_item:get_damage_state()
             if old_ds != new_ds then
-                ui:add_resource(self.coll_item.type, 1)
+                ui:add_resource(self.coll_item.type, 2)
                 if self.coll_item.type == "stone" then sfx_gather_stone() end
                 if self.coll_item.type == "tree" then sfx_gather_tree() end
             end

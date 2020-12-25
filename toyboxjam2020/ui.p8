@@ -4,10 +4,12 @@ ui.stone = 0
 ui.coins = 0
 
 obj_count = 15
+coins_count=100
 o1={icon=spr_tree,t1="gather "..obj_count,t2="trees"}
 o2={icon=spr_stone,t1="gather "..obj_count,t2="stones"}
 o3={icon=spr_rail_h,t1="connect paris",t2="to tokyo"}
-o3={icon=spr_loco_h,t1="drive the",t2="train to tokyo"}
+o4={icon=spr_loco_h,t1="drive the",t2="train to tokyo"}
+o5={icon=spr_coins,t1="earn "..coins_count,t2="coins"}
 function o1:completed()
     return ui.tree >= obj_count
 end
@@ -15,9 +17,15 @@ function o2:completed()
     return ui.stone >= obj_count
 end
 function o3:completed()
-    return false
+    return array_contains(world.connected_cities, "tokyo")
 end
-ui.objectives = {o1, o2, o3}
+function o4:completed()
+    return train.city == "tokyo"
+end
+function o5:completed()
+    return ui.coins >= coins_count
+end
+ui.objectives = {o1, o2, o3, o4, o5}
 
 rail_cost_stone = 2
 rail_cost_tree = 3
