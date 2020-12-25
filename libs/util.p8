@@ -63,3 +63,12 @@ function printc(_str,_y,_c)
  if (where<0) where=0
  print(_str,where,_y,_c)
 end
+
+function array_contains(__l, __item)
+    for __litem in all(__l) do
+        if __litem == __item then
+            return true
+        end
+    end
+    return false
+end
