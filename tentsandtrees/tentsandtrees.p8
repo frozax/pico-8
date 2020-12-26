@@ -49,6 +49,7 @@ function _update()
         elseif mode == "level_select" then
             level_select:input()
         elseif mode == "game" then
+            game_level:update()
             if pause then
                 pause_menu:input()
             elseif eol_anim then
@@ -65,9 +66,7 @@ end
 
 function draw_title()
     sspr(0, 32, 128, 16*3, 0, 0)
-end
-
-function draw_fire()
+    
     f = flr(time()*3) % 3
     sspr(74 + f * 8, 20, 8, 12, 10, 24)
 end
@@ -79,21 +78,23 @@ function _draw()
         if mode == "home" then
             cls(bg_col)
             draw_title()
-            draw_fire()
             home_menu:draw(60)
             y = 100
             printc("tents and trees is also", y, text_col)
             printc("available on mobile:", y+6, text_col)
             printc("www.frozax.com/tat", y+16, text_col)
             if credits then
-                draw_rwin(8, 22, 127-16, 127-48, 13, 0)
-                y = 31
-                printc("programming:", y, 0)
-                printc("francois guibert - @frozax", y+7, 0)
-                printc("art:", y+25, 0)
-                printc("vincent guibert", y+32, 0)
-                printc("sound:", y+50, 0)
-                printc("@gruber_music", y+57, 0)
+                y = 42
+                draw_rwin(8+1, y+1, 127-16, 127-48, shadow_col, shadow_col)
+                draw_rwin(8, y, 127-16, 127-48, bg_col, 0)
+                y += 9
+                c = text_col
+                printc("programming:", y, c)
+                printc("francois guibert - @frozax", y+7, c)
+                printc("art:", y+25, c)
+                printc("vincent guibert", y+32, c)
+                printc("sound:", y+50, c)
+                printc("@gruber_music", y+57, c)
             end
         elseif mode == "level_select" then
             cls(bg_col)
@@ -102,14 +103,13 @@ function _draw()
         elseif mode == "game" then
             cls(bg_col)
             if game_level.size < 9 then
-                draw_level_number(127 - level_number_w, 1, level_number)
+                draw_level_number(127 - level_number_w-1, 1, level_number)
             end
             game_level:draw()
             if pause then
-                border = 30
                 y = 40
-                draw_rwin(32, y, 127-64, 50, 5, 0)
-                pause_menu:draw(y + 10)
+                draw_rwin(16, y, 127-32, 51, bg_col, 0)
+                pause_menu:draw(y + 8)
             elseif eol_anim then
                 particles:draw()
                 if time() - eol_anim_start > 2 then
@@ -118,14 +118,13 @@ function _draw()
                 end
             elseif eol then
                 y = 40
-                draw_rwin(28, y, 127-56, 50, 5, 0)
-                draw_rwin(28, y, 127-56, 50, 5, 0)
-                printc("congratulations!", y + 7, 7)
+                draw_rwin(24, y, 127-48, 50, bg_col, 0)
+                printc("congratulations!", y + 7, text_col)
                 eol_menu:draw(y + 20)
                 particles:draw()
             else
                 draw_input()
-                completion = level:get_completion()
+                completion = game_level:get_completion()
                 if completion == "success" then
                     set_level_completed(level_number)
                     eol_menu.selection = 1
@@ -147,6 +146,9 @@ function _draw()
 end
 
 function _init()
+    mode = "home"
+    tutorial = 0
+    credits = true
 
     anims.maxdelay=3
     
@@ -183,12 +185,10 @@ function _init()
         {x=11, y=11, w=w, h=h},
         {x=0, y=11, w=w, h=h}}
 
-    mode = "home"
-    tutorial = 0
-    credits = false
     cell_inner_size = 11
     cell_size = 12
 
+    shadow_col = 1
     bg_col = 15
     grass_col = 2
     pal(2, 128+7, 1)
@@ -213,7 +213,7 @@ function _init()
     function bc:click()
         credits = true
     end
-    home_menu = create_menu({bplay,bhtp,bc})
+    home_menu = create_menu({bplay,bhtp,bc}, shadow_col)
 
     bres = {text="resume"}
     function bres:click()
@@ -226,7 +226,7 @@ function _init()
         eol_anim = false
         mode = "home"
     end
-    pause_menu = create_menu({bres, bhtp, bquit})
+    pause_menu = create_menu({bres, bhtp, bquit}, shadow_col)
     pause = false
 
     bnl = {text="next level"}
@@ -239,9 +239,13 @@ function _init()
         end
         eol = false
     end
-    eol_menu = create_menu({bnl, bquit})
+    eol_menu = create_menu({bnl, bquit}, shadow_col)
     eol = false
     eol_anim = false
+
+    home_menu.button_text_col = colors.white
+    pause_menu.button_text_col = colors.white
+    eol_menu.button_text_col = colors.white
 
     load_level(0)
     init_input()

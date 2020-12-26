@@ -157,7 +157,6 @@ function train:advance()
     else
         self.speed -= 1
     end
-    printh("speed"..self.speed)
 end
 
 function train:is_player_in_loco()

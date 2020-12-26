@@ -21,6 +21,7 @@ end
 function load_level(number, reset)
     level_number = number
     game_level = load_level_from_def(levels[level_number+1], reset)
+    init_input()
 end
 
 function load_level_from_def(ldef, reset)
@@ -28,8 +29,11 @@ function load_level_from_def(ldef, reset)
     level.show_numbers = true
     level.size = #ldef
     level.def = ldef
+    level.no_anims=false
     pix_size = level.size * (cell_size)
     level.origin = vec2((128 - pix_size)/2, (128 - pix_size)/2 + 2)
+    -- used to compute anim of level
+    level.anim = 0
 
     -- compute numbers
     level.rows = {}
@@ -57,10 +61,14 @@ function load_level_from_def(ldef, reset)
     _reset_state(level, clear)
 
     function level:launch_start_anim()
+        self.anim = 0
         for y=1,self.size do
             for x=1,self.size do
                 if self:get_cell_state(x, y) == TR then
                     self:set_cell_state(x, y, TR)
+                end
+                if self:get_cell_state(x, y) == TE then
+                    self:set_cell_state(x, y, TE)
                 end
             end
         end
@@ -82,7 +90,7 @@ function load_level_from_def(ldef, reset)
             self.anims[y][x].cur_frame = 1
         elseif stt == TR then
             self.anims[y][x] = create_anim(tree_show)
-            self.anims[y][x].cur_frame = flr(rnd(9)) - 11
+            self.anims[y][x].cur_frame = flr(rnd(9)) - 23
         elseif old == TE then
             self.anims[y][x] = create_anim(tent_hide)
             self.anims[y][x].cur_frame = 1
@@ -165,6 +173,10 @@ function load_level_from_def(ldef, reset)
             return numbers_ok_col
         end
         return numbers_wip_col
+    end
+
+    function level:update()
+        self.anim += 1
     end
 
     function level:draw()

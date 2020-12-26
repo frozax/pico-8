@@ -16,31 +16,32 @@ function draw_tutorial(page)
         }
         tuto_level = load_level_from_def(l)
         tuto_level.origin.y += 6
+        tuto_level.no_anims=true
         ti = flr(time()*2) % 10
         if ti > 1 then
-            tuto_level.state[3][2] = GR
-            tuto_level.state[3][3] = GR
-            tuto_level.state[3][4] = GR
+            tuto_level:set_cell_state(2,3,GR)
+            tuto_level:set_cell_state(3,3,GR)
+            tuto_level:set_cell_state(4,3,GR)
         end
         if ti > 2 then
-            tuto_level.state[2][4] = GR
-            tuto_level.state[4][4] = GR
+            tuto_level:set_cell_state(4,2,GR)
+            tuto_level:set_cell_state(4,4,GR)
         end
         if ti > 3 then
-            tuto_level.state[4][1] = TE
-            tuto_level.state[4][3] = TE
+            tuto_level:set_cell_state(1,4,TE)
+            tuto_level:set_cell_state(3,4,TE)
         end
         if ti > 4 then
-            tuto_level.state[1][1] = GR
-            tuto_level.state[2][3] = GR
+            tuto_level:set_cell_state(1,1,GR)
+            tuto_level:set_cell_state(3,2,GR)
         end
         if ti > 5 then
-            tuto_level.state[2][2] = TE
-            tuto_level.state[2][3] = GR
+            tuto_level:set_cell_state(2,2,TE)
+            tuto_level:set_cell_state(3,2,GR)
         end
         if ti > 6 then
-            tuto_level.state[1][2] = GR
-            tuto_level.state[1][4] = TE
+            tuto_level:set_cell_state(2,1,GR)
+            tuto_level:set_cell_state(4,1,TE)
         end
         tuto_level:draw()
         color(text_col)
@@ -59,21 +60,22 @@ function draw_tutorial(page)
             {GR,GR,GR},
         }
         tuto_level = load_level_from_def(l, false)
+        tuto_level.no_anims=true
         tuto_level.origin.x -= 4
         tuto_level.origin.y += 15
         tuto_level.show_numbers = false
         ti = flr(time()*2) % 4
         if ti == 0 then
-            tuto_level.state[2][1] = TE
+            tuto_level:set_cell_state(1,2,TE)
         end
         if ti == 1 then
-            tuto_level.state[3][2] = TE
+            tuto_level:set_cell_state(2,3,TE)
         end
         if ti == 2 then
-            tuto_level.state[2][3] = TE
+            tuto_level:set_cell_state(3,2,TE)
         end
         if ti == 3 then
-            tuto_level.state[1][2] = TE
+            tuto_level:set_cell_state(2,1,TE)
         end
         tuto_level:draw()
     elseif page == 3 then
@@ -89,6 +91,7 @@ function draw_tutorial(page)
         tuto_level.origin.x -= 4
         tuto_level.origin.y += 8
         tuto_level.show_numbers = false
+        tuto_level.no_anims=true
         tuto_level:draw()
         ti = flr(time() * 3)
         if ti % 2 == 0 then

@@ -1,8 +1,10 @@
-function create_menu(mis)
+function create_menu(mis, shadow)
 
     menu = {}
     menu.items=mis
+    menu.hspacing = 3
     menu.button_bg_col = 6
+    menu.button_shadow_col = shadow
     menu.button_text_col = 0
     menu.selection = 1
     menu.item_border_x = 4
@@ -11,14 +13,14 @@ function create_menu(mis)
 
     max_text_width = 0
     for mi in all(menu.items) do
-        max_text_width = max(max_text_width, #mi.text)
+        max_text_width = max(max_text_width, #mi.text+5)
     end
     menu.item_width = max_text_width * 4 - 1 + 2 * menu.item_border_x
 
     function menu:draw(y)
         for i=1,#self.items do
-            draw_item(y, self.item_width, self.item_height, self.button_bg_col, self.button_text_col, self.items[i].text, self.selection==i)
-            y += self.item_height + 2
+            self:draw_item(y, self.items[i].text, self.selection==i)
+            y += self.item_height + self.hspacing
         end
     end
 
@@ -45,20 +47,39 @@ function create_menu(mis)
         end
     end
 
-    return menu
-end
+    function menu:draw_item(y, _text, selected)
+        local text=_text
+        local x = 64 - self.item_width * 0.5
+        local y=y
 
-function draw_item(y, item_width, item_height, button_bg_col, button_text_col, text, selected)
-    text_width = #text * 4 - 1
-    x = 64 - item_width * 0.5
-    rectfill(x, y, x + item_width - 1, y + item_height - 1, button_bg_col)
-    c = 0
-    if selected then
-        if (flr(time() * 5)) % 2 == 0 then
-            c = 7
+        local shad_col = self.button_shadow_col
+        local text_col = self.button_text_col
+        local text_width = #text * 4 - 1
+        if selected then
+            x+=1
+            y+=1
+            shad_col = nil
+                --text_col=9
+            --end
+            --text="\x8f "..text.." \x8f"
+            --if (flr(time() * 5)) % 2 == 0 then
+                text="\x8f "..text.." \x8f"
+                text_width += 8*2+4*2
+            --end
         end
-        rect(x, y, x + item_width - 1, y + item_height - 1, c)
+
+        if shad_col then
+            rectfill(x+1, y+1, x + self.item_width, y + self.item_height, shad_col)
+        end
+        rectfill(x, y, x + self.item_width - 1, y + self.item_height - 1, self.button_bg_col)
+        c = 0
+        --if selected then
+        --        c = 9
+        --        rect(x-1, y-1, x + self.item_width, y + self.item_height, c)
+        --end
+        text_height = 5
+        print(text, x + (self.item_width - text_width)/2, y + (self.item_height - text_height)/2, text_col)
     end
-    text_height = 5
-    print(text, x + (item_width - text_width)/2, y + (item_height - text_height)/2, button_text_col)
+
+    return menu
 end

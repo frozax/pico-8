@@ -12,24 +12,39 @@ function draw_grid(level)
 end
 
 function draw_numbers(level)
+    srand(0)
     for i=0, level.size-1 do
         -- rows
         row = level:compute_row_infos(i+1)
-        print(row.nb, level.origin.x - cell_size/2, level.origin.y + (i + 0.5) * cell_size - 2, row.color)
+        if (10) < level.anim-20 or level.no_anims then
+            print(row.nb, level.origin.x - cell_size/2, level.origin.y + (i + 0.5) * cell_size - 2, row.color)
+        end
         -- cols
         col = level:compute_col_infos(i+1)
-        print(col.nb, level.origin.x + (i + 0.5) * cell_size - 1, level.origin.y - cell_size * 0.5, col.color)
+        if (10) < level.anim-20 or level.no_anims then
+            print(col.nb, level.origin.x + (i + 0.5) * cell_size - 1, level.origin.y - cell_size * 0.5, col.color)
+        end
     end
 end
 
 function draw_cell_bgs(level)
+    srand(1)
     ys = level.origin.y + 1
     size = cell_inner_size - 1 -- because it's final pixel, not size of rect
     for y=1, level.size do
         xs = level.origin.x + 1
         for x=1, level.size do
-            c = level:get_cell_bg_color(x, y)
-            rectfill(xs, ys, xs + size, ys + size, c)
+            this_size = (level.anim - rnd(10))*2
+            this_size = min(this_size, size)
+            this_size = max(this_size, -1)
+            if level.no_anims then
+                this_size = size
+            end
+            if this_size >= 0 then
+                shft = (size-this_size)/2
+                c = level:get_cell_bg_color(x, y)
+                rectfill(xs+shft, ys+shft, xs + shft + this_size, ys + shft + this_size, c)
+            end
             xs += cell_size
         end
         ys += cell_size
@@ -47,6 +62,9 @@ function draw_cell_sprites(level)
             if anm != nil and anm.frames then
                 if anm.cur_frame < (#anm.frames*2) then
                     anm.cur_frame += 1
+                end
+                if level.no_anims then
+                    anm.cur_frame = 2*#anm.frames
                 end
                 if anm.cur_frame > 1 then
                     anm.frame = anm.frames[anm.cur_frame \ 2]

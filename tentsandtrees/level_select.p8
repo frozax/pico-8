@@ -9,6 +9,7 @@ function draw_level_number(x, y, number)
     else
         c = 5
     end
+    rectfill(x+1, y+1, x + level_number_w, y + level_number_h, shadow_col)
     rectfill(x, y, x + level_number_w - 1, y + level_number_h - 1, c)
 
     text = tostr(number + 1)
@@ -31,12 +32,12 @@ function create_level_select(nb_levels)
         i = 0
         for y=0,rows-1 do
             for x=0,level_per_row-1 do
+                draw_level_number(self.origin_x + x * self.sx, origin_y + y * self.sy, i)
                 if i == self.selection then
                     c = blink(5, 0, 7)
                     rect(self.origin_x + x * self.sx - 1, origin_y + y * self.sy - 1, self.origin_x + x * self.sx + level_number_w, origin_y + y * self.sx + level_number_h, c)
                 end
 
-                draw_level_number(self.origin_x + x * self.sx, origin_y + y * self.sy, i)
 
                 i += 1
             end
