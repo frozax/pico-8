@@ -26,7 +26,10 @@ end
 function o5:completed()
     return ui.coins >= coins_count
 end
-ui.objectives = {o1, o2, o3, o4, o5}
+function o6:completed()
+    return world.areas_unlocked > 1
+end
+ui.objectives = {o1, o2, o3, o4, o5, o6}
 
 rail_cost_stone = 2
 rail_cost_tree = 3

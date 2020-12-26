@@ -6,12 +6,17 @@ end
 cur_city = 0
 city_w, city_h=4,4
 city_names = {"paris", "tokyo", "dallas", "london", "berlin", "roma"}--, "madrid", "sydney"}
+city_rewards = {50, 60, 100, 150, 200, 250, 250}--, "madrid", "sydney"}
 first_city = vec2(3, 7)
 cities_pos = {{first_city.x, first_city.y}, {10, 16}, {31, 24}, {50, 9}, {80, 18}, {110,22}}
 
 function create_city(position)
-    city = position
+    city = {}
+    city.x = position.x
+    city.y = position.y
     city.name=city_names[cur_city + 1]
+    city.reward=city_rewards[cur_city+1]
+    printh(city.name.."rew"..city.reward)
     city.flip1 = rnd({true,false})
     city.flip2 = rnd({true,false})
     city.gare_x = rnd({0, 1, 2})
@@ -79,10 +84,13 @@ function create_city(position)
             i = world.items[x][self.y-2]
             printh(i.type)
             if i.type == nil or i.type == "" then
-                world.items[x][self.y-2] = create_item({x=x,y=self.y-2,type="coins",amount=25})
+                printh(tostring(self))
+                world.items[x][self.y-2] = create_item({x=x,y=self.y-2,type="coins",amount=self.reward\2})
             end
         end
     end
+
+    printh(tostring(city))
 
     return city
 end
