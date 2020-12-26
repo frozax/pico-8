@@ -127,8 +127,18 @@ function train:can_enter_loco(pos)
         return false
     end
     local pos = pos - vec2(player.hsize, player.hsize)
-    if #(pos-self.start_loco_pos) < loco_enter_dist or
-         #(pos-self.end_loco_pos) < loco_enter_dist then
+    -- can't compute large numbers, so ignore them beforehand
+    if abs(pos.x-self.start_loco_pos.x) > 100 then
+        return false
+    end
+    if abs(pos.y-self.start_loco_pos.y) > 100 then
+        return false
+    end
+    start_d = #(pos-self.start_loco_pos)
+    end_d = #(pos-self.end_loco_pos)
+    printh(tostring(pos).." "..tostring(self.start_loco_pos).." "..tostring(self.end_loco_pos).." "..start_d.." "..end_d)
+    if start_d < loco_enter_dist or
+        end_d < loco_enter_dist then
         return true
     end
     return false

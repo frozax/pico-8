@@ -17,9 +17,9 @@ pal(new_green, old_green, 1)
 pal(old_green, hidden_pal_green, 1)
 
 -- gen world
-world.area_size = 20
-world.nb_area_w = 3
-world.nb_area_h = 2
+world.area_size = 30
+world.nb_area_w = 4
+world.nb_area_h = 1
 world.w = world.area_size * world.nb_area_w
 world.h = world.area_size * world.nb_area_h
 world.origin = vec2(0, 0) -- origin for draw
@@ -90,8 +90,8 @@ function world:init()
     world.cities = {}
     first_city = vec2(3, 7)
     fc = {first_city.x, first_city.y}
-    cities_pos = {fc, {40, 9}, {10, 16}, {25, 26}, {40, 38}}
-    for c=1,5 do
+    cities_pos = {fc, {10, 16}, {25, 24}, {50, 9}, {80, 18}, {110,22}}
+    for c=1,6 do
         city = create_city({x=cities_pos[c][1], y=cities_pos[c][2]})
         add(world.cities, city)
         for x=0,city_w-1 do
