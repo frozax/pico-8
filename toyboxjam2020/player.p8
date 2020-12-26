@@ -80,7 +80,11 @@ function player:update()
         cbr, has_rsc = self.below_item:can_build_rail()
         cel = train:can_enter_loco(self.p)
         iil = train:is_player_in_loco()
-        if cbr and has_rsc then
+        cba, has_coins = world:can_buy_area(self.below_item)
+        if cba and has_coins then
+            ui:spend_resource("coins", world:next_area_cost())
+            world:buy_area()
+        elseif cbr and has_rsc then
             ui:spend_resource("tree", rail_cost_tree)
             ui:spend_resource("stone", rail_cost_stone)
             self.below_item:set_rail()

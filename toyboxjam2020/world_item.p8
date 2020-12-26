@@ -17,6 +17,7 @@ spr_loco_h = 40
 spr_loco_v = 41
 spr_wagon_h = 42
 spr_wagon_v = 43
+spr_limit = 88
 
 function create_item(infos)
     item = infos
@@ -40,7 +41,7 @@ function create_item(infos)
         return self.type == "stone" or self.type == "tree" or
             self.type == "citypart" or self.type == "house" or
             self.type == "gare_left" or self.type == "gare_right" or self.type == "gare_col" or
-            self.type == "entrepot"
+            self.type == "entrepot" or self.limit
     end
 
     function item:is_breakable()
@@ -51,7 +52,11 @@ function create_item(infos)
         --, xc * 8 - self.origin.x, yc * 8 - self.origin.y)
         dx = self.x * 8 - world.origin.x
         dy = self.y * 8 - world.origin.y
-        if self.type == "stone" then
+        if self.limit then
+            palt(0,false)
+            spr(spr_limit, dx, dy)
+            palt(0,true)
+        elseif self.type == "stone" then
             spr(spr_stone, dx, dy)
             palt(6, true)
             dmg = self:get_damage_state()

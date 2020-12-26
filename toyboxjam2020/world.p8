@@ -20,6 +20,7 @@ pal(old_green, hidden_pal_green, 1)
 world.area_size = 30
 world.nb_area_w = 4
 world.nb_area_h = 1
+world.areas_unlocked = 1
 world.w = world.area_size * world.nb_area_w
 world.h = world.area_size * world.nb_area_h
 world.origin = vec2(0, 0) -- origin for draw
@@ -88,10 +89,9 @@ function world:init()
     end
 
     world.cities = {}
-    first_city = vec2(3, 7)
-    fc = {first_city.x, first_city.y}
-    cities_pos = {fc, {10, 16}, {25, 24}, {50, 9}, {80, 18}, {110,22}}
+    fc = cities_pos[1]
     for c=1,6 do
+        printh("c"..c.." "..tostring(cities_pos[c]))
         city = create_city({x=cities_pos[c][1], y=cities_pos[c][2]})
         add(world.cities, city)
         for x=0,city_w-1 do
@@ -137,6 +137,14 @@ function world:update()
 
     self.origin.x = flr(self.origin.x)
     self.origin.y = flr(self.origin.y)
+
+    -- refresh area limit
+    area_x_limit = self.areas_unlocked * self.area_size
+    for x=0,self.w-1 do
+        for y=0,self.h-1 do
+            self.items[x][y].limit = x == area_x_limit
+        end
+    end
 end
 
 function world:draw()
@@ -227,4 +235,24 @@ function world:refresh_connections()
     end
     train.max_pp = 8*nbcells
     printh("connected_cities="..tostring(self.connected_cities).." nbcells="..nbcells)
+end
+
+function world:next_area_cost()
+    costs = {100, 250, 500, 1000, 2000, 5000, 5000}
+    return costs[self.areas_unlocked]
+end
+
+-- returns two bools:
+-- 1st returns true if proper cell
+-- 2nd return true if enough moneu
+function world:can_buy_area(cur_cell)
+    if cur_cell:right().limit then
+        return true, ui.coins >= self:next_area_cost()
+    else
+        return false, false
+    end
+end
+
+function world:buy_area()
+    self.areas_unlocked+=1
 end

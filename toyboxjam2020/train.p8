@@ -136,7 +136,6 @@ function train:can_enter_loco(pos)
     end
     start_d = #(pos-self.start_loco_pos)
     end_d = #(pos-self.end_loco_pos)
-    printh(tostring(pos).." "..tostring(self.start_loco_pos).." "..tostring(self.end_loco_pos).." "..start_d.." "..end_d)
     if start_d < loco_enter_dist or
         end_d < loco_enter_dist then
         return true

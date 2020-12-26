@@ -87,7 +87,7 @@ function ui:draw()
     if self.objective then
         xo = 60
         ho = 14
-        if self.objective.t2 == 0 then
+        if #self.objective.t2 == 0 then
             ho = 8
         end
         draw_win(xo, -1, 128-xo, ho, ui_col1, ui_col2)
@@ -96,10 +96,13 @@ function ui:draw()
         print(self.objective.t2, xo+2, 7, ui_text_col)
     end
 
+    cba, has_coins = world:can_buy_area(player.below_item)
     cbr, has_rsc = player.below_item:can_build_rail()
     cel = train:can_enter_loco(player.p)
     cll = train:can_leave_loco(player.below_item)
-    if cbr then
+    if cba then
+        self:draw_buy_area(has_coins)
+    elseif cbr then
         self:draw_build_rail(has_rsc)
     elseif cel then
         self:draw_enter_loco()
@@ -125,6 +128,18 @@ function ui:draw_build_rail(has_rsc)
     draw_small_icon(spr_stone, x, y+8)
     if rail_cost_stone <= self.stone then c = enough_col else c = not_enough_col end
     print(rail_cost_stone, x+6, y+8, c)
+end
+
+function ui:draw_buy_area(has_coins)
+    enough_col = ui_text_col
+    not_enough_col = colors.red
+    y = 7
+    draw_win(-1, y, 41, 14, ui_col1, ui_col2)
+    print("\x8ebuy area", 1, y+2, ui_text_col)
+    x=1
+    draw_small_icon(spr_coins, x, y+8)
+    if world:next_area_cost() <= self.coins then c = enough_col else c = not_enough_col end
+    print(world:next_area_cost(), x+6, y+8, c)
 end
 
 function ui:draw_enter_loco()
