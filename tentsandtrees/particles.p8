@@ -3,7 +3,7 @@ particles.p = {}
 
 function particles:start()
     self.p = {}
-    for ip=1,500 do
+    for ip=1,800 do
         left_side = rnd(1) < 0.5
         vx = (rnd(2) + 1) * 1.5
         vy = -rnd(2) * 2 - 2
@@ -13,12 +13,13 @@ function particles:start()
             x = 132
             vx = -vx
         end
-        p = {x=x,y=rnd(10) + 100,
+        p = {x=x,y=rnd(30) + 90,
             vx=vx,vy=vy,
             size=flr(rnd(3))+1,
             age=-rnd(30),
             life=rnd(100)+100,
-            col=rnd({7, 9, 10, 9, 10})
+            col=rnd({7, 9, 2, 9, 2})
+            --col=7
         }
         add(self.p, p)
     end
@@ -30,6 +31,7 @@ function particles:update()
         if p.age > 0 then
             p.x += p.vx
             p.y += p.vy
+            p.vy+=0.05
         end
     end
 end
