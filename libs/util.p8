@@ -64,6 +64,24 @@ function printc(_str,_y,_c)
  print(_str,where,_y,_c)
 end
 
+-------------------------------
+-- centered and outlined
+function printco(_str,_y,_c,_co)
+ where=center_x(_str)
+ if (where<0) where=0
+ printo(_str,where,_y,_c,_co)
+end
+
+-------------------------------
+function printo(str, x, y, c0, c1)
+for xx = -1, 1 do
+ for yy = -1, 1 do
+ print(str, x+xx, y+yy, c1)
+ end
+end
+print(str,x,y,c0)
+end
+
 function array_contains(__l, __item)
     for __litem in all(__l) do
         if __litem == __item then
