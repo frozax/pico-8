@@ -1,16 +1,13 @@
 pico-8 cartridge // http://www.pico-8.com
 version 29
 __lua__
--- toy box jam 2
+-- the tiny train driver
 -- by frozax
--- for toy box jam 2
 
--- TODO
--- DRAW AND DRIVE TRAIN
--- EARN MONEY BY DRIVING
--- PURCHASE MORE LAND
--- BONUS: INCREASE WAGONS
--- BONUS: ??
+-- for toy box jam 2
+-- Follow me on twitter: @frozax
+-- My mobile games: https://www.frozax.com
+-- More games: https://frozax.itch.io
 
 #include ../libs/vec2.p8
 #include ../libs/util.p8
