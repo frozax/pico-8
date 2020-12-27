@@ -25,3 +25,11 @@ end
 function sfx_train_advance()
     sfx(40)
 end
+
+function sfx_train_stop()
+    sfx(40, -2)
+end
+
+function sfx_menu_valid()
+    sfx(37)
+end

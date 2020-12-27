@@ -24,6 +24,7 @@ function train:update()
     self.speed *= 0.9
     if abs(self.speed) <= 0.01 then
         self.speed = 0
+        sfx_train_stop()
     else
         -- advance!
         self.pp += self.speed
@@ -161,6 +162,9 @@ function train:enter_loco(pos)
 end
 
 function train:advance()
+    if self.speed == 0 then
+        sfx_train_advance()
+    end
     if self.state == "drive_start" then
         self.speed += 1
     else

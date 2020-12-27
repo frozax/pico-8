@@ -1,6 +1,6 @@
 player = {}
 
-player.p = vec2(64, 64) -- p is center of perso
+player.p = vec2(74, 64) -- p is center of perso
 player.speed = 2.0    -- pix / frame
 player.size = 8
 player.hsize = 4
@@ -22,31 +22,10 @@ player.destroy = player.destroy_down
 player.idle = player.idle_down
 
 function player:update()
+    dir = vec2(0, 0)
     if not train:is_player_in_loco() then
-        dir = vec2(0, 0)
-        if btn(buttons.left) then
-            dir.x = -1
-            self.anim = self.walk_left
-            self.idle = self.idle_left
-            self.destroy = self.destroy_left
-        end
-        if btn(buttons.right) then
-            dir.x = 1
-            self.anim = self.walk_right
-            self.idle = self.idle_right
-            self.destroy = self.destroy_right
-        end
-        if btn(buttons.up) then
-            dir.y = -1
-            self.anim = self.walk_up
-            self.idle = self.idle_up
-            self.destroy = self.destroy_up
-        end
-        if btn(buttons.down) then
-            dir.y = 1
-            self.anim = self.walk_down
-            self.idle = self.idle_down
-            self.destroy = self.destroy_down
+        if not title_screen then
+            dir = self:check_movement()
         end
         if #dir == 0 then
             self.anim = self.idle
@@ -76,7 +55,7 @@ function player:update()
     -- check if on a buildable cell
     self.below_item = world.items[self.p.x\8][self.p.y\8]
 
-    if btnp(buttons.b1) then
+    if btnp(buttons.b1) and not title_screen then
         cbr, has_rsc = self.below_item:can_build_rail()
         cel = train:can_enter_loco(self.p)
         iil = train:is_player_in_loco()
@@ -109,6 +88,35 @@ function player:update()
         ui:add_resource("coins", self.below_item.amount)
         self.below_item.type = ""
     end
+end
+
+function player:check_movement()
+    dir=vec2(0,0)
+    if btn(buttons.left) then
+        dir.x = -1
+        self.anim = self.walk_left
+        self.idle = self.idle_left
+        self.destroy = self.destroy_left
+    end
+    if btn(buttons.right) then
+        dir.x = 1
+        self.anim = self.walk_right
+        self.idle = self.idle_right
+        self.destroy = self.destroy_right
+    end
+    if btn(buttons.up) then
+        dir.y = -1
+        self.anim = self.walk_up
+        self.idle = self.idle_up
+        self.destroy = self.destroy_up
+    end
+    if btn(buttons.down) then
+        dir.y = 1
+        self.anim = self.walk_down
+        self.idle = self.idle_down
+        self.destroy = self.destroy_down
+    end
+    return dir
 end
 
 function player:move(dir)

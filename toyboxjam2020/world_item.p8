@@ -1,14 +1,14 @@
 spr_tree = 32
 spr_stone = 63
-spr_coins = 128
-spr_coins2 = 129
+spr_coins = 192
+spr_coins2 = 193
 spr_stone_dmg = 204
 spr_rail_h = 37
 spr_rail_v = 36
-spr_entrepot = 190
+spr_entrepot = 196
 spr_hammer = 28
 spr_rail_corner = 39
-spr_clock = 171
+spr_clock = 197
 spr_house = 22
 spr_column = 55
 spr_gare_left = 119
@@ -52,7 +52,7 @@ function create_item(infos)
         --, xc * 8 - self.origin.x, yc * 8 - self.origin.y)
         dx = self.x * 8 - world.origin.x
         dy = self.y * 8 - world.origin.y
-        if self.limit then
+        if self.limit and not title_screen then
             palt(0,false)
             spr(spr_limit, dx, dy)
             palt(0,true)

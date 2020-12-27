@@ -115,26 +115,32 @@ function world:init()
 end
 
 function world:update()
-    -- if player is outside center square, shift the origin
-    pp = player.p - vec2(player.size*0.5, player.size*0.5)
-    cur_pos = pp - self.origin 
-    if cur_pos.x < self.border then
-        self.origin.x = pp.x - self.border
-        if self.origin.x < self.min_origin.x then self.origin.x = self.min_origin.x end
-    end
-    if cur_pos.x > 128 - self.border then
-        self.origin.x = pp.x - (128 - self.border)
-        if self.origin.x > self.max_origin.x then self.origin.x = self.max_origin.x end
-    end
-    if cur_pos.y < self.border then
-        self.origin.y = pp.y - self.border
-        if self.origin.y < self.min_origin.y then self.origin.y = self.min_origin.y end
-    end
-    if cur_pos.y > 128 - self.border then
-        self.origin.y = pp.y - (128 - self.border)
-        if self.origin.y > self.max_origin.y then self.origin.y = self.max_origin.y end
+    if title_screen then
+        -- animated origin
+        self.origin.x = sin(time()/60) * self.w*8*0.95/2 + self.w*8/2
+        self.origin.y = sin(time()/18.3) * self.h*8*0.3/2 + self.h*8/2-64
+    else
+        -- if player is outside center square, shift the origin
+        pp = player.p - vec2(player.size*0.5, player.size*0.5)
+        cur_pos = pp - self.origin 
+        if cur_pos.x < self.border then
+            self.origin.x = pp.x - self.border
+        end
+        if cur_pos.x > 128 - self.border then
+            self.origin.x = pp.x - (128 - self.border)
+        end
+        if cur_pos.y < self.border then
+            self.origin.y = pp.y - self.border
+        end
+        if cur_pos.y > 128 - self.border then
+            self.origin.y = pp.y - (128 - self.border)
+        end
     end
 
+    if self.origin.x < self.min_origin.x then self.origin.x = self.min_origin.x end
+    if self.origin.x > self.max_origin.x then self.origin.x = self.max_origin.x end
+    if self.origin.y < self.min_origin.y then self.origin.y = self.min_origin.y end
+    if self.origin.y > self.max_origin.y then self.origin.y = self.max_origin.y end
     self.origin.x = flr(self.origin.x)
     self.origin.y = flr(self.origin.y)
 

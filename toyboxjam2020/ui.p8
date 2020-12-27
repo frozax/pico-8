@@ -178,3 +178,35 @@ function ui:spend_resource(type, count)
         assert(false, "unknown resource "..type)
     end
 end
+
+function ui:draw_title()
+
+    c1=nil
+    c2=nil
+    c3=8
+    y=5
+    draw_rwin(32, y*8-24, 128-64-4, 4*8+28, 1, 7)
+    palt(5,true) -- remove backgnd
+    palt(6,true) -- remove lines
+    palt(0,false) -- shadow draws
+    pal(0,13)
+    sprintc("the", y, c1, c2, c3)
+    sprintc("tiny", y+1, c1, c2, c3)
+    sprintc("train", y+2, c1, c2, c3)
+    sprintc("driver", y+3, c1, c2, c3)
+    palt(5,false)
+    palt(6,false)
+    pal(0,0)
+    palt(0,true)
+
+    if flr(time()*4) % 10 < 7 then
+        sx, sy = 112,112
+    else
+        sx, sy = 40,120
+    end
+    sspr(sx, sy, 8, 8, 32+16+8-1, 21, 16, 16)
+
+    if flr(time()*8) % 4 > 0 then
+        printco("press \x8e to start", 90, ui_col2, ui_text_col)
+    end
+end
