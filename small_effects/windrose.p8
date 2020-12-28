@@ -1,6 +1,8 @@
 pico-8 cartridge // http://www.pico-8.com
 version 29
 __lua__
+-- windrose
+-- by frozax
 
 #include ../libs/draw_poly.p8
 #include ../libs/vec2.p8
