@@ -69,7 +69,7 @@ printh("End time: "..time_end)
 
 
 ::★::
-cls(bg)
+--cls(bg)
 
 r=40
 circfill(c.x, c.y, r+3, fg)
@@ -109,6 +109,12 @@ draw_windrose(main_a-a_2, 1, 12, 2, 1) -- blue
 
 draw_windrose(main_a, 8, 6, 2, 1) -- red
 --showpct(7)
+
+--pal({-15,1,-13,3,-5,11,-6,7},1)
+--for i=0,999do
+--    x=rnd(128)y=rnd(128)
+--    ?'⁙',x-1,y,max(pget(x,y)-1,1)
+--end
 
 print("windrose", 1, 1, fg)
 print("@frozax", 100, 122, fg)
