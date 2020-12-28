@@ -53,7 +53,6 @@ function player:update()
     end
 
     -- check if on a buildable cell
-    printh("p: "..tostring(self.p).." ")
     self.below_item = world.items[self.p.x\8][self.p.y\8]
 
     if btnp(buttons.b1) and not title_screen then

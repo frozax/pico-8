@@ -9,13 +9,14 @@ __lua__
 -- My mobile games: https://www.frozax.com
 -- More games: https://frozax.itch.io
 
-#include ../libs/vec2.p8
+#include vec2.p8
 #include ../libs/util.p8
 #include ../libs/buttons.p8
 #include ../libs/colors.p8
 #include ../libs/fps.p8
 #include ../libs/tostring.p8
 #include ../libs/anim.p8
+#include ../libs/data.p8
 
 #include font.p8
 #include train.p8

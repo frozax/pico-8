@@ -35,18 +35,6 @@ function world:init()
         col = {}
         for y=0,world.h-1 do
             r = flr(rnd(100))
-            -- TODO REMOVE
-            --r = 100
-            --if x < 4 and (y > 2 and y < 10) then r = 9 end
-            --if x > 8 and (y > 2 and y < 10) then r = 4 end
-            --if x == 6 and y == 4 then r = 4 end
-            --if r < 5 then
-            --    item = create_item({type="tree",x=x,y=y})
-            --elseif r < 10 then
-            --    item = create_item({type="stone",x=x,y=y})
-            --else
-            --    item = create_item({x=x,y=y})
-            --end
             col[y]=create_item({x=x,y=y})
         end
         world.items[x]=col
