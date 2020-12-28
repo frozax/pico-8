@@ -26,3 +26,30 @@ function vec2(x,y)
     v = setmetatable({x=x,y=y},vec2mt)
     return v
 end
+
+function rotate_2d_multi(ps, center, angle)
+  local s = sin(angle)
+  local c = cos(angle)
+
+  new_list = {}
+  for p in all(ps) do
+    -- translate point back to origin:
+    p.x -= center.x;
+    p.y -= center.y;
+    add(new_list, vec2(p.x * c - p.y * s + center.x, p.x * s + p.y * c + center.y))
+  end
+  return new_list
+
+end
+
+function rotate_2d(p, center, angle)
+  local s = sin(angle)
+  local c = cos(angle)
+
+  -- translate point back to origin:
+  p.x -= center.x
+  p.y -= center.y
+
+  -- rotate point
+  return vec2(p.x * c - p.y * s + center.x, p.x * s + p.y * c + center.y)
+end

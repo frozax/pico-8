@@ -1,202 +1,185 @@
---easing function cheatsheet
---by valeradhd
---curves
---these will all return values
---near the range 0->1 when given
---values in the range 0->1
---you can easily pass them 
---into a 'lerp' (linear interpolate) 
---with these functions modifying 
---the 't' value.
---copying:
---every function is completely
---self sufficient, which
---increases the total number of
---tokens but allows you to pick
---and choose which functions to
---take, with no problems.
---(i.e. just don't take
---the linear function, it does 
---nothing)
---
---crediting:
---include a link to the
---bbs page for this demo
---whenever you paste in your
---functions, so that
---anyone reading your code can
---find this as well.
---if you want to include my
---username you can, but i can't
---claim full credit for these
---functions so you don't have to.
-
-function linear(t)
-    return t
-end
-
---quadratics
-function easeinquad(t)
-    return t*t
-end
-
-function easeoutquad(t)
-    t-=1
-    return 1-t*t
-end
-
-function easeinoutquad(t)
-    if(t<.5) then
-        return t*t*2
-    else
-        t-=1
-        return 1-t*t*2
+-- create ease urve from 0 to 0 going to 1 with ease function
+function ease(zero_duration, ease_to_1, ease_to_1_duration, one_duration, ease_to_0, ease_to_0_duration, zero_duration_end)
+    total_duration = zero_duration + ease_to_1_duration + one_duration + ease_to_0_duration + zero_duration_end
+    ti = time() % total_duration
+    --printh(ti)
+    if ti < zero_duration then
+        printh("0 ("..ti..")")
+        return 0
+    end
+    ti -= zero_duration
+    if ti < ease_to_1_duration then
+        tt = ti / ease_to_1_duration
+        printh("to_1:"..tt)
+        return ease_to_1(tt, 0, 1, 1)
+    end
+    ti -= ease_to_1_duration
+    if ti < one_duration then
+        printh("1")
+        return 1
+    end
+    ti -= one_duration
+    if ti < ease_to_0_duration then
+        tt = 1 - ti/ease_to_0_duration
+        printh("to_0:"..tt)
+        return ease_to_0(tt, 0, 1, 1)
+    end
+    ti -= ease_to_0_duration
+    if ti < zero_duration_end then
+        printh("0 (2)")
+        return 0
     end
 end
 
-function easeoutinquad(t)
-    if t<.5 then
-        t-=.5
-        return .5-t*t*2
+-- tweening & easing functions
+-- by matt sephton
+
+-- http://robertpenner.com/easing/penner_chapter7_tweening.pdf
+-- http://gizma.com/easing/
+-- https://github.com/kikito/tween.lua/blob/master/tween.lua
+-- http://forum.multitheftauto.com/viewtopic.php?f=108&t=75895
+
+function pow(a,b)
+  return a ^ b
+end
+
+-- order of steepness
+-- linear, sine, quad, cubic, quartic, quintic, expo, circ
+
+function linear(t,b,c,d)  -- simple linear tweening - no easing, no acceleration
+  return c*t/d + b
+end
+
+
+function ease_in_quad(t,b,c,d)  -- quadratic easing in - accelerating from zero velocity
+  t /= d
+  return c*t*t + b
+end
+
+function ease_out_quad(t,b,c,d)  -- quadratic easing out - decelerating to zero velocity
+  t /= d
+  return -c * t*(t-2) + b
+end
+
+function ease_in_out_quad(t,b,c,d)  -- quadratic easing in/out - acceleration until halfway, then deceleration
+  t /= d/2
+  if (t < 1) return c/2*t*t + b
+  t -= 1
+  return -c/2 * (t*(t-2) - 1) + b
+end
+
+
+function ease_in_cubic(t,b,c,d)  -- cubic easing in - accelerating from zero velocity
+  t /= d
+  return c*t*t*t + b
+end
+
+function ease_out_cubic(t,b,c,d)  -- cubic easing out - decelerating to zero velocity
+  t /= d
+  t -= 1
+  return c*(t*t*t + 1) + b
+end
+
+function ease_in_out_cubic(t,b,c,d)  -- cubic easing in/out - acceleration until halfway, then deceleration
+  t /= d/2
+  if (t < 1) return c/2*t*t*t + b
+  t -= 2
+  return c/2*(t*t*t + 2) + b
+end
+
+
+function ease_in_quartic(t,b,c,d) -- quartic easing in - accelerating from zero velocity
+  t /= d
+  return c*t*t*t*t + b
+end
+
+function ease_out_quartic(t,b,c,d) -- quartic easing out - decelerating to zero velocity
+  t /= d
+  t -= 1
+  return -c * (t*t*t*t - 1) + b
+end
+
+function ease_in_out_quartic(t,b,c,d) -- quartic easing in/out - acceleration until halfway, then deceleration
+  t /= d/2
+  if (t < 1) return c/2*t*t*t*t + b
+  t -= 2
+  return -c/2 * (t*t*t*t - 2) + b
+end
+
+
+function ease_in_quintic(t,b,c,d) -- quintic easing in - accelerating from zero velocity
+  t /= d
+  return c*t*t*t*t*t + b
+end
+
+function ease_out_quintic(t,b,c,d) -- quintic easing out - decelerating to zero velocity
+  t /= d
+  t -= 1
+  return c*(t*t*t*t*t + 1) + b
+end
+
+function ease_in_out_quintic(t,b,c,d) -- quintic easing in/out - acceleration until halfway, then deceleration
+  t /= d/2
+  if (t < 1) return c/2*t*t*t*t*t + b
+  t -= 2
+  return c/2*(t*t*t*t*t + 2) + b
+end
+
+-- add frozax
+function ease_in_back(t,b,c,d)
+    c1 = 1.70158;
+    c3 = c1 + 1;
+
+    return c3 * t * t * t - c1 * t * t;
+end
+function ease_in_out_back(t,b,c,d)
+    c1 = 1.70158;
+    c2 = c1 * 1.525;
+
+    if t < 0.5 then
+        return (pow(2 * t, 2) * ((c2 + 1) * 2 * t - c2)) / 2
     else
-        t-=.5
-        return .5+t*t*2
+        return (pow(2 * t - 2, 2) * ((c2 + 1) * (t * 2 - 2) + c2) + 2) / 2;
     end
 end
+function ease_out_back(t,b,c,d)
+    c1 = 1.70158;
+    c3 = c1 + 1;
 
---quartics
-function easeinquart(t)
-    return t*t*t*t
+    return 1 + c3 * pow(t - 1, 3) + c1 * pow(t - 1, 2);
 end
 
-function easeoutquart(t)
-    t-=1
-    return 1-t*t*t*t
+
+--TO FIX
+function ease_in_sine(t,b,c,d) -- sinusoidal easing in - accelerating from zero velocity
+  return c * (1 - cos(t/d/4)) + b
 end
 
-function easeinoutquart(t)
-    if t<.5 then
-        return 8*t*t*t*t
-    else
-        t-=1
-        return (1-8*t*t*t*t)
-    end
+function ease_out_sine(t,b,c,d) -- sinusoidal easing out - decelerating to zero velocity
+  return c * -sin(t/d/4) + b
 end
 
-function easeoutinquart(t)
-    if t<.5 then
-        t-=.5
-        return .5-8*t*t*t*t
-    else
-        t-=.5
-        return .5+8*t*t*t*t
-    end
+function ease_in_out_sine(t,b,c,d) -- sinusoidal easing in/out - accelerating until halfway, then decelerating
+  return c/2 * (1 - cos(t/d/2)) + b
 end
 
---overshooting functions
-function easeinovershoot(t)
-    return 2.7*t*t*t-1.7*t*t
+
+--TO FIX
+function ease_in_expo(t,b,c,d) -- exponential easing in - accelerating from zero velocity
+  return c * pow(2, 10 * (t/d - 1)) + b
 end
 
-function easeoutovershoot(t)
-    t-=1
-    return 1+2.7*t*t*t+1.7*t*t
+--requires higher precision
+function ease_out_expo(t,b,c,d) -- exponential easing out - decelerating to zero velocity
+  return c * (-pow(2, -10 * t/d) + 1) + b
 end
 
-function easeinoutovershoot(t)
-    if t<.5 then
-        return (2.7*8*t*t*t-1.7*4*t*t)/2
-    else
-        t-=1
-        return 1+(2.7*8*t*t*t+1.7*4*t*t)/2
-    end
-end
-
-function easeoutinovershoot(t)
-    if t<.5 then
-        t-=.5
-        return (2.7*8*t*t*t+1.7*4*t*t)/2+.5
-    else
-        t-=.5
-        return (2.7*8*t*t*t-1.7*4*t*t)/2+.5
-    end
-end
-
---elastics
-function easeinelastic(t)
-    if(t==0) return 0
-    return 2^(10*t-10)*cos(2*t-2)
-end
-
-function easeoutelastic(t)
-    if(t==1) return 1
-    return 1-2^(-10*t)*cos(2*t)
-end
-
-function easeinoutelastic(t)
-    if t<.5 then
-        return 2^(10*2*t-10)*cos(2*2*t-2)/2
-    else
-        t-=.5
-        return 1-2^(-10*2*t)*cos(2*2*t)/2
-    end
-end
-
-function easeoutinelastic(t)
-    if t<.5 then
-        return .5-2^(-10*2*t)*cos(2*2*t)/2
-    else
-        t-=.5
-        return 2^(10*2*t-10)*cos(2*2*t-2)/2+.5
-    end
-end
-
---bouncing
-function easeinbounce(t)
-    t=1-t
-    local n1=7.5625
-    local d1=2.75
-   
-    if (t<1/d1) then
-        return 1-n1*t*t;
-    elseif(t<2/d1) then
-        t-=1.5/d1
-        return 1-n1*t*t-.75;
-    elseif(t<2.5/d1) then
-        t-=2.25/d1
-        return 1-n1*t*t-.9375;
-    else
-        t-=2.625/d1
-        return 1-n1*t*t-.984375;
-    end
-end
-
-function easeoutbounce(t)
-    local n1=7.5625
-    local d1=2.75
-   
-    if (t<1/d1) then
-        return n1*t*t;
-    elseif(t<2/d1) then
-        t-=1.5/d1
-        return n1*t*t+.75;
-    elseif(t<2.5/d1) then
-        t-=2.25/d1
-        return n1*t*t+.9375;
-    else
-        t-=2.625/d1
-        return n1*t*t+.984375;
-    end
-end
-
---other useful functions:
---(linear interpolation between a/b)
-function lerp(a,b,t)
-    return a+(b-a)*t
-end
-
---(finds the t value that would
---return v in a lerp between a/b)
-function invlerp(a,b,v)
-    return (v-a)/(b-a)
+--requires higher precision
+function ease_in_out_expo(t,b,c,d) -- exponential easing in/out - accelerating until halfway, then decelerating
+  t = t/(d/2)
+  if t<1 then
+    return c/2*2^(10*(t-1))+b
+  end
+  t = t-1
+  return c/2*(-2^(-10*t)+2)+b
 end

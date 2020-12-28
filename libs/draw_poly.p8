@@ -2,8 +2,10 @@
 -- draws a filled convex polygon
 -- v is an array of vertices
 -- {x1, y1, x2, y2} etc
-function draw_poly(v,col)
+function draw_poly(v,col,col2)
  col=col or 5
+ col2=col2 or col
+ col2=col
 
  -- initialize scan extents
  -- with ludicrous values
@@ -71,7 +73,7 @@ function draw_poly(v,col)
   local ofs1=flr((sx1+1)/2)
   local ofs2=flr((sx2+1)/2)
   memset(0x6000+(y*64)+ofs1,c,ofs2-ofs1)
-  pset(sx1,y,c)
-  pset(sx2,y,c)
+  pset(sx1,y,col2)
+  pset(sx2,y,col2)
  end 
 end
