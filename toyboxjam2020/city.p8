@@ -16,7 +16,6 @@ function create_city(position)
     city.y = position.y
     city.name=city_names[cur_city + 1]
     city.reward=city_rewards[cur_city+1]
-    printh(city.name.."rew"..city.reward)
     city.flip1 = rnd({true,false})
     city.flip2 = rnd({true,false})
     city.gare_x = rnd({0, 1, 2})
@@ -82,15 +81,11 @@ function create_city(position)
         sfx_spawn_coins()
         for x=self.x,self.x+3 do
             i = world.items[x][self.y-2]
-            printh(i.type)
             if i.type == nil or i.type == "" then
-                printh(tostring(self))
                 world.items[x][self.y-2] = create_item({x=x,y=self.y-2,type="coins",amount=self.reward\2})
             end
         end
     end
-
-    printh(tostring(city))
 
     return city
 end

@@ -26,6 +26,7 @@ __lua__
 #include world.p8
 #include player.p8
 #include sfx.p8
+#include save.p8
 
 #include debug.p8
 
@@ -49,6 +50,8 @@ function _update()
             title_screen = false
             sfx_menu_valid()
         end
+    else
+        save:save()
     end
     world:update()
     ui:update()
@@ -75,6 +78,7 @@ function _init()
     world:init()
     train:init()
     debug:init()
+    save:init()
     --music(0)
 end
 

@@ -91,7 +91,6 @@ function world:init()
     world.cities = {}
     fc = cities_pos[1]
     for c=1,6 do
-        printh("c"..c.." "..tostring(cities_pos[c]))
         city = create_city({x=cities_pos[c][1], y=cities_pos[c][2]})
         add(world.cities, city)
         for x=0,city_w-1 do
@@ -240,7 +239,6 @@ function world:refresh_connections()
         end
     end
     train.max_pp = 8*nbcells
-    printh("connected_cities="..tostring(self.connected_cities).." nbcells="..nbcells)
 end
 
 function world:next_area_cost()
