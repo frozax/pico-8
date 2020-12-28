@@ -4,29 +4,24 @@ function ease(zero_duration, ease_to_1, ease_to_1_duration, one_duration, ease_t
     ti = time() % total_duration
     --printh(ti)
     if ti < zero_duration then
-        printh("0 ("..ti..")")
         return 0
     end
     ti -= zero_duration
     if ti < ease_to_1_duration then
         tt = ti / ease_to_1_duration
-        printh("to_1:"..tt)
         return ease_to_1(tt, 0, 1, 1)
     end
     ti -= ease_to_1_duration
     if ti < one_duration then
-        printh("1")
         return 1
     end
     ti -= one_duration
     if ti < ease_to_0_duration then
         tt = 1 - ti/ease_to_0_duration
-        printh("to_0:"..tt)
         return ease_to_0(tt, 0, 1, 1)
     end
     ti -= ease_to_0_duration
     if ti < zero_duration_end then
-        printh("0 (2)")
         return 0
     end
 end
