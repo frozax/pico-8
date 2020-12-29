@@ -45,7 +45,6 @@ SAVE_ITEMS_START=18
 SAVE_RAILS_START=SAVE_ITEMS_START + 512/8
 SIZE_PER_RAIL_SAVED = 16 -- 16b
 MAX_RAILS_SAVED = (256-SAVE_RAILS_START) * 8 \ SIZE_PER_RAIL_SAVED
-printh("max railed saved"..MAX_RAILS_SAVED)
 
 DATA_START = 0x5e00
 VERSION=8
@@ -84,28 +83,30 @@ function save:save()
     end
 
     -- save rails
-    ir = 0
+    ir, failed = 0, 0
     for x=0,world.w-1 do
         for y=0,world.h-1 do
-            if world.items[x][y]:is_rail() then
+            it = world.items[x][y]
+            if it:is_rail() and not it.city then
                 if ir < MAX_RAILS_SAVED then
                     poke(DATA_START+SAVE_RAILS_START + ir*2 + 0, x+1)
                     poke(DATA_START+SAVE_RAILS_START + ir*2 + 1, y+1)
                     ir += 1
+                else
+                    failed += 1
                 end
             end
         end
     end
+    if (failed > 0) printh("Saved "..ir.."/"..(failed+ir).." rails")
 
 end
 
 function save:load()
     version = peek2(DATA_START+SAVE_VERSION_CONTROL)
-    printh("load versino:" ..version)
     if version == VERSION then
         player.p.x = peek2(DATA_START+SAVE_PLAYER_X)
         player.p.y = peek2(DATA_START+SAVE_PLAYER_Y)
-        printh("load"..tostring(player.p))
 
         ui.coins = peek2(DATA_START+SAVE_COINS)
         ui.stone = peek2(DATA_START+SAVE_STONES)

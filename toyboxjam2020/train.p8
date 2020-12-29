@@ -37,6 +37,9 @@ function train:update()
     while(true) do
         if pp >= 8 then
             pp -= 8
+            if c.next_rail == nil then
+                break
+            end
             c = c.next_rail
         else
             break
