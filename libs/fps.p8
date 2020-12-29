@@ -8,11 +8,11 @@ end
 function showpct(c)
     pct = flr(stat(1)*100)
     if pct > 100 then
-        c = colors.red
+        c = 8
     elseif pct > 80 then
-        c = colors.orange
+        c = 9
     elseif not c then
-        c = colors.black
+        c = 0
     end
 
     pct = tostr(pct)
