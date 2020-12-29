@@ -10,9 +10,8 @@ __lua__
 -- More games: https://frozax.itch.io
 
 #include vec2.p8
-#include ../libs/util.p8
+#include util.p8
 #include ../libs/buttons.p8
-#include ../libs/colors.p8
 #include ../libs/fps.p8
 #include ../libs/tostring.p8
 #include ../libs/anim.p8
@@ -31,16 +30,6 @@ __lua__
 
 #include debug.p8
 
--------------------------------
-function printo(str, x, y, c0, c1)
-for xx = -1, 1 do
- for yy = -1, 1 do
- print(str, x+xx, y+yy, c1)
- end
-end
-print(str,x,y,c0)
-end
-
 function _update()
     anims:update()
     train:update()
@@ -51,8 +40,6 @@ function _update()
             title_screen = false
             sfx_menu_valid()
         end
-    else
-        save:save()
     end
     world:update()
     ui:update()
@@ -69,8 +56,7 @@ function _draw()
     if title_screen then
         ui:draw_title()
     end
-    --showpct(7)
-    --printo(tostring(world.items[player.p.x\8][player.p.y\8].type), 1, 1, 1, 7)
+    showpct(7)
 end
 
 function _init()

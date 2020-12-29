@@ -48,6 +48,7 @@ function player:update()
                     if self.coll_item.type == "stone" then sfx_gather_stone() end
                     if self.coll_item.type == "tree" then sfx_gather_tree() end
                 end
+                save:save()
             end
         end
     end
@@ -76,17 +77,20 @@ function player:update()
         else
             sfx_error()
         end
+        save:save()
     end
     if btnp(buttons.b2) then
         cll = train:can_leave_loco()
         if cll then
             train:leave_loco()
         end
+        save:save()
     end
     if self.below_item.type == "coins" then
         sfx_gather_coins()
         ui:add_resource("coins", self.below_item.amount)
         self.below_item.type = ""
+        save:save()
     end
 end
 

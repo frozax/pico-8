@@ -116,7 +116,7 @@ end
 
 function ui:draw_build_rail(has_rsc)
     enough_col = ui_text_col
-    not_enough_col = colors.red
+    not_enough_col = 8
     y = 7
     draw_win(-1, y, 36, 14, ui_col1, ui_col2)
     print("\x8ebuild", 1, y+2, ui_text_col)
@@ -135,7 +135,7 @@ end
 
 function ui:draw_buy_area(has_coins)
     enough_col = ui_text_col
-    not_enough_col = colors.red
+    not_enough_col = 8
     y = 7
     draw_win(-1, y, 41, 14, ui_col1, ui_col2)
     print("\x8ebuy area", 1, y+2, ui_text_col)
