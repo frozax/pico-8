@@ -1,14 +1,10 @@
-function draw_win(_x,_y,_w,_h,_c1,_c2)
- rectfill(_x,_y,_x+_w,_y+_h,_c1)
- rect(_x,_y,_x+_w,_y+_h,_c2)
-end
-
 cur_city = 0
 city_w, city_h=4,4
 city_names = {"paris", "tokyo", "dallas", "london", "berlin", "roma"}--, "madrid", "sydney"}
 city_rewards = {50, 60, 100, 150, 200, 250, 250}--, "madrid", "sydney"}
 first_city = vec2(3, 7)
 cities_pos = {{first_city.x, first_city.y}, {10, 16}, {31, 24}, {50, 9}, {80, 18}, {110,22}}
+
 
 function create_city(position)
     city = {}

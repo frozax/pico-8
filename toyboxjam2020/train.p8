@@ -87,6 +87,9 @@ function train:draw()
         if cell:left():is_rail() or cell:right():is_rail() then
             if i ==1 or i == self.wagons + 2 then
                 if i != 1 then flipx=true end
+                if cell.next_rail != cell:right() or cell:left().next_rail != cell then
+                    flipx = not flipx
+                end
                 s = spr_loco_h
             else
                 s = spr_wagon_h
@@ -95,6 +98,9 @@ function train:draw()
             flipx=true
             if i ==1 or i == self.wagons + 2 then
                 if i==1 then flipy=true end
+                if cell.next_rail != cell:bottom() or cell:top().next_rail != cell then
+                    flipy = not flipy
+                end
                 s = spr_loco_v
             else
                 s = spr_wagon_v
