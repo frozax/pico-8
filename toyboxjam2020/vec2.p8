@@ -7,9 +7,6 @@ vec2mt={
     __sub=function(v1,v2)
         return vec2(v1.x-v2.x,v1.y-v2.y)
     end,
-    __unm=function(self)
-        return vec2(-self.x,-self.y)
-    end,
     __mul=function(s,v)
         return vec2(s*v.x,s*v.y)
     end,

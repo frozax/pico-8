@@ -9,7 +9,6 @@ end
 -- code from democart
 function draw_rwin(_x,_y,_w,_h,_c1,_c2)
  -- would check screen bounds but may want to scroll window on?
- if (_w<12 or _h<12) return(false) -- min size
  -- okay draw inside
  rectfill(_x+3,_y+1,_x+_w-3,_y+_h-1,_c1) -- x big middle bit
  line(_x+2,_y+3,_x+2,_y+_h-3,_c1) -- x left edge taller

@@ -11,8 +11,8 @@ __lua__
 
 #include vec2.p8
 #include util.p8
+#include fps.p8
 #include ../libs/buttons.p8
-#include ../libs/fps.p8
 #include ../libs/tostring.p8
 #include ../libs/anim.p8
 #include ../libs/data.p8

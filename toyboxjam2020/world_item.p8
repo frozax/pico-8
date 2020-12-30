@@ -29,7 +29,7 @@ function create_item(infos)
             if self.dmg >= 100 then
                 self.dmg = 100
                 -- remove from world
-                world.items[self.x][self.y] = create_item({x=item.x, y=item.y})
+                world.items[self.x][self.y] = create_item({x=self.x, y=self.y})
             end
         end
         function item:get_damage_state()
@@ -235,9 +235,12 @@ function create_item(infos)
             t = self:top():nb_rails_nb()
             b = self:bottom():nb_rails_nb()
             r = self:right():nb_rails_nb()
+            --printh("l"..l.."r"..r.."t"..t.."b"..b)
+            --printh("il"..tostr(il).."ir"..tostr(ir).."it"..tostr(it).."ib"..tostr(ib))
+            --printh("l"..tostr(l).."r"..tostr(r).."t"..tostr(t).."b"..tostr(b))
+            --" il"..il.." ir"..ir.." it"..tostr(it).." ib"..tostr(ib))
             if (l < 2 and t < 2 and b < 2 and r < 2) and
             (ir or il or it or ib) then
-                --printh("l"..l.."r"..r.."t"..t.."b"..b)
                 return true, ui.stone >= rail_cost_stone and ui.tree >= rail_cost_tree
             end
         end
