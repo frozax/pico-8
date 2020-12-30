@@ -178,8 +178,8 @@ function ui:draw_title()
     c1=nil
     c2=nil
     c3=8
-    y=5
-    draw_rwin(32, y*8-24, 128-64-4, 4*8+28, 1, 7)
+    y=4
+    draw_rwin(32, 40-30, 128-64-4, 4*8+26, 1, 7)
     palt(5,true) -- remove backgnd
     palt(6,true) -- remove lines
     palt(0,false) -- shadow draws
@@ -193,14 +193,19 @@ function ui:draw_title()
     pal(0,0)
     palt(0,true)
 
+    --draw_rwin(32, 80, 128-64-4, 4*8+28, 1, 7)
+    y = 104
+    print("toyboxjam 2020", 64-7*4+2, y+6, 7)
+    print("@frozax", 64-4*4+4, y+12, 7)
+
     if flr(time()*4) % 10 < 7 then
         sx, sy = 112,112
     else
         sx, sy = 40,120
     end
-    sspr(sx, sy, 8, 8, 32+16+8-1, 21, 16, 16)
+    sspr(sx, sy, 8, 8, 32+16+8-1, 14, 16, 16)
 
     if flr(time()*8) % 4 > 0 then
-        printco("press \x8e to start", 90, ui_col2, ui_text_col)
+        printco("press \x8e to start", 80, ui_col2, ui_text_col)
     end
 end

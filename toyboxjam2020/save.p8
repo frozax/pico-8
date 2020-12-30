@@ -99,7 +99,6 @@ function save:save()
         end
     end
     if (failed > 0) printh("Saved "..ir.."/"..(failed+ir).." rails")
-
 end
 
 function save:load()
