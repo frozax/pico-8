@@ -108,7 +108,7 @@ function world:update()
         self.origin.y = sin(time()/18.3) * self.h*8*0.3/2 + self.h*8/2-64
     else
         -- if player is outside center square, shift the origin
-        pp = player.p - vec2(player.size*0.5, player.size*0.5)
+        pp = player.p - vec2(player.hsize, player.hsize)
         cur_pos = pp - self.origin 
         if cur_pos.x < self.border then
             self.origin.x = pp.x - self.border

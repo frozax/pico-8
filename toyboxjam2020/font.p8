@@ -27,29 +27,6 @@ function chr(_ascii)
 end
 
 -------------------------------
--- sprite print
--- _c = letter color
--- _c2 = line color
--- _c3 = background color of font
--- collapse all these sprite
--- printing routines into one
--- function if you want!
-function sprint(_str,_x,_y,_c,_c2,_c3)
- local i, num
- palt(0,false) -- make sure black is solid
- if (_c != nil) pal(7,_c) -- instead of white, draw this
- if (_c2 != nil) pal(6,_c2) -- instead of light gray, draw this
- if (_c3 != nil) pal(5,_c3) -- instead of dark gray, draw this
- -- make color 5 and 6 transparent for font plus shadow on screen
-  
- for i=1,#_str do
-  num=asc(sub(_str,i,i))+64+32
-  spr(num,(_x+i-1)*8,_y*8)
- end
- pal()
-end
-
--------------------------------
 -- sprite print centered on x
 function sprintc(_str,_y,_c,_c2,_c3)
  local i, num

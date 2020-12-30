@@ -2,7 +2,6 @@ player = {}
 
 player.p = vec2(74, 64) -- p is center of perso
 player.speed = 2.0    -- pix / frame
-player.size = 8
 player.hsize = 4
 player.minp = vec2(player.hsize, player.hsize)
 player.maxp = vec2(world.w * 8 - player.hsize, world.h * 8 - player.hsize)
@@ -83,8 +82,11 @@ function player:update()
         cll = train:can_leave_loco()
         if cll then
             train:leave_loco()
+            save:save()
+        else
+            -- show help
+            help_on = true
         end
-        save:save()
     end
     if self.below_item.type == "coins" then
         sfx_gather_coins()

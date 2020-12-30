@@ -40,7 +40,7 @@ function getspr(spr)
     return __x, __y
 end
 
-function ui:refresh_objective()
+function ui:update()
     self.objective = nil
     for i=1,#self.objectives do
         if not self.objectives[i].done then
@@ -52,10 +52,6 @@ function ui:refresh_objective()
             end
         end
     end
-end
-
-function ui:update()
-    self:refresh_objective()
 end
 
 ui_col1 = 13
@@ -114,9 +110,9 @@ function ui:draw()
     end
 end
 
+enough_col = ui_text_col
+not_enough_col = 8
 function ui:draw_build_rail(has_rsc)
-    enough_col = ui_text_col
-    not_enough_col = 8
     y = 7
     draw_win(-1, y, 36, 14, ui_col1, ui_col2)
     print("\x8ebuild", 1, y+2, ui_text_col)
@@ -134,8 +130,6 @@ function ui:draw_build_rail(has_rsc)
 end
 
 function ui:draw_buy_area(has_coins)
-    enough_col = ui_text_col
-    not_enough_col = 8
     y = 7
     draw_win(-1, y, 41, 14, ui_col1, ui_col2)
     print("\x8ebuy area", 1, y+2, ui_text_col)

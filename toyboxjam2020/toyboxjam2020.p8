@@ -27,22 +27,29 @@ __lua__
 #include player.p8
 #include sfx.p8
 #include save.p8
+#include help.p8
 
 #include debug.p8
 
 function _update()
-    anims:update()
-    train:update()
-    -- draw player before to center the world properly
-    player:update()
-    if title_screen then
-        if btnp(buttons.b1) then
-            title_screen = false
-            sfx_menu_valid()
+    if help_on then
+        if btnp(buttons.b1) or btnp(buttons.b2) then
+            help_on = false
         end
+    else
+        anims:update()
+        train:update()
+        -- draw player before to center the world properly
+        player:update()
+        if title_screen then
+            if btnp(buttons.b1) then
+                title_screen = false
+                sfx_menu_valid()
+            end
+        end
+        world:update()
+        ui:update()
     end
-    world:update()
-    ui:update()
 end
 
 function _draw()
@@ -55,6 +62,9 @@ function _draw()
     player:draw()
     if title_screen then
         ui:draw_title()
+    end
+    if help_on then
+        show_help()
     end
     --showpct(7)
 end
