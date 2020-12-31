@@ -126,8 +126,7 @@ function player:check_movement()
 end
 
 function player:move(dir)
-    newp = self.p + dir
-    self.p = newp
+    self.p = self.p + dir
 
     -- check borders
     if self.p.x < self.minp.x then self.p.x = self.minp.x end

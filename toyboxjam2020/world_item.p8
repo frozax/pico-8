@@ -208,16 +208,17 @@ function create_item(infos)
         end
     end
 
-    function item:is_rail()
-        return self.type == "rail"
+    -- or_entrepot mens wealso returns trop for entrpot
+    function item:is_rail(or_entrepot)
+        return self.type == "rail" or (self.type == "entrepot" and or_entrepot)
     end
     
     function item:nb_rails_nb()
         _nb = 0
-        if self:left():is_rail() then _nb+=1 end
-        if self:right():is_rail() then _nb+=1 end
-        if self:bottom():is_rail() then _nb+=1 end
-        if self:top():is_rail() then _nb+=1 end
+        if self:left():is_rail(true) then _nb+=1 end
+        if self:right():is_rail(true) then _nb+=1 end
+        if self:bottom():is_rail(true) then _nb+=1 end
+        if self:top():is_rail(true) then _nb+=1 end
         return _nb
     end
 

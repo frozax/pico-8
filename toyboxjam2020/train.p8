@@ -131,7 +131,7 @@ function train:get_end_loco_cell()
     return c
 end
 
-loco_enter_dist=5
+loco_enter_dist=7
 function train:can_enter_loco(pos)
     if self:is_player_in_loco() then
         return false
