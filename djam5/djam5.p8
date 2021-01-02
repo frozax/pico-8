@@ -14,6 +14,8 @@ __lua__
 #include ../libs/change_interval.p8
 #include ../libs/buttons.p8
 
+#include sound.p8
+#include menu.p8
 #include dna.p8
 #include game.p8
 #include level.p8
@@ -22,31 +24,18 @@ __lua__
 #include help.p8
 
 function _update()
-    -- before to detect buttons before
-    help:update()
-    if (cur_dna) cur_dna:update()
-    if (dst_dna) dst_dna:update()
-
-    ui:update()
+    game:update()
 end
 
 -- colors
 function _draw()
-    cls(1)
-    --for i=1,2999 do
-    --    x=rnd(32)+32+16
-    --    y=rnd(128)
-    --    pset(x, y, 1)
-    --end
-    cur_dna:draw()
-    dst_dna:draw()
-    ui:draw(1)
-    help:draw()
-    --draw_dna({C}, 64, 24)
+    game:draw()
     showpct()
 end
 
 function _init()
+    game:init()
+    game:set_state(GS_MAINMENU)
     gen_level(1)
     cur_dna = create_dna(level.src, 20, 58, "r")
     dst_dna = create_dna(level.dst, 128-20, 58, "l")

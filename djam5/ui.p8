@@ -87,7 +87,7 @@ function ui:update()
         self.selection -= 1
         if self.selection <= 0 then
             self.selection = 1
-            sfx_wrong()
+            sound_menu_error()
         end
     elseif btnp(buttons.b1) then
         if self.state == STT_SELECT_MUTATION then
@@ -174,8 +174,8 @@ function ui:draw_ctag(text, xpos, selected)
     print(text, c-1, ypos+5, 7)
 end
 
-function ui:draw(y)
-    local y=y
+function ui:draw()
+    local y=1
     local ui_col=7
     printc(self.text1, y, ui_col)
     printc(self.text2, y+6, ui_col)
@@ -215,10 +215,4 @@ function ui:draw(y)
             x+= 20
         end
     end
-end
-
-function sfx_wrong()
-end
-
-function sfx_valid()
 end
