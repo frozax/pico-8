@@ -22,6 +22,8 @@ __lua__
 #include help.p8
 
 function _update()
+    -- before to detect buttons before
+    help:update()
     if (cur_dna) cur_dna:update()
     if (dst_dna) dst_dna:update()
 
@@ -39,17 +41,18 @@ function _draw()
     cur_dna:draw()
     dst_dna:draw()
     ui:draw(1)
+    help:draw()
     --draw_dna({C}, 64, 24)
     showpct()
 end
 
 function _init()
     gen_level(1)
-    cur_dna = create_dna(level.src, 20, 60, "r")
-    dst_dna = create_dna(level.dst, 128-20, 60, "l")
+    cur_dna = create_dna(level.src, 20, 58, "r")
+    dst_dna = create_dna(level.dst, 128-20, 58, "l")
     cur_dna:start()
     dst_dna:start()
-    ui:init()
+    ui:init(level)
 end
 
 __gfx__
