@@ -45,6 +45,10 @@ function mutate(seq, mut_type, i, v)
             v = flr(rnd(4))
         end
         seq[i] = v
+    elseif mut_type == MUT_DELETE then
+        deli(seq, i)
+    elseif mut_type == MUT_INSERT then
+        add(seq, v, i)
     end
     printh("new seq:"..tostring(seq))
 end

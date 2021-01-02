@@ -119,7 +119,10 @@ function create_dna(sequence, _x, _y, _lr)
         else
             xt = self.x - max_width - 10
         end
-        print(names[self.sequence[_i]], xt, y-2, _c1)
+        -- can not exists when using insertion
+        if _i > 0 and _i <= #self.sequence then
+            print(names[self.sequence[_i]], xt, y-2, _c1)
+        end
         return xt, y
     end
 
