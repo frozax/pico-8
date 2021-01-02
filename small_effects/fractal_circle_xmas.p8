@@ -10,6 +10,13 @@ e(64,64,25,5)
 ?"merry xmas",45,62,7
 flip()goto _
 
+-- improvement by @p01
+function e(x,y,r,d,a)
+if(d<5)for q=0,3do p=r*1.8b=a+q/4e(x-p*cos(b),y+p*sin(b),r/2,d+1,-a)end
+circfill(x,y,r,d)end::_::pal({129,1,-4,12,7},1)cls(1)e(64,64,25,1,t()/6)
+?"merry xmas",45,62,7
+flip()goto _
+
 --c=7
 --pal({128+1,1,128+12,12,7},1)
 --::_::

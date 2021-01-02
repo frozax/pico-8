@@ -9,39 +9,65 @@ __lua__
 frame = 0
 global = {}
 function _update()
-    item = create_item()
-    add(global, item)
     frame += 1
-    if frame % 100 == 0 then
-        printh(stat(0))
-        global = {}
-    end
 end
 
 function _draw()
-    cls(1)
-
-    print(frame, 1, 1)
-    print(stat(0), 20, 1)
 end
 
 function create_item()
     item = {}
     function item:f1()
-        print("1")
+        print("f1")
+    end
+    return item
+end
+
+local ItemMetaTable = {}
+local ItemMethods = {}
+function ItemMethods:f1()
+    print("f1_mt"..self.a)
+end
+ItemMetaTable.__index = ItemMethods
+
+function create_item_mt()
+    item = {a=rnd()}
+    setmetatable(item, ItemMetaTable)
+    return item
+end
+
+function create_item_large()
+    item = {}
+    function item:f1()
     end
     function item:f2()
-        print("2")
-    end
-    function item:f3()
-        print("3")
-    end
-    function item:f4()
-        print("3")
     end
     return item
 end
 
 function _init()
     print("done")
+    print(stat(0))
+    count=9000
+    items = {}
+    print("before "..stat(0))
+    for i=1,count do
+        add(items, create_item())
+    end
+    items[1]:f1()
+    print(count.." simple_old "..stat(0))
+    for i=1,count do
+        add(items, create_item_large())
+    end
+    print(count.." large_old "..stat(0))
+
+    new_items = {}
+    for i=1,count do
+        add(new_items, create_item_mt())
+    end
+    new_items[1]:f1()
+    new_items[2]:f1()
+    print(count.." simple_mt "..stat(0))
+
+
 end
