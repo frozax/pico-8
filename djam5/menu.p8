@@ -3,9 +3,11 @@ function create_menu(mis, shadow)
     menu = {}
     menu.items=mis
     menu.hspacing = 3
-    menu.button_bg_col = 6
-    menu.button_shadow_col = shadow
-    menu.button_text_col = 0
+    menu.button_bg_col = 2
+    menu.button_bg_col_selected = 3
+    menu.button_shadow_col = 6
+    menu.button_text_col = 6
+    menu.button_text_col_selected = 7
     menu.selection = 1
     menu.item_border_x = 4
     menu.item_border_y = 2
@@ -49,11 +51,11 @@ function create_menu(mis, shadow)
 
     function menu:draw_item(y, _text, selected)
         local text=_text
-        local x = 64 - self.item_width * 0.5
+        local x = self.forced_x or (64 - self.item_width * 0.5)
         local y=y
 
         local shad_col = self.button_shadow_col
-        local text_col = self.button_text_col
+        local text_col = selected and self.button_text_col_selected or self.button_text_col
         local text_width = #text * 4 - 1
         if selected then
             x+=1
@@ -71,7 +73,7 @@ function create_menu(mis, shadow)
         if shad_col then
             rectfill(x+1, y+1, x + self.item_width, y + self.item_height, shad_col)
         end
-        rectfill(x, y, x + self.item_width - 1, y + self.item_height - 1, self.button_bg_col)
+        rectfill(x, y, x + self.item_width - 1, y + self.item_height - 1, selected and self.button_bg_col_selected or self.button_bg_col)
         c = 0
         --if selected then
         --        c = 9

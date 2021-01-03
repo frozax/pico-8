@@ -3,7 +3,9 @@ T=1
 C=2
 G=3
 pair={[A]=T,[T]=A,[C]=G,[G]=C}
-colors={[A]=2,[T]=3,[C]=4,[G]=5}
+pal(2, 128+12, 1)   -- new blue
+pal(4, 128+8, 1) -- new red
+colors={[A]={11,3},[T]={8,4},[C]={10,9},[G]={12,2}} -- A:Green, T:Red, C:Yellow, G:Blue
 names={[A]="a",[T]="t",[C]="c",[G]="g"}
 ANIM_START = "anim_start"
 ANIM_STOP = "anim_stop"
@@ -104,17 +106,17 @@ function create_dna(sequence, _x, _y, _lr)
             c1 = colors[self.sequence[i]]
             c2 = colors[pair[self.sequence[i]]]
             if ang%1 < 0.5 then
-                circfill(branch_x+width, y, r2, c2)
-                rectfill(branch_x+width, y-bar_half_height, branch_x, y+bar_half_height, c2)
-                rectfill(branch_x-width, y-bar_half_height, branch_x, y+bar_half_height, c1)
-                circfill(branch_x-width, y, r, c1)
+                rectfill(branch_x+width, y-bar_half_height, branch_x, y+bar_half_height, c2[2])
+                circfill(branch_x+width, y, r2, c2[1])
+                rectfill(branch_x-width, y-bar_half_height, branch_x, y+bar_half_height, c1[2])
+                circfill(branch_x-width, y, r, c1[1])
             else
-                circfill(branch_x-width, y, r, c1)
-                rectfill(branch_x-width, y-bar_half_height, branch_x, y+bar_half_height, c1)
-                rectfill(branch_x+width, y-bar_half_height, branch_x, y+bar_half_height, c2)
-                circfill(branch_x+width, y, r2, c2)
+                rectfill(branch_x-width, y-bar_half_height, branch_x, y+bar_half_height, c1[2])
+                circfill(branch_x-width, y, r, c1[1])
+                rectfill(branch_x+width, y-bar_half_height, branch_x, y+bar_half_height, c2[2])
+                circfill(branch_x+width, y, r2, c2[1])
             end
-            self:draw_char(i, c1)
+            self:draw_char(i, c1[1])
             y+=bar_spacing
         end
     end

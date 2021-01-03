@@ -31,15 +31,22 @@ end
 -- colors
 function _draw()
     game:draw()
-    showpct()
+    --showpct()
 end
 
 function _init()
+    cartdata("frozax_dnamutations")
+    menu_dna = create_dna({C,T,T,A,G,G,T,C,A,G,T,A,C,T,C,C,T,G,A,A,G,T}, 20, 66)
+    menu_dna:start()
+    menu_dna.anim_start = -10
     game:init()
     game:set_state(GS_MAINMENU)
-    game:set_state(GS_GAME, difficulties[#difficulties])
-    gen_level_precise(4, 2, 31119)
-    game:setup_level()
+
+    --game:set_state(GS_GAME, difficulties[#difficulties])
+    --gen_level_precise(4, 2, 31119)
+    --game:setup_level()
+    --help:show()
+    --game.pause_menu_on=true
 end
 
 __gfx__

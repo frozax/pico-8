@@ -13,7 +13,7 @@ function particles:start()
             size=flr(rnd(3))+1,
             age=-rnd(30),
             life=rnd(100)+100,
-            col=rnd({7, 9, 2, 9, 2})
+            col=rnd({11,8,10,12})
             --col=7
         }
         add(self.p, p)
