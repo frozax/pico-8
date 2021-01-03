@@ -161,6 +161,13 @@ function ui:draw_button(mut_type, ypos, selected)
     end
     print(text, 20, ypos+2, 7)
     print(text2, 20, ypos+8, 7)
+    -- icon
+    local nb_frames = 4
+    yspr = mut_type - 1
+    xd = 90
+    if (mut_type == MUT_INSERT) xd -= 9
+    frame = flr(time()*4) % nb_frames
+    sspr(8+frame*13, yspr * 13, 13, 13, xd, ypos+1)
 end
 
 function ui:remaining(_mut_type)

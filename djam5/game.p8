@@ -44,6 +44,12 @@ function game:init()
     end
     self.game_over_menu = create_menu({brestart, bmenu}, shadow_col)
 
+    bcontinue={text="resume"}
+    function bcontinue:click()
+        game.pause_menu_on = false
+    end
+    self.pause_menu = create_menu({bcontinue, brestart, bmenu}, shadow_col)
+
     -- diff menu
     diff = {}
     for d=1,#difficulties do
@@ -86,19 +92,30 @@ function game:update()
         help:update()
         cur_dna:update()
         dst_dna:update()
-        ui:update()
-        if array_equals(cur_dna.sequence, dst_dna.sequence) then
-            particles:start()
-            cur_dna:speed_up()
-            dst_dna:speed_up()
-            self:set_state(GS_EOL)
+        if self.pause_menu_on then
+            self.pause_menu:input()
+            if btnp(buttons.b2) then
+                self.pause_menu_on = false
+            end
         else
-            -- check game over
-            if ui:all_remaining() == 0 then
-                cur_dna:stop()
-                dst_dna:stop()
-                self.game_over_menu.selection = 1
-                self:set_state(GS_GAMEOVER)
+            ui:update()
+            if array_equals(cur_dna.sequence, dst_dna.sequence) then
+                particles:start()
+                cur_dna:speed_up()
+                dst_dna:speed_up()
+                self:set_state(GS_EOL)
+            else
+                -- check game over
+                if ui:all_remaining() == 0 then
+                    cur_dna:stop()
+                    dst_dna:stop()
+                    self.game_over_menu.selection = 1
+                    self:set_state(GS_GAMEOVER)
+                end
+            end
+            if btnp(buttons.b2) then
+                self.pause_menu_on = true
+                self.pause_menu.selection = 1
             end
         end
     elseif self.state == GS_GAMEOVER then
@@ -155,6 +172,9 @@ function game:draw()
         dst_dna:draw()
         ui:draw()
         help:draw()
+        if self.pause_menu_on then
+            self.pause_menu:draw(40)
+        end
     elseif self.state == GS_EOL then
         particles:draw()
         cur_dna:draw()
@@ -173,6 +193,7 @@ function game:set_state(stt, diff)
     self.state = stt
     self.state_time = time()
     self.selection = 1
+    self.pause_menu_on = false
     if stt == GS_GAME and diff then
         mutations = rnd(diff.mutations)
         dna_length = rnd(diff.length)

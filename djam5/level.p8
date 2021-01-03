@@ -31,9 +31,8 @@ function gen_level_precise(size, mutations, srnd)
                 break
             end
         end
-        printh(mut_type.." "..tostring(INV_MUT).." "..tostring(INV_MUT[mut_type]))
         -- for insert or substitute
-        i = flr(rnd(src_seq)) + 1
+        i = flr(rnd(#src_seq)) + 1
         mutate(src_seq, mut_type, i)
         level.mut_count[INV_MUT[mut_type]] += 1
     end
@@ -44,6 +43,7 @@ function gen_level_precise(size, mutations, srnd)
 end
 
 function mutate(seq, mut_type, i, v)
+    printh("Mutate "..tostring(seq).." with "..mutation_names[mut_type].." at "..i.." with "..tostring(v))
     local v = v
     if v == nil then
         if mut_type == MUT_INSERT then
@@ -56,6 +56,7 @@ function mutate(seq, mut_type, i, v)
         end
     end
     if mut_type == MUT_SUBSTITUTE then
+        assert (i <= #seq, "invalid substitution")
         seq[i] = v
     elseif mut_type == MUT_DELETE then
         deli(seq, i)
