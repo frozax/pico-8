@@ -12,11 +12,11 @@ shadow_col=1
 
 difficulties = {
     {text="very easy", length={4}, mutations={2}},
-    {text="easy", length={5}, mutations={3,4}},
-    {text="medium", length={6}, mutations={5,6}},
-    {text="hard", length={7,8}, mutations={7,8}},
-    {text="very hard", length={9}, mutations={9,10}},
-    {text="extreme", length={10,11}, mutations={11,12}},
+    {text="easy", length={5}, mutations={3}},
+    {text="medium", length={6}, mutations={4}},
+    {text="hard", length={7,8}, mutations={4,5}},
+    {text="very hard", length={9}, mutations={5}},
+    {text="extreme", length={10,11}, mutations={5,6}},
 }
 
 function game:init()
@@ -161,7 +161,7 @@ function game:draw()
         menu_dna.x = ease_out_cubic(t, 0, 1, 1) * 66 - 44
         menu_dna.x = min(menu_dna.x, 22)
         menu_dna:draw()
-        local y_logo = 8
+        local y_logo = 6
         y_logo = min(y_logo, ease_out_cubic(t, 0, 1, 1) * (8+40) - 40)
         sx = 27
         w = {26,23,30}
@@ -170,7 +170,8 @@ function game:draw()
         sspr(sx,60,90,93-60,48, y_logo+1)
         x = sx
         for i=1,3 do
-            c = colors[i]
+            cl = {2,1,0}
+            c = colors[cl[i]]
             pal(7, c[2])
             pal(8, c[1])
             sspr(x,60,w[i],93-60,20+x, y_logo)
@@ -181,10 +182,12 @@ function game:draw()
         --sspr(27,60,102-27,93-60,46, 8)
     end
     if self.state == GS_MAINMENU then
-        if flr((time()*5)) % 4 != 0 then
-            print("press c/\x8e to start", 47, 61, 7)
+        if time()-self.mainmenu_time > 0.5 then
+            if flr((time()*5)) % 4 != 0 then
+                print("press c/\x8e to start", 47, 61, 7)
+            end
+            print("code/design/gfx:\n    @frozax\n\n   sfx/music:\n @gruber_music", 52, 96, 6)
         end
-        print("code/design/gfx:\n    @frozax\n\n   sfx/music:\n @gruber_music", 52, 96, 6)
     elseif self.state == GS_SELECT_DIFF then
         self.diff_menu:draw(57)
         item = self.diff_menu.items[self.diff_menu.selection]
