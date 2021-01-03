@@ -92,12 +92,14 @@ function game:update()
             end
         else
             if btnp(buttons.b1) then
+                sound_menu_valid()
                 game:set_state(GS_SELECT_DIFF)
             end
         end
     elseif self.state == GS_SELECT_DIFF then
         menu_dna:update()
         if btnp(buttons.b2) then
+            sound_menu_back()
             self:set_state(GS_MAINMENU)
         end
         self.diff_menu:input()
@@ -110,11 +112,13 @@ function game:update()
         if self.pause_menu_on then
             self.pause_menu:input()
             if btnp(buttons.b2) then
+                sound_menu_back()
                 self.pause_menu_on = false
             end
         elseif help_was_on then
         else
             if btnp(buttons.b2) and ui.state == STT_SELECT_MUTATION then
+                sound_menu_back()
                 self.pause_menu_on = true
                 self.pause_menu.selection = 1
             end
@@ -124,6 +128,7 @@ function game:update()
                 cur_dna:speed_up()
                 dst_dna:speed_up()
                 self:set_state(GS_EOL)
+                music(5)
             else
                 -- check game over
                 if ui:all_remaining() == 0 then
@@ -152,20 +157,38 @@ function game:draw()
     cls(1)
 
     if self.state == GS_MAINMENU or self.state == GS_SELECT_DIFF then
+        t = change_interval(time()-self.mainmenu_time, 0, 1, 0, 1, false)
+        menu_dna.x = ease_out_cubic(t, 0, 1, 1) * 66 - 44
+        menu_dna.x = min(menu_dna.x, 22)
         menu_dna:draw()
-        printc("dna", 10, 7)
-        printc("mutations", 16, 7)
+        local y_logo = 8
+        y_logo = min(y_logo, ease_out_cubic(t, 0, 1, 1) * (8+40) - 40)
+        sx = 27
+        w = {26,23,30}
+        pal(7,0)
+        pal(8,0)
+        sspr(sx,60,90,93-60,48, y_logo+1)
+        x = sx
+        for i=1,3 do
+            c = colors[i]
+            pal(7, c[2])
+            pal(8, c[1])
+            sspr(x,60,w[i],93-60,20+x, y_logo)
+            x+=w[i]
+        end
+        pal(7, 7)
+        pal(8, 8)
+        --sspr(27,60,102-27,93-60,46, 8)
     end
     if self.state == GS_MAINMENU then
         if flr((time()*5)) % 4 != 0 then
-            print("press c/\x8e to start", 47, 85, 7)
+            print("press c/\x8e to start", 47, 61, 7)
         end
-        print("code/design/gfx: @frozax", 40, 118, 6)
-        print("sfx: @frozax", 100, 108, 6)
+        print("code/design/gfx:\n    @frozax\n\n   sfx/music:\n @gruber_music", 52, 96, 6)
     elseif self.state == GS_SELECT_DIFF then
         self.diff_menu:draw(57)
         item = self.diff_menu.items[self.diff_menu.selection]
-        y = 40
+        y = 43
         print("dna length:", 28+30, y, 6)
         print("mutations:", 28+34, y+6)
         print(item.dna_length, 28+79, y, 7)
@@ -199,6 +222,10 @@ function game:draw()
 end
 
 function game:set_state(stt, diff)
+    if self.state == GS_EOL then
+        -- reestore music
+        music(0)
+    end
     self.state = stt
     self.state_time = time()
     self.selection = 1
@@ -214,6 +241,9 @@ function game:set_state(stt, diff)
             dset(SAVE_ALREADY_PLAYED, 1)
             help:show()
         end
+    end
+    if self.state == GS_MAINMENU then
+        self.mainmenu_time = time()
     end
 end
 

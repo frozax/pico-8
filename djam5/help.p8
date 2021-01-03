@@ -52,6 +52,7 @@ function help:draw()
 end
 
 function help:show_error(_text)
+    sound_menu_error()
     self.error_text = _text
     self.error_start = time()
 end

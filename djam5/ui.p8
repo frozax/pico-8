@@ -88,59 +88,74 @@ function ui:update()
         self.selection += 1
         if self.selection > self.max_sel then
             self.selection = self.max_sel
+            sound_menu_error()
+        else
+            sound_menu_move()
         end
     elseif btnp(buttons.up) or btnp(buttons.left) then
         self.selection -= 1
         if self.selection <= 0 then
             self.selection = 1
             sound_menu_error()
+        else
+            sound_menu_move()
         end
     elseif btnp(buttons.b1) then
         if self.state == STT_SELECT_MUTATION then
             self.mutation = self.selection
             if self.selection == 1 then
                 if self:remaining(MUT_INSERT) > 0 then
+                    sound_menu_valid()
                     self:set_sel_insertion()
                 else
                     help:show_error("no insertion remaining")
                 end
             elseif self.selection == 2 then
                 if self:remaining(MUT_DELETE) > 0 then
+                    sound_menu_valid()
                     self:set_sel_deletion()
                 else
                     help:show_error("no deletion remaining")
                 end
             elseif self.selection == 3 then
                 if self:remaining(MUT_SUBSTITUTE) > 0 then
+                    sound_menu_valid()
                     self:set_sel_substitution()
                 else
                     help:show_error("no substitution remaining")
                 end
             end
         elseif self.state == STT_SELECT_SUBSTITUTION then
+            sound_menu_valid()
             self:set_sel_substitution2(self.selection)
         elseif self.state == STT_SELECT_INSERTION then
+            sound_menu_valid()
             self:set_sel_insertion2(self.selection)
         elseif self.state == STT_SELECT_INSERTION2 then
-            printh("...."..self.action_location.." "..tostring(self.action_poss).." "..self.selection.." "..self.action_poss[self.selection])
+            sound_menu_valid()
             mutate(cur_dna.sequence, MUT_INSERT, self.action_location, self.action_poss[self.selection])
             self.used[MUT_INSERT] += 1
             self:set_sel_mut()
         elseif self.state == STT_SELECT_SUBSTITUTION2 then
+            sound_menu_valid()
             mutate(cur_dna.sequence, MUT_SUBSTITUTE, self.action_location, self.action_poss[self.selection])
             self.used[MUT_SUBSTITUTE] += 1
             self:set_sel_mut()
         elseif self.state == STT_SELECT_DELETION then
+            sound_menu_valid()
             mutate(cur_dna.sequence, MUT_DELETE, self.selection)
             self.used[MUT_DELETE] += 1
             self:set_sel_mut()
         end
     elseif btnp(buttons.b2) then
         if self.state == STT_SELECT_SUBSTITUTION or self.state == STT_SELECT_INSERTION or self.state == STT_SELECT_DELETION then
+            sound_menu_back()
             self:set_sel_mut()
         elseif self.state == STT_SELECT_SUBSTITUTION2 then
+            sound_menu_back()
             self:set_sel_substitution(self.action_location)
         elseif self.state == STT_SELECT_INSERTION2 then
+            sound_menu_back()
             self:set_sel_insertion(self.action_location)
         end
     end
