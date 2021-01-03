@@ -89,5 +89,18 @@ function array_contains(__l, __item)
         end
     end
     return false
+end
 
+function array_equals(__a1, __a2)
+    if #__a1 != #__a2 then
+        return false
+    end
+
+    for k, v in pairs(__a1) do
+        if __a2[k] != v then
+            return false
+        end
+    end
+
+    return true
 end

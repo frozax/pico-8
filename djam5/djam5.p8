@@ -14,6 +14,7 @@ __lua__
 #include ../libs/change_interval.p8
 #include ../libs/buttons.p8
 
+#include particles.p8
 #include sound.p8
 #include menu.p8
 #include dna.p8
@@ -36,12 +37,9 @@ end
 function _init()
     game:init()
     game:set_state(GS_MAINMENU)
-    gen_level(1)
-    cur_dna = create_dna(level.src, 20, 58, "r")
-    dst_dna = create_dna(level.dst, 128-20, 58, "l")
-    cur_dna:start()
-    dst_dna:start()
-    ui:init(level)
+    game:set_state(GS_GAME, difficulties[#difficulties])
+    gen_level_precise(7, 7, 2436)
+    game:setup_level()
 end
 
 __gfx__

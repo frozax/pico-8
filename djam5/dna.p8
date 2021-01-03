@@ -21,17 +21,24 @@ function create_dna(sequence, _x, _y, _lr)
     dna.x = _x
     dna.y = _y
     dna.lr = _lr
+    dna.speed = 1
+    dna.local_time = 0
 
     function dna:update()
+        self.local_time += 1/30 * self.speed
     end
 
     function dna:ang_from_t(branch)
-        return 0 - (branch-1) * 0.06 + (t() - self.anim_start)/3
+        return 0 - (branch-1) * 0.06 + (self.local_time - self.anim_start)/3
     end
 
     function dna:start()
         self.anim = ANIM_START
-        self.anim_start = t()
+        self.anim_start = self.local_time
+    end
+
+    function dna:speed_up()
+        self.speed = 4
     end
 
     function dna:stop()
@@ -46,13 +53,13 @@ function create_dna(sequence, _x, _y, _lr)
 
     function dna:draw()
         circ_col = 7
-        local y = self.y
         front_r = 3
         mid_r = 2
         back_r = 1
         --t()/5
         for i=1,#self.sequence do
             ang = self:ang_from_t(i)
+            local y = self:get_y(i)
             if self.anim == ANIM_START then
                 if ang < 0 then
                     ang = 0
@@ -112,8 +119,12 @@ function create_dna(sequence, _x, _y, _lr)
         end
     end
 
+    function dna:get_y(__i)
+        return self.y+(__i-1)*bar_spacing - #self.sequence * bar_spacing / 2
+    end
+
     function dna:draw_char(_i, _c1)
-        local y = self.y+(_i-1)*bar_spacing
+        local y = self:get_y(_i)
         if self.lr == "r" then
             xt = self.x + max_width + 8
         else

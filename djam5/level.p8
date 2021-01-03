@@ -6,7 +6,12 @@ NB_MUT_TYPES = 3
 INV_MUT = {[MUT_INSERT]=MUT_DELETE, [MUT_DELETE]=MUT_INSERT, [MUT_SUBSTITUTE]=MUT_SUBSTITUTE}
 MAX_SEQUENCE_LENGTH = 12
 
-function gen_level_precise(size, mutations)
+function gen_level_precise(size, mutations, srnd)
+    printh("gen_level"..size.." "..mutations.." "..tostring(srnd))
+    local srnd = srnd or flr(time()*100)
+    srand(srnd)
+    level = {srand=srnd, dna_length=size, mutations=mutations}
+
     src_seq = {}
     dst_seq = {}
     for i=1,size do
@@ -14,7 +19,6 @@ function gen_level_precise(size, mutations)
         add(src_seq, ACTG)
         add(dst_seq, ACTG)
     end
-    level = {}
     level.dst = dst_seq
 
     level.mut_count = {[MUT_INSERT]=0, [MUT_DELETE]=0, [MUT_SUBSTITUTE]=0}
@@ -39,17 +43,16 @@ function gen_level_precise(size, mutations)
     return level
 end
 
-function gen_level(diff)
-    srand(0)
-    return gen_level_precise(12, 4)
-end
-
 function mutate(seq, mut_type, i, v)
-    printh("mutate"..tostring(seq).." with "..mut_type.." ".." at "..i.." with "..tostring(v)..".")
     local v = v
-    if mut_type == MUT_SUBSTITUTE or mut_type == MUT_INSERT then
-        while v == seq[i] or v == nil do
+    if v == nil then
+        if mut_type == MUT_INSERT then
             v = flr(rnd(4))
+        elseif mut_type == MUT_SUBSTITUTE then
+            while v == seq[i] or v == nil do
+                printh("GOT INTO RND!"..tostring(v))
+                v = flr(rnd(4))
+            end
         end
     end
     if mut_type == MUT_SUBSTITUTE then

@@ -9,15 +9,18 @@ ui.state = ""
 ui.mutation = 1
 ui.selection = 1
 mutation_names = {[MUT_INSERT]="insertion", [MUT_DELETE]="deletion",[MUT_SUBSTITUTE]="substitution"}
+ui_col=7
 
 function ui:init(level)
     self:set_sel_mut()
     self.level = level
     self.used = {[MUT_INSERT]=0, [MUT_DELETE]=0,[MUT_SUBSTITUTE]=0}
+    printh(tostring(self.used))
+    printh(tostring(self.level.mut_count))
 end
 
 function ui:set_sel_mut()
-    self.text1 = "choose a mutation"
+    self.text1 = "select a mutation"
     self.text2 = ""
     self.state = STT_SELECT_MUTATION
     self.selection = self.mutation
@@ -116,6 +119,7 @@ function ui:update()
         elseif self.state == STT_SELECT_INSERTION then
             self:set_sel_insertion2(self.selection)
         elseif self.state == STT_SELECT_INSERTION2 then
+            printh("...."..self.action_location.." "..tostring(self.action_poss).." "..self.selection.." "..self.action_poss[self.selection])
             mutate(cur_dna.sequence, MUT_INSERT, self.action_location, self.action_poss[self.selection])
             self.used[MUT_INSERT] += 1
             self:set_sel_mut()
@@ -163,6 +167,14 @@ function ui:remaining(_mut_type)
     return self.level.mut_count[_mut_type] - self.used[_mut_type]
 end
 
+function ui:all_remaining()
+    rem = 0
+    for mut=1,NB_MUT_TYPES do
+        rem += self:remaining(mut)
+    end
+    return rem
+end
+
 function ui:draw_ctag(text, xpos, selected)
     local rw_col1=selected and 8 or 9
     local rw_col2=selected and 9 or 8
@@ -176,7 +188,6 @@ end
 
 function ui:draw()
     local y=1
-    local ui_col=7
     printc(self.text1, y, ui_col)
     printc(self.text2, y+6, ui_col)
     if self.state == STT_SELECT_MUTATION then
