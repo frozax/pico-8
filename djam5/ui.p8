@@ -241,15 +241,23 @@ function ui:draw()
     if self.state == STT_SELECT_DELETION or self.state == STT_SELECT_SUBSTITUTION then
         mn = self.state == STT_SELECT_DELETION and MUT_DELETE or MUT_SUBSTITUTE
         self:draw_button(mn, btn_sel_y, true)
+        cur_dna:draw_line(self.selection, {7,7}, {7,7})
         local xc, yc = cur_dna:draw_char(self.selection, 7)
         spr(spr_arrow, xc+5, yc-4)
     elseif self.state == STT_SELECT_INSERTION then
         self:draw_button(MUT_INSERT, btn_sel_y, true)
+        if self.selection > 1 then
+            cur_dna:draw_line(self.selection-1, {7,7}, {7,7})
+        end
+        if self.selection <= #cur_dna.sequence then
+            cur_dna:draw_line(self.selection, {7,7}, {7,7})
+        end
         local xc, yc = cur_dna:draw_char(self.selection-1, 7)
         cur_dna:draw_char(self.selection, 7)
         spr(spr_arrow, xc+5, yc)
     elseif self.state == STT_SELECT_SUBSTITUTION2 then
         self:draw_button(MUT_SUBSTITUTE, btn_sel_y, true)
+        cur_dna:draw_line(self.action_location, {7,7}, {7,7})
         local xc, yc = cur_dna:draw_char(self.action_location, 7)
         spr(spr_arrow, xc+5, yc-4)
         x = -20
