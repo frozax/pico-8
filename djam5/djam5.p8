@@ -1,7 +1,7 @@
 pico-8 cartridge // http://www.pico-8.com
 version 29
 __lua__
--- djam5 pico-8
+-- dna mutations
 -- by frozax
 
 -- Follow me on twitter: @frozax
