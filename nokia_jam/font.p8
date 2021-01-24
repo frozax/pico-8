@@ -34,8 +34,6 @@ for i=1,#font_chars do
     char_2_size[c] = size
     char_2_left_border[c] = border
 end
-printh(tostring(char_2_index))
-printh(tostring(char_2_size))
 
 function _print(t, x, y, c)
     pal(7,c)

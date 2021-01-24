@@ -13,6 +13,7 @@ __lua__
 
 #include ../libs/tostring.p8
 #include ../libs/util.p8
+#include ../libs/buttons.p8
 #include font.p8
 
 bg = 6
@@ -21,8 +22,27 @@ sw = 84
 sh = 48
 sox = (128-sw)/2
 soy = (128-sh)/2
+cx = (sox+sw \ 2)
+cy = (soy+sh \ 2)
+button_down = ""
+
+fps15 = false
+function update15fps()
+    if fps15 == false then
+        fps15 = true
+    else
+        fps15 = false
+    end
+end
 
 function _update()
+    update15fps()
+    if(btnp(buttons.b1)) button_down="b1"
+    if(btnp(buttons.b2)) button_down="b2"
+    if(btnp(buttons.up)) button_down="up"
+    if(btnp(buttons.down)) button_down="down"
+    if(btnp(buttons.left)) button_down="left"
+    if(btnp(buttons.right)) button_down="right"
 end
 
 -- colors
@@ -32,7 +52,24 @@ function clear_screen()
     rectfill(sox, soy, sox+sw-1, soy+sh-1, bg)
 end
 
+-- convert to pico8
+function _x(x)
+    return x + sox
+end
+function _y(y)
+    return y + soy
+end
+function _p(x, y)
+    return _x(x), _y(y)
+end
+
 function _draw()
+    if fps15 then
+        draw()
+    end
+end
+
+function draw()
     clear_screen()
 
     ti = t()
@@ -44,12 +81,24 @@ function _draw()
     ty = flr(ty)
 
     --printc("hello nokia", 64-2, fg)
-    _print("Hello Nokia! [yeah]", sox+1, soy+1, fg)
+    _print("Hello Nokia!", sox+1, soy+1, fg)
     --_print("AABBCCDDEEFFGGHHII\nJJKKLLMMNNOOPPQQ\nRRSSTTUUVVWW\nXXYYZZ0123456789", 0, 70, fg)
     --_print("aabbccddeeffgghhii\njjkkllmmnnooppqq\nrrssttuuvvww\nxxyyzz0123456789", 0, 70, fg)
-    _print("Freigabe", sox+1, soy+10, fg)
-    _print("+-*/=%\"'#@&_()\n,.;:?!\\|<>[]^~", 0, 70, fg)
+    --_print("+-*/=%\"'#@&_()\n,.;:?!\\|<>[]^~", 0, 70, fg)
+    _print(tostring(rnd(10)), cx, cy)
+    _print(button_down, sox+1, soy+10, fg)
+    _print(tostring(btn()), sox+1, soy+20, fg)
 
+    _draw_safe_frame()
+
+end
+
+function _draw_safe_frame()
+    col = 3
+    rectfill(0, 0, 127, soy - 1, col)
+    rectfill(0, soy+sh, 127, 127, col)
+    rectfill(0, 0, sox - 1, 127, col)
+    rectfill(_x(sw), 0, 127, 127, col)
 end
 
 function _init()
