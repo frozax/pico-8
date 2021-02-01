@@ -104,3 +104,21 @@ function array_equals(__a1, __a2)
 
     return true
 end
+
+function shuffle(t)
+    for n=1,#t*2 do -- #t*2 times seems enough
+        local a,b=flr(1+rnd(#t)),flr(1+rnd(#t))
+        t[a],t[b]=t[b],t[a]
+    end
+    return t
+end
+
+function sort(t)
+    for n=2,#t do
+        local i=n
+        while i>1 and t[i-1] > t[i] do
+            t[i],t[i-1]=t[i-1],t[i]
+            i-=1
+        end
+    end
+end
