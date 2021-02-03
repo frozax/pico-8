@@ -50,7 +50,6 @@ function _print(t, x, y, c)
             sx = (asc % 18) * font_width
             sy = (asc \ 18) * font_height + 80
             border = char_2_left_border[c]
-            --printh(c.." "..dx.." "..dy.." "..sx.." "..sy.." "..size.."x"..font_height.." left_border:"..border)
             sspr(sx+border, sy, size, font_height, dx, dy)
             dx += size + 1
         end

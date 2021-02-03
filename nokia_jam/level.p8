@@ -24,7 +24,7 @@ function gen_level()
     -- gen level
     level = {selection=1}
 
-    d = diff[3]
+    d = diff[1]
 
     level.nb_switches = d.nb_switches
     -- percentages of chances that each switch impact X lights
@@ -125,6 +125,17 @@ function gen_level()
             end
         end
         self:_compute_light_state()
+    end
+
+    function level:completed()
+        comp = true
+        for il=1, #level.lights do
+            if not level.lights[il].state then
+                comp = false
+            end
+        end
+        printh("completed"..tostring(comp))
+        return comp
     end
 
 
