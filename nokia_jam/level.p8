@@ -61,6 +61,16 @@ levels = {
     }
 }
 
+-- new sprite
+sprite_x_inside = 16
+sprite_x_outside = 7
+sprite_w_outside = 8
+sprite_h_outside = 15
+sprite_w_inside = 4
+sprite_h_inside = 6
+sprite_y_outside = 22
+sprite_y_inside = 22
+
 function gen_level(ilevel)
 
     -- gen level
@@ -124,35 +134,35 @@ function gen_level(ilevel)
     end
 
     -- debug find a result
-    for i=0, 2 ^ #level.switches-1 do
-        states = {}
-        all_true = true
-        brepr = ""
-        for l = 1,#level.lights do
-            lstate = false
-            for is = 1, #level.switches do
-                s = level.switches[is]
-                on_switch = band(2 ^ (is-1), i) != 0
-                if l == 1 then
-                    if on_switch then
-                        brepr = brepr.."1"
-                    else
-                        brepr = brepr.."0"
-                    end
-                end
-                if on_switch and array_contains(s.lights, l) then
-                    lstate = not lstate
-                end
-            end
-            add(states, lstate)
-            if not lstate then
-                all_true = false
-            end
-        end
-        if all_true then
-            printh(i.." "..tostring(brepr))
-        end
-    end
+    --for i=0, 2 ^ #level.switches-1 do
+    --    states = {}
+    --    all_true = true
+    --    brepr = ""
+    --    for l = 1,#level.lights do
+    --        lstate = false
+    --        for is = 1, #level.switches do
+    --            s = level.switches[is]
+    --            on_switch = band(2 ^ (is-1), i) != 0
+    --            if l == 1 then
+    --                if on_switch then
+    --                    brepr = brepr.."1"
+    --                else
+    --                    brepr = brepr.."0"
+    --                end
+    --            end
+    --            if on_switch and array_contains(s.lights, l) then
+    --                lstate = not lstate
+    --            end
+    --        end
+    --        add(states, lstate)
+    --        if not lstate then
+    --            all_true = false
+    --        end
+    --    end
+    --    if all_true then
+    --        printh(i.." "..tostring(brepr))
+    --    end
+    --end
 
     function level:_compute_light_state()
         for il=1, #self.lights do
@@ -222,25 +232,6 @@ function gen_level(ilevel)
         -- show switches
         y = 29
 
-        sprite_x_inside = 0
-        sprite_x_outside = 0
-        sprite_w_outside = 6
-        sprite_h_outside = 9
-        sprite_w_inside = 2
-        sprite_h_inside = 2
-        sprite_y_outside = 22
-        sprite_y_inside = 32
-
-        -- new sprite
-        sprite_x_inside = 16
-        sprite_x_outside = 7
-        sprite_w_outside = 8
-        sprite_h_outside = 15
-        sprite_w_inside = 4
-        sprite_h_inside = 6
-        sprite_y_outside = 22
-        sprite_y_inside = 22
-
         spacing = 2
 
         total_width = #self.switches * (sprite_w_outside + spacing) - 1
@@ -263,17 +254,17 @@ function gen_level(ilevel)
         end
 
         -- show light bulbs
-        sprite_w = 13
-        total_width = #self.lights * (sprite_w + 1) - 1
+        sprite_w = 14
+        total_width = #self.lights * (sprite_w) - 1
         x_start = (sw - total_width) \ 2
-        y = 1
+        y = 2
         for il = 1, #self.lights do
-            x = x_start + (il - 1) * (sprite_w + 1)
+            x = x_start + (il - 1) * (sprite_w)
             spr_x = 0
             if self.lights[il].state == true then
                 spr_x = spr_x + 14
             end
-            sspr(spr_x, 0, sprite_w, 21, sox + x, soy + y)
+            sspr(spr_x, 0, sprite_w, 22, sox + x, soy + y)
         end
     end
 

@@ -12,9 +12,11 @@ function game:update()
             self.substate = "eol"
             eol_y_top = animate(soy - 12, soy + 18, 25, ease_out_quad)
             eol_y_bottom = animate(soy + 60, soy + 30, 25, ease_out_quad)
+            sfx_eol()
         end
     elseif self.substate == "eol" then
         if btnp(buttons.b1) then
+            sfx_valid()
             self:next_level()
         end 
     end
@@ -37,6 +39,10 @@ function game:draw()
         --rectfill(sox, soy, sox + sw, eol_y_top.value - 1, bg)
         rectfill(sox, eol_y_bottom.value + 10, sox + sw, soy + sh, bg)
         --_print("Level completed", sox + 2, eol_y_top.value - 10, fg)
-        _print("Press SPACE", sox + 10, eol_y_bottom.value + 10, fg)
+        if run_from_html5 then
+            _print("Press SPACE", sox + 10, eol_y_bottom.value + 10, fg)
+        else
+            _print("Press C", sox + 25, eol_y_bottom.value + 10, fg)
+        end
     end
 end

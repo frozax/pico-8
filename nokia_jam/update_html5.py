@@ -34,6 +34,9 @@ assert new_js_data != js_data, "could not replace the colors"
 js_data = new_js_data.replace("194, 195, 199", "/*FROZAX*/199, 240, 216", 1)
 assert new_js_data != js_data, "could not replace the colors"
 
+# add gpio stuff
+js_data = "pico8_gpio[0] = 1\n" + js_data
+
 js_file.open("wt").write(js_data)
 
 subprocess.open("index.html", shell=True)

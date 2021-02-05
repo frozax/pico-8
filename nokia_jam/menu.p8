@@ -3,6 +3,7 @@ function create_menu(mis)
     menu.items=mis
     menu.selection = 1
     menu.top_item = 1   -- case of scrolling
+    items_per_screen = 4
 
     function menu:update()
         if btnp(buttons.down) then
@@ -11,25 +12,34 @@ function create_menu(mis)
                 self.selection = 1
                 self.top_item = 1
             end
+            if self.selection >= self.top_item + items_per_screen then
+                self.top_item += 1
+            end
+            sfx_menu_change_sel()
         end
         if btnp(buttons.up) then
             self.selection -= 1
             if self.selection == 0 then
                 self.selection = #self.items
-                self.top_item = self.selection - 4
+                self.top_item = self.selection - items_per_screen + 1
                 if self.top_item <= 0 then
                     self.top_item = 1
                 end
             end
+            if self.selection < self.top_item then
+                self.top_item = self.selection
+            end
+            sfx_menu_change_sel()
         end
         if btnp(buttons.b1) then
+            sfx_menu_valid()
             self.items[self.selection]:click()
         end
     end
 
     function menu:draw()
         y = soy + 2
-        for imi=self.top_item, self.top_item+3 do
+        for imi=self.top_item, self.top_item+items_per_screen - 1 do
             if imi > #self.items then
                 break
             end
@@ -67,6 +77,7 @@ end
 function mainmenu:update()
     if btnp(buttons.b1) then
         self:_start_game()
+        sfx_valid()
     end
 end
 
@@ -86,9 +97,10 @@ function mainmenu:draw()
     self:draw_network()
 
     -- draw logo
-    if logo_y.value != soy + 10 or not rnd_erase then
-        sspr(62, 0, 65, 40, sox + 10, logo_y.value)
+    if logo_y.value != soy + 9 or not rnd_erase then
+        sspr(62, 0, 65, 40, sox + 9, logo_y.value)
     end
+    sspr(0 and rnd_erase or 14, 0, 14, 22, sox+55, logo_y.value+17)
 
     -- display time
     minutes = tostring(stat(94))
@@ -101,30 +113,32 @@ end
 mis = {}
 for i=1,#levels do
     l = levels[i]
-    mi = {text=l.nb_switches.." swi. "..#l.nb_light_per_switch_chances.." lights"}
+    mi = {text=i..". ".."sw:"..l.nb_switches.."  lig:"..#l.nb_light_per_switch_chances}
     function mi:click()
         game.level = i
         set_state("game")
     end
     add(mis, mi)
 end
+btn_b = {text="Back"}
+function btn_b:click()
+    set_state("options")
+end
+add(mis, btn_b)
 levelselect = {menu=create_menu(mis)}
 
 function levelselect:update()
-    printh("levelsect:udmate")
-    printh(tostring(self.menu))
     self.menu:update()
 end
 
 function levelselect:draw()
-    printh("levelsect:draw")
-    printh(tostring(self.menu))
     self.menu:draw()
 end
 
 options = {}
 mi_ng = {text="New Game"}
 function mi_ng:click()
+    game.level = 1
     set_state("game")
 end
 mi_htp = {text="How to Play"}
