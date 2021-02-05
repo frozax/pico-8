@@ -6,39 +6,42 @@ function create_menu(mis)
 
     function menu:update()
         if btnp(buttons.down) then
-            menu.selection += 1
-            if menu.selection > #menu.items then
-                menu.selection = 1
-                menu.top_item = 1
+            self.selection += 1
+            if self.selection > #self.items then
+                self.selection = 1
+                self.top_item = 1
             end
         end
         if btnp(buttons.up) then
-            menu.selection -= 1
-            if menu.selection == 0 then
-                menu.selection = #menu.items
-                menu.top_item = menu.selection - 4
-                if menu.top_item <= 0 then
-                    menu.top_item = 1
+            self.selection -= 1
+            if self.selection == 0 then
+                self.selection = #self.items
+                self.top_item = self.selection - 4
+                if self.top_item <= 0 then
+                    self.top_item = 1
                 end
             end
         end
         if btnp(buttons.b1) then
-            menu.items[menu.selection]:click()
+            self.items[self.selection]:click()
         end
     end
 
     function menu:draw()
         y = soy + 2
-        for imi=menu.top_item, menu.top_item+3 do
+        for imi=self.top_item, self.top_item+3 do
+            if imi > #self.items then
+                break
+            end
             text_col = fg
-            if imi == menu.selection then
-                rectfill(sox + 1, y - 1, sox + 84-9, y + 8, fg)
+            if imi == self.selection then
+                rectfill(sox + 1, y - 1, sox + 84-6, y + 8, fg)
                 text_col = bg
             end
-            _print(menu.items[imi].text, sox + 2, y, text_col)
+            _print(self.items[imi].text, sox + 2, y, text_col)
             y += 12
         end
-        pct = (menu.selection-1) / (#menu.items-1)
+        pct = (self.selection-1) / (#self.items-1)
         scroll_bar_min = soy + 1
         scroll_bar_max = soy + sh - 1 - 7
         scroll_bar_size = scroll_bar_max - scroll_bar_min
@@ -95,12 +98,28 @@ function mainmenu:draw()
     _print(stat(93)..":"..minutes, sox + sw - 31, soy + 1, fg)
 end
 
-levelselect = {}
+mis = {}
+for i=1,#levels do
+    l = levels[i]
+    mi = {text=l.nb_switches.." swi. "..#l.nb_light_per_switch_chances.." lights"}
+    function mi:click()
+        game.level = i
+        set_state("game")
+    end
+    add(mis, mi)
+end
+levelselect = {menu=create_menu(mis)}
 
 function levelselect:update()
+    printh("levelsect:udmate")
+    printh(tostring(self.menu))
+    self.menu:update()
 end
 
 function levelselect:draw()
+    printh("levelsect:draw")
+    printh(tostring(self.menu))
+    self.menu:draw()
 end
 
 options = {}
@@ -114,6 +133,7 @@ function mi_htp:click()
 end
 mi_sl = {text="Select Level"}
 function mi_sl:click()
+    set_state("levelselect")
 end
 mi_b = {text="Back"}
 function mi_b:click()

@@ -69,8 +69,9 @@ function _update()
             set_state("mainmenu")
         end
     elseif game_state == "game" then
-        level:update()
+        was_play = game.substate == "play"
         game:update()
+        level:update(was_play)
         if btnp(buttons.b2) then
             set_state("mainmenu")
         end
@@ -135,7 +136,9 @@ end
 
 function set_state(state)
     -- end state
-    printh("set_state: ".."game_state".." -> "..state)
+    if game_state != nil then
+        printh("set_state: "..game_state.." -> "..state)
+    end
     if game_state == "mainmenu" then
         music(-1)
     end
@@ -145,7 +148,14 @@ function set_state(state)
     if state == "mainmenu" then
         music(0)
         logo_y = animate(soy + 58, soy + 10, 45, ease_out_quad)
+    elseif state == "game" then
+        level = gen_level(game.level)
+        game.substate = "play"
     end
+end
+
+function html_ver()
+    return #tostring(stat(102)) > 2
 end
 
 function draw()
@@ -178,19 +188,12 @@ function draw()
     elseif game_state == "levelselect" then
         levelselect:draw()
     elseif game_state == "game" then
-        --printc("hello nokia", 64-2, fg)
-        --_print("Hello Nokia!", sox+1, soy+1, fg)
-        --_print("AABBCCDDEEFFGGHHII\nJJKKLLMMNNOOPPQQ\nRRSSTTUUVVWW\nXXYYZZ0123456789", 0, 70, fg)
-        --_print("aabbccddeeffgghhii\njjkkllmmnnooppqq\nrrssttuuvvww\nxxyyzz0123456789", 0, 70, fg)
-        --_print("+-*/=%\"'#@&_()\n,.;:?!\\|<>[]^~", 0, 70, fg)
-        --_print(tostring(rnd(10)), cx, cy)
-        --_print(button_down, sox+1, soy+10, fg)
-        --_print(tostring(btn()), sox+1, soy+20, fg)
         level:draw()
         game:draw()
     end
     pal()
     _draw_safe_frame()
+    _print("*"..tostring(stat(102)).."*"..tostring(html_ver()), 0, 0)
 end
 
 function _draw_safe_frame()
@@ -202,8 +205,8 @@ function _draw_safe_frame()
 end
 
 function _init()
+    game.level=12
     set_state("game")
-    level = gen_level()
 end
 
 __gfx__

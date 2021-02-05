@@ -1,30 +1,74 @@
-diff = {
+levels = {
     {
-        diff = "easy",
+        sr=0,
         nb_switches = 3,
         nb_light_per_switch_chances = {0.6, 0.3, 0.0}
     },
     {
-        diff = "medium",
+        sr=0,
+        nb_switches = 4,
+        nb_light_per_switch_chances = {0.6, 0.3, 0.1, 0.0}
+    },
+    {
+        sr=3,
         nb_switches = 5,
         nb_light_per_switch_chances = {0.6, 0.3, 0.1, 0.0}
     },
     {
-        diff = "hard",
+        sr=1,
+        nb_switches = 5,
+        nb_light_per_switch_chances = {0.5, 0.3, 0.1, 0.1, 0.0}
+    },
+    {
+        sr=0,
+        nb_switches = 6,
+        nb_light_per_switch_chances = {0.5, 0.3, 0.2, 0.0, 0.0}
+    },
+    {
+        sr=1,
+        nb_switches = 6,
+        nb_light_per_switch_chances = {0.3, 0.6, 0.0, 0.1, 0.0}
+    },
+    {
+        sr=7,
+        nb_switches = 6,
+        nb_light_per_switch_chances = {0.3, 0.3, 0.3, 0.1, 0.0, 0.0}
+    },
+    {
+        sr=2,
+        nb_switches = 7,
+        nb_light_per_switch_chances = {0.3, 0.3, 0.2, 0.1, 0.0}
+    },
+    {
+        sr=7,
+        nb_switches = 7,
+        nb_light_per_switch_chances = {0.2, 0.2, 0.2, 0.2, 0.2, 0.0}
+    },
+    {
+        sr=1,
         nb_switches = 8,
-        nb_light_per_switch_chances = {0.6, 0.3, 0.1, 0.0, 0.0, 0.0}
+        nb_light_per_switch_chances = {0.0, 0.2, 0.2, 0.3, 0.5, 0.0}
+    },
+    {
+        sr=3,
+        nb_switches = 8,
+        nb_light_per_switch_chances = {0.0, 0.1, 0.3, 0.3, 0.1, 0.0}
+    },
+    {
+        sr=5,
+        nb_switches = 8,
+        nb_light_per_switch_chances = {0.0, 0.1, 0.3, 0.3, 0.1, 0.0}
     }
 }
 
-function gen_level()
-
-    l1 = {1, 2, 3}
-    l2 = {1, 2, 3}
+function gen_level(ilevel)
 
     -- gen level
     level = {selection=1}
 
-    d = diff[1]
+    d = levels[ilevel]
+    printh("srand = "..d.sr)
+    srand(d.sr)
 
     level.nb_switches = d.nb_switches
     -- percentages of chances that each switch impact X lights
@@ -79,6 +123,37 @@ function gen_level()
         end
     end
 
+    -- debug find a result
+    for i=0, 2 ^ #level.switches-1 do
+        states = {}
+        all_true = true
+        brepr = ""
+        for l = 1,#level.lights do
+            lstate = false
+            for is = 1, #level.switches do
+                s = level.switches[is]
+                on_switch = band(2 ^ (is-1), i) != 0
+                if l == 1 then
+                    if on_switch then
+                        brepr = brepr.."1"
+                    else
+                        brepr = brepr.."0"
+                    end
+                end
+                if on_switch and array_contains(s.lights, l) then
+                    lstate = not lstate
+                end
+            end
+            add(states, lstate)
+            if not lstate then
+                all_true = false
+            end
+        end
+        if all_true then
+            printh(i.." "..tostring(brepr))
+        end
+    end
+
     function level:_compute_light_state()
         for il=1, #self.lights do
             -- default to off
@@ -97,19 +172,21 @@ function gen_level()
         end
     end
 
-    function level:update()
-        if btnp(buttons.left) then
-            self.selection -= 1
-            if self.selection == 0 then
-                self.selection = #self.switches
-                sfx_change_sel()
+    function level:update(check_input)
+        if check_input then
+            if btnp(buttons.left) then
+                self.selection -= 1
+                if self.selection == 0 then
+                    self.selection = #self.switches
+                    sfx_change_sel()
+                end
             end
-        end
-        if btnp(buttons.right) then
-            self.selection += 1
-            if self.selection > #self.switches then
-                self.selection = 1
-                sfx_change_sel()
+            if btnp(buttons.right) then
+                self.selection += 1
+                if self.selection > #self.switches then
+                    self.selection = 1
+                    sfx_change_sel()
+                end
             end
         end
         for is = 1, #self.switches do
@@ -117,10 +194,12 @@ function gen_level()
                 self.switches[is].anim -= 1
             end
             if self.selection == is then
-                if btnp(buttons.b1) or btnp(buttons.up) or btnp(buttons.down) then
-                    self.switches[is].state = not self.switches[is].state
-                    self.switches[is].anim = 2
-                    sfx_change_switch()
+                if check_input then
+                    if btnp(buttons.b1) or btnp(buttons.up) or btnp(buttons.down) then
+                        self.switches[is].state = not self.switches[is].state
+                        self.switches[is].anim = 2
+                        sfx_change_switch()
+                    end
                 end
             end
         end
@@ -134,7 +213,6 @@ function gen_level()
                 comp = false
             end
         end
-        printh("completed"..tostring(comp))
         return comp
     end
 
