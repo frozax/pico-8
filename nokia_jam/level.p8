@@ -188,15 +188,15 @@ function gen_level(ilevel)
                 self.selection -= 1
                 if self.selection == 0 then
                     self.selection = #self.switches
-                    sfx_change_sel()
                 end
+                sfx_change_sel()
             end
             if btnp(buttons.right) then
                 self.selection += 1
                 if self.selection > #self.switches then
                     self.selection = 1
-                    sfx_change_sel()
                 end
+                sfx_change_sel()
             end
         end
         for is = 1, #self.switches do
@@ -208,7 +208,11 @@ function gen_level(ilevel)
                     if btnp(buttons.b1) or btnp(buttons.up) or btnp(buttons.down) then
                         self.switches[is].state = not self.switches[is].state
                         self.switches[is].anim = 2
-                        sfx_change_switch()
+                        if self.switches[is].state then
+                            sfx_switch_on()
+                        else
+                            sfx_switch_off()
+                        end
                     end
                 end
             end

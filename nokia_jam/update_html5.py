@@ -41,6 +41,8 @@ js_file.open("wt").write(js_data)
 
 subprocess.open("index.html", shell=True)
 
+# create zip
+
 
 #rem 95, 87, 79 is fg => 67, 82, 61
 #rem 194, 195, 199 is bg => 199, 240, 216
