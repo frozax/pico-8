@@ -5,9 +5,9 @@ level_number_w, level_number_h = 13, 13
 function draw_level_number(x, y, number)
     --if save:completed(i) TODO
     if is_level_completed(number) then
-        c = 3
+        c = light_blue
     else
-        c = 5
+        c = med_blue
     end
     rectfill(x+1, y+1, x + level_number_w, y + level_number_h, shadow_col)
     rectfill(x, y, x + level_number_w - 1, y + level_number_h - 1, c)
@@ -34,11 +34,9 @@ function create_level_select(nb_levels)
             for x=0,level_per_row-1 do
                 draw_level_number(self.origin_x + x * self.sx, origin_y + y * self.sy, i)
                 if i == self.selection then
-                    c = blink(5, 0, 7)
+                    c = blink(5, light_blue, 7)
                     rect(self.origin_x + x * self.sx - 1, origin_y + y * self.sy - 1, self.origin_x + x * self.sx + level_number_w, origin_y + y * self.sx + level_number_h, c)
                 end
-
-
                 i += 1
             end
         end
@@ -80,11 +78,11 @@ function create_level_select(nb_levels)
         if btnp(buttons.b1) then
             sound_menu_valid()
             load_level(self.selection)
-            mode = "game"
+            set_state("game")
         end
         if btnp(buttons.b2) then
             sound_menu_back()
-            mode = "home"
+            set_state("home")
         end
     end
 

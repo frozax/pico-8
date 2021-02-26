@@ -12,65 +12,53 @@ function draw_grid(level)
 end
 
 function draw_numbers(level)
-    srand(0)
-    for i=0, level.size-1 do
-        -- rows
-        row = level:compute_row_infos(i+1)
-        if (10) < level.anim-20 or level.no_anims then
-            print(row.nb, level.origin.x - cell_size/2, level.origin.y + (i + 0.5) * cell_size - 2, row.color)
+    if level.def.show_rows_nbs then
+        for i=0, level.h-1 do
+            -- rows
+            ri = level:compute_row_infos(i)
+            sspr(cell_size*4, level:rc_spr_y(ri), cell_size, cell_size, level.origin.x - cell_size, level.origin.y+1)
+            print(ri.expected, level.origin.x - cell_size/2 + 1, level.origin.y + (i + 0.5) * cell_size - 1, level:rc_num_color(ri))
         end
-        -- cols
-        col = level:compute_col_infos(i+1)
-        if (10) < level.anim-20 or level.no_anims then
-            print(col.nb, level.origin.x + (i + 0.5) * cell_size - 1, level.origin.y - cell_size * 0.5, col.color)
+    end
+    if level.def.show_cols_nbs then
+        for i=0, level.w-1 do
+            -- cols
+            ri = level:compute_col_infos(i)
+            sspr(cell_size*4, level:rc_spr_y(ri), cell_size, cell_size, level.origin.x + (cell_size-1) * i - 1, level.origin.y - cell_size + 2)
+            print(ri.expected, level.origin.x + (i + 0.5) * (cell_size-1), level.origin.y - cell_size*0.5 + 0, level:rc_num_color(ri))
         end
     end
 end
 
 function draw_cell_bgs(level)
-    srand(1)
     ys = level.origin.y + 1
-    size = cell_inner_size - 1 -- because it's final pixel, not size of rect
-    for y=1, level.size do
-        xs = level.origin.x + 1
-        for x=1, level.size do
-            this_size = (level.anim - rnd(10))*2
-            this_size = min(this_size, size)
-            this_size = max(this_size, -1)
-            if level.no_anims then
-                this_size = size
-            end
-            if this_size >= 0 then
-                shft = (size-this_size)/2
-                c = level:get_cell_bg_color(x, y)
-                rectfill(xs+shft, ys+shft, xs + shft + this_size, ys + shft + this_size, c)
-            end
-            xs += cell_size
+    for y=0, level.h-1 do
+        xs = level.origin.x+ 1
+        for x=0, level.w-1 do
+            c = level:get_cell_bg_color(x, y)
+            sspr(0, 0, cell_size, cell_size, xs, ys)
+            xs += cell_size - 1 -- because overlap
         end
-        ys += cell_size
+        ys += cell_size - 1 -- because overlap
     end
 end
 
 function draw_cell_sprites(level)
     ys = level.origin.y + 1
-    size = cell_inner_size - 1 -- because it's final pixel, not size of rect
-    for y=1, level.size do
+    size = cell_size - 1 -- because it's final pixel, not size of rect
+    for y=0, level.h-1 do
         xs = level.origin.x + 1
-        for x=1, level.size do
-            stt = level:get_cell_state(x, y)
-            anm = level:get_anim(x,y)
-            if anm != nil and anm.frames then
-                if anm.cur_frame < (#anm.frames*2) then
-                    anm.cur_frame += 1
-                end
-                if level.no_anims then
-                    anm.cur_frame = 2*#anm.frames
-                end
-                if anm.cur_frame > 1 then
-                    anm.frame = anm.frames[anm.cur_frame \ 2]
-                    anm:draw(vec2(xs, ys))
-                end
-            end
+        for x=0, level.w-1 do
+            cell = level.cells[x][y]
+            spr_x = 17
+            if (cell.state == EMPTY) spr_x += 17
+            if (cell.state == FILLED) spr_x += 17 * 2
+            spr_y = 0
+            if (cell.extremity == MIDDLE) spr_y += 17
+            if (cell.extremity == END) spr_y += 17 * 2
+            
+            sspr(spr_x, spr_y, cell_size, cell_size, xs, ys)
+
             --if stt != UN then
             --    if stt == TE then
             --        anim = tent_show
@@ -81,8 +69,8 @@ function draw_cell_sprites(level)
             --    end
             --    anim:draw(vec2(xs, ys))
             --end
-            xs += cell_size
+            xs += cell_size - 1
         end
-        ys += cell_size
+        ys += cell_size - 1
     end
 end

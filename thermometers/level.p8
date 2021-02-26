@@ -1,19 +1,12 @@
+-- state
+UNKNOWN = 0
+EMPTY = 1
+FILLED = 2
 
-
-function _reset_state(level, clear)
-    level.state = {}
-    for y=1,#level.def do
-        row = {}
-        for x=1,#level.def[y] do
-            stt = level.def[y][x]
-            if (stt == TE or stt == GR) and clear then
-                stt = UN
-            end
-            add(row, stt)
-        end
-        add(level.state, row)
-    end
-end
+-- extremities
+START = 0
+MIDDLE = 1
+END = 2
 
 function load_level(number, reset)
     level_number = number
@@ -22,7 +15,6 @@ function load_level(number, reset)
 end
 
 function load_level_from_def(ldef, reset)
-    printh("load level")
     level = {}
     level.w = ldef.w
     level.h = ldef.h
@@ -61,13 +53,24 @@ function load_level_from_def(ldef, reset)
         thermo.fill = thermo_def[5]
         thermo.cells = {}
         for i=0,thermo.length-1 do
-            cell={x=thermo.x, y=thermo.y}
+            if i == 0 then
+                e = START
+            elseif i == thermo.length - 1 then
+                e = END
+            else
+                e = MIDDLE
+            end
+            exp = FILLED
+            if i >= thermo.fill then
+                exp = EMPTY
+            end
+            cell={x=thermo.x, y=thermo.y, state=UNKNOWN, extremity=e, expected=exp}
             if (thermo.dir == LEFT) cell.x-=i
             if (thermo.dir == RIGHT) cell.x+=i
             if (thermo.dir == DOWN) cell.y-=i
             if (thermo.dir == UP) cell.y+=i
             add(thermo.cells, cell)
-            level.cells[cell.x][cell.y] = thermo
+            level.cells[cell.x][cell.y] = cell
         end
         add(level.thermos, thermo)
     end
@@ -75,47 +78,23 @@ function load_level_from_def(ldef, reset)
     pix_size = level.w * (cell_size)
     level.origin = vec2((128 - pix_size)/2, (128 - pix_size)/2 + 2)
 
-    if reset == nil or reset then
-        clear = true
-    else
-        clear = false
-    end
-    _reset_state(level, clear)
-
-    function level:launch_start_anim()
-    end
-
-    function level:get_expected_state(x, y) -- lua: index is 1-based
-        return self.def[y][x]
-    end
-    function level:get_cell_state(x, y) -- lua: index is 1-based
-        return self.state[y][x]
-    end
-    function level:get_anim(x, y) -- lua: index is 1-based
-        return self.anims[y][x]
-    end
-    function level:set_cell_state(x, y, stt) -- lua: index is 1-based
-        old = self.state[y][x]
-        self.state[y][x] = stt
-    end
     function level:get_cell_bg_color(x, y) -- lua: index is 1-based
-        stt = self:get_cell_state(x, y)
-        if stt == UN then
+        if self.cells[x][y] == UNKNOWN then
             return unknown_col
         else
             return grass_col
         end
     end
     function level:cycle_cell(x, y)
-        stt = self:get_cell_state(x, y)
-        if stt == UN then
-            self:set_cell_state(x, y, GR)
+        stt = self.cells[x][y].state
+        if stt == UNKNOWN then
+            self.cells[x][y].state = FILLED
             return true
-        elseif stt == GR then
-            self:set_cell_state(x, y, TE)
+        elseif stt == FILLED then
+            self.cells[x][y].state = EMPTY
             return true
-        elseif stt == TE then
-            self:set_cell_state(x, y, UN)
+        elseif stt == EMPTY then
+            self.cells[x][y].state = UNKNOWN
             return true
         else
             return false
@@ -124,19 +103,13 @@ function load_level_from_def(ldef, reset)
     -- returns "wip", "success", "error"
     function level:get_completion()
         res = "success"
-        for y=1,self.size do
-            for x=1,self.size do
-                stt = self:get_cell_state(x, y)
-                exp = self:get_expected_state(x, y)
-                if exp == TE then
-                    if stt == UN then
-                        return "wip"
-                    end
-                    if stt != TE then
-                        res = "error"
-                    end
+        for y=0,self.h-1 do
+            for x=0,self.w-1 do
+                cell = self.cells[x][y]
+                if cell.state == UNKNOWN then
+                    return "wip"
                 end
-                if stt == TE and exp != TE then
+                if cell.state != cell.expected then
                     res = "error"
                 end
             end
@@ -146,47 +119,74 @@ function load_level_from_def(ldef, reset)
     -- returns object with nb (value expected), and color (depending on current nb of tents)
     -- i: 1-based
     function level:compute_col_infos(x)
-        cnt = 0
-        for y=1, self.size do
-            if self:get_cell_state(x, y) == TE then
-                cnt += 1
+        cur = 0
+        full = true
+        expected = 0
+        for y=0, self.h-1 do
+            stt = self.cells[x][y].state
+            if stt == UNKNOWN then
+                full = false
+            end
+            if stt == FILLED then
+                cur += 1
+            end
+            printh(self.cells[x][y].expected)
+            if self.cells[x][y].expected == FILLED then
+                expected += 1
             end
         end
-        return {nb=self.cols[x].nb, color=self:rc_colors(self.cols[x].nb, cnt)}
+        return {expected=expected, cur=cur, full=full}
     end
     function level:compute_row_infos(y)
-        cnt = 0
-        for x=1, self.size do
-            if self:get_cell_state(x, y) == TE then
-                cnt += 1
+        cur = 0
+        full = true
+        expected = 0
+        for x=0, self.w-1 do
+            stt = self.cells[x][y].state
+            if stt == UNKNOWN then
+                full = false
+            end
+            if stt == FILLED then
+                cur += 1
+            end
+            if self.cells[x][y].expected == FILLED then
+                expected += 1
             end
         end
-        return {nb=self.rows[y].nb, color=self:rc_colors(self.rows[y].nb, cnt)}
+        return {expected=expected, cur=cur, full=full}
+    end
+    function level:rc_spr_y(row_info)
+        if row_info.full then
+            if row_info.cur == row_info.expected then
+                return cell_size
+            else
+                return cell_size*2
+            end
+        else
+            return 0
+        end
     end
     -- return color to display number depending on state
-    function level:rc_colors(expected, cur)
-        if cur > expected then
-            return numbers_error_col
+    function level:rc_num_color(row_info)
+        if row_info.full then
+            if row_info.cur == row_info.expected then
+                return 6
+            else
+                return 10
+            end
+        else
+            return 0
         end
-        if cur == expected then
-            return numbers_ok_col
-        end
-        return numbers_wip_col
     end
 
     function level:update()
     end
 
     function level:draw()
-        --draw_grid(self)
-        if self.show_numbers then
-            draw_numbers(self)
-        end
+        draw_numbers(self)
         draw_cell_bgs(self)
         draw_cell_sprites(self)
     end
-
-    level:launch_start_anim()
 
     return level
 end
