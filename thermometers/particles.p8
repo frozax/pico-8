@@ -3,23 +3,22 @@ particles.p = {}
 
 function particles:start()
     self.p = {}
-    for ip=1,800 do
+    for ip=1,1800 do
         left_side = rnd(1) < 0.5
-        vx = (rnd(2) + 1) * 1.5
+        vx = (rnd(2.5) + 1.0) * 1.5
         vy = -rnd(2) * 2 - 2
+        x = -rnd(10) - 5
         if left_side then
-            x = -rnd(5) - 2
         else
-            x = 132
+            x = 128 - x
             vx = -vx
         end
-        p = {x=x,y=rnd(30) + 90,
+        p = {x=x,y=rnd(80) + 50,
             vx=vx,vy=vy,
             size=flr(rnd(3))+1,
             age=-rnd(30),
             life=rnd(100)+100,
-            col=rnd({7, 9, 2, 9, 2})
-            --col=7
+            col=rnd({1, 3, 7, 12})
         }
         add(self.p, p)
     end
