@@ -13,6 +13,7 @@ __lua__
 #include ../libs/fps.p8
 #include ../libs/util.p8
 #include ../libs/easings.p8
+#include ../libs/rotate.p8
 #include ../libs/anim_coroutines.p8
 
 #include menu.p8
@@ -210,7 +211,7 @@ function _init()
     eol_menu.button_text_col = colors.white
 
     --level_select = create_level_select(#levels)
-    load_level(0)
+    load_level(2)
     level_select = create_level_select(25)
     --cls(1)
     --flip()

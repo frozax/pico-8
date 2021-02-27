@@ -64,14 +64,16 @@ function load_level_from_def(ldef, reset)
             if i >= thermo.fill then
                 exp = EMPTY
             end
-            cell={x=thermo.x, y=thermo.y, state=UNKNOWN, extremity=e, expected=exp}
+            cell={x=thermo.x, y=thermo.y, state=UNKNOWN, extremity=e, expected=exp, dir=thermo.dir}
             if (thermo.dir == LEFT) cell.x-=i
             if (thermo.dir == RIGHT) cell.x+=i
-            if (thermo.dir == DOWN) cell.y-=i
-            if (thermo.dir == UP) cell.y+=i
+            if (thermo.dir == DOWN) cell.y+=i
+            if (thermo.dir == UP) cell.y-=i
+            
             add(thermo.cells, cell)
             level.cells[cell.x][cell.y] = cell
         end
+        printh("THERMO "..tostring(thermo))
         add(level.thermos, thermo)
     end
     printh(tostring(level))
@@ -123,6 +125,8 @@ function load_level_from_def(ldef, reset)
         full = true
         expected = 0
         for y=0, self.h-1 do
+            printh(tostring(self.cells))
+            printh(x.." "..y)
             stt = self.cells[x][y].state
             if stt == UNKNOWN then
                 full = false

@@ -5,11 +5,7 @@
 -- dx,dy: screen position
 -- w,h: sprite width and height (1 if not specified)
 
-function rotate(sprite,mode,dx,dy,w,h)
- local sx=sprite%16*8
- local sy=flr(sprite/16)*8
- w,h=w or 1,h or 1
- w,h=w*8-1,h*8-1
+function rotate(sx, sy, mode, dx, dy, w, h)
  local ya,yb,xa,xb=0,1,0,1
  if mode==0 then
   ya,yb=h,-1
@@ -20,7 +16,10 @@ function rotate(sprite,mode,dx,dy,w,h)
  end
  for y=0,h do
   for x=0,w do
-   pset((y-ya)*yb+dx,(x-xa)*xb+dy,sget(x+sx,y+sy))
+    pix = sget(x+sx, y+sy)
+    if pix != 0 then
+        pset((y-ya)*yb+dx,(x-xa)*xb+dy,pix)
+    end
   end
  end
 end

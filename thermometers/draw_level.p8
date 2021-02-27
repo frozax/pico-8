@@ -57,7 +57,14 @@ function draw_cell_sprites(level)
             if (cell.extremity == MIDDLE) spr_y += 17
             if (cell.extremity == END) spr_y += 17 * 2
             
-            sspr(spr_x, spr_y, cell_size, cell_size, xs, ys)
+            if cell.dir == DOWN then
+                rotate(spr_x, spr_y, 0, xs, ys, cell_size-1, cell_size-1)
+            elseif cell.dir == UP then
+                rotate(spr_x, spr_y, 1, xs, ys, cell_size-1, cell_size-1)
+            else
+                flipx = cell.dir == LEFT
+                sspr(spr_x, spr_y, cell_size, cell_size, xs, ys, cell_size, cell_size, flipx)
+            end
 
             --if stt != UN then
             --    if stt == TE then
