@@ -25,12 +25,17 @@ function update_animations()
 end
 
 
-function animate(from, to, frames, ease)
+function animate(from, to, frames, ease, pause_frames)
   frames = frames or 30
+  pause_frames = pause_frames or 0
   ease = ease or linear
   
   local animation = {
     coroutine = cocreate(function(from, to, frames, ease, animation)
+      for frame=1,pause_frames do
+        animation.value = from
+        yield()
+      end
       for frame=1,frames do
         animation.value = ease(frame/frames, from, to-from, 1)
         yield()

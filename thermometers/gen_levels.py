@@ -3,19 +3,37 @@ from pathlib import Path
 
 final_file = Path("levels.p8")
 ffw = final_file.open("wt")
-ffw.write("levels = {}\n")
+ffw.write("""-- levels: auto generated, do not edit
+LEFT = 0
+RIGHT = 1
+DOWN = 2
+UP = 3
 
-for f, nb in [
-    ("5x5_A", 4),
-    ("6x6_A", 4),
-    ("7x7_A", 4),
-    ("8x8_B", 4),
-    ("9x9_C", 4)]:
+levels = {}
+""")
+
+for f, istart, nb in [
+    ("A", 0, 10),
+    ("A", 20, 5),
+    ("A", 80, 5),
+    ("B", 0, 5)]:
     fname = Path("f:\\tmp\\classic-" + f + ".infos")
     count = 0
     for fline in fname.open('rt'):
         if fline[0] == '{':
             json_data = json.loads(fline)
+            width = 4
+            height = 5
+            show_rows_nbs = "true"
+            show_cols_nbs = "true"
+            thermos_str = ",".join([thermo_str(t) for t in thermos])
+
+            lstr = f"""
+    l = \{w={width}, h={height}, show_rows_nbs={show_rows_nbs}, show_cols_nbs={show_cols_nbs},
+        thermos=\{{thermos_str}\}
+    \}
+    add(levels, l)"""
+
             lstr = "l = {\n"
             cells = json_data["cells"].split(' ')
 
