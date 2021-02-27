@@ -12,45 +12,44 @@ UP = 3
 levels = {}
 """)
 
+LEFT, RIGHT, DOWN, UP = range(4)
+
 for f, istart, nb in [
     ("A", 0, 10),
     ("A", 20, 5),
     ("A", 80, 5),
     ("B", 0, 5)]:
-    fname = Path("f:\\tmp\\classic-" + f + ".infos")
+    fname = Path("C:\\gamedev\\games\\swg26\\LevelGenerator\\data\\levels_def\\classic-" + f + ".infos")
     count = 0
     for fline in fname.open('rt'):
         if fline[0] == '{':
             json_data = json.loads(fline)
-            width = 4
-            height = 5
-            show_rows_nbs = "true"
-            show_cols_nbs = "true"
-            thermos_str = ",".join([thermo_str(t) for t in thermos])
 
+            max_x, max_y = 0, 0
+            thermos = []
+            th_data = json_data.get("thermos", json_data.get("cells", ""))
+            th_data = [int(i) for i in th_data.split()]
+            for ithermo in range(th_data[0]):
+                x, y, direction, size, fill = th_data[1+ithermo*5:1+ithermo*5+5]
+                print(x, y, size, fill, direction)
+                thermos.append(f"{{{x}, {y}, {direction}, {size}, {fill}}}")
+                max_tx, max_ty = x, y
+                if direction == RIGHT:
+                    max_tx += size-1
+                if direction == DOWN:
+                    max_ty += size-1
+                max_x = max(max_x, max_tx)
+                max_y = max(max_y, max_ty)
+
+            show_rows_nbs = "true" if th_data[-2] == 0 else "false"
+            show_cols_nbs = "true" if th_data[-1] == 0 else "false"
+            thermos_str = ",".join(thermos)
             lstr = f"""
-    l = \{w={width}, h={height}, show_rows_nbs={show_rows_nbs}, show_cols_nbs={show_cols_nbs},
-        thermos=\{{thermos_str}\}
-    \}
-    add(levels, l)"""
+l = {{w={max_x+1}, h={max_y+1}, show_rows_nbs={show_rows_nbs}, show_cols_nbs={show_cols_nbs},
+    thermos={{{thermos_str}}}
+}}
+add(levels, l)"""
 
-            lstr = "l = {\n"
-            cells = json_data["cells"].split(' ')
-
-            for row in cells:
-                lstr += "{"
-                for col in row:
-                    if col == "G":
-                        lstr += "GR"
-                    elif col == "T":
-                        lstr += "TR"
-                    elif col == "Q":
-                        lstr += "TE"
-                    else:
-                        assert False, f"unknown col {col}"
-                    lstr += ","
-                lstr += "},\n"
-            lstr += "}\nadd(levels, l)\n"
             ffw.write(lstr)
             count += 1
             if count >= nb:

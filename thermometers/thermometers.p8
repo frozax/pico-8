@@ -70,6 +70,7 @@ function set_state(stt)
         ad_y = animate(128, 100, 30, ease_out_quad, 30)
     elseif state == "level_select" then
         title_y = animate(0, -94, 15, ease_in_quad)
+    elseif state == "game" then
     end
 end
 
@@ -159,8 +160,8 @@ end
 
 function _init()
     set_state("home")
-    --set_state("level_select")
-    --set_state("game")
+    set_state("level_select")
+    set_state("game")
     tutorial = 0
     credits = false
     eol = false
@@ -208,13 +209,12 @@ function _init()
     pause_menu.button_text_col = colors.white
     eol_menu.button_text_col = colors.white
 
-    load_level(0)
-    init_input()
     --level_select = create_level_select(#levels)
+    load_level(0)
     level_select = create_level_select(25)
-    cls(1)
-    flip()
-    extcmd("rec")
+    --cls(1)
+    --flip()
+    --extcmd("rec")
 end
 
 
