@@ -12,16 +12,16 @@ function draw_grid(level)
 end
 
 function draw_numbers(level)
-    if level.def.show_rows_nbs then
-        for i=0, level.h-1 do
+    for i=0, level.h-1 do
+        if band(level.def.hide_rows_nbs, 1 << i) == 0 then
             -- rows
             ri = level:compute_row_infos(i)
-            sspr(cell_size*4, level:rc_spr_y(ri), cell_size, cell_size, level.origin.x - cell_size, level.origin.y+1)
-            print(ri.expected, level.origin.x - cell_size/2 + 1, level.origin.y + (i + 0.5) * cell_size - 1, level:rc_num_color(ri))
+            sspr(cell_size*4, level:rc_spr_y(ri), cell_size, cell_size, level.origin.x - cell_size, level.origin.y+(cell_size-1)*i + 1)
+            print(ri.expected, level.origin.x - cell_size/2 + 1, level.origin.y + (i + 0.5) * (cell_size-1) - 1, level:rc_num_color(ri))
         end
     end
-    if level.def.show_cols_nbs then
-        for i=0, level.w-1 do
+    for i=0, level.w-1 do
+        if band(level.def.hide_cols_nbs, 1 << i) == 0 then
             -- cols
             ri = level:compute_col_infos(i)
             sspr(cell_size*4, level:rc_spr_y(ri), cell_size, cell_size, level.origin.x + (cell_size-1) * i - 1, level.origin.y - cell_size + 2)
@@ -37,6 +37,10 @@ function draw_cell_bgs(level)
         for x=0, level.w-1 do
             c = level:get_cell_bg_color(x, y)
             sspr(0, 0, cell_size, cell_size, xs, ys)
+            if y != 0 and x != 0 then
+                -- place pix top left
+                pset(xs, ys, med_blue)
+            end
             xs += cell_size - 1 -- because overlap
         end
         ys += cell_size - 1 -- because overlap

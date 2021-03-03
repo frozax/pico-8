@@ -59,9 +59,17 @@ function center_x(str)
 end
 -------------------------------
 function printc(_str,_y,_c)
+ if _c == nil then
+   _c = ongoing_c or 0
+ end
+ ongoing_c = _c
+ if _y == nil then
+   _y = ongoing_y or 0
+ end
  where=center_x(_str)
  if (where<0) where=0
  print(_str,where,_y,_c)
+ ongoing_y = _y + 6
 end
 
 -------------------------------

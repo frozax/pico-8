@@ -73,12 +73,9 @@ function load_level_from_def(ldef, reset)
             add(thermo.cells, cell)
             level.cells[cell.x][cell.y] = cell
         end
-        printh("THERMO "..tostring(thermo))
         add(level.thermos, thermo)
     end
-    printh(tostring(level))
-    pix_size = level.w * (cell_size)
-    level.origin = vec2((128 - pix_size)/2, (128 - pix_size)/2 + 2)
+    level.origin = get_level_origin()
 
     function level:get_cell_bg_color(x, y) -- lua: index is 1-based
         if self.cells[x][y] == UNKNOWN then
@@ -108,10 +105,10 @@ function load_level_from_def(ldef, reset)
         for y=0,self.h-1 do
             for x=0,self.w-1 do
                 cell = self.cells[x][y]
-                if cell.state == UNKNOWN then
+                if cell.state == UNKNOWN and cell.expected == FILLED then
                     return "wip"
                 end
-                if cell.state != cell.expected then
+                if cell.state != UNKNOWN and cell.state != cell.expected then
                     res = "error"
                 end
             end
@@ -125,8 +122,6 @@ function load_level_from_def(ldef, reset)
         full = true
         expected = 0
         for y=0, self.h-1 do
-            printh(tostring(self.cells))
-            printh(x.." "..y)
             stt = self.cells[x][y].state
             if stt == UNKNOWN then
                 full = false
@@ -134,7 +129,6 @@ function load_level_from_def(ldef, reset)
             if stt == FILLED then
                 cur += 1
             end
-            printh(self.cells[x][y].expected)
             if self.cells[x][y].expected == FILLED then
                 expected += 1
             end
@@ -160,26 +154,25 @@ function load_level_from_def(ldef, reset)
         return {expected=expected, cur=cur, full=full}
     end
     function level:rc_spr_y(row_info)
+        if row_info.cur == row_info.expected then
+            return cell_size
+        end
         if row_info.full then
-            if row_info.cur == row_info.expected then
-                return cell_size
-            else
-                return cell_size*2
-            end
+            return cell_size*2
         else
             return 0
         end
     end
     -- return color to display number depending on state
     function level:rc_num_color(row_info)
-        if row_info.full then
-            if row_info.cur == row_info.expected then
-                return 6
-            else
-                return 10
-            end
+        if row_info.cur == row_info.expected then
+            return 6
         else
-            return 0
+            if row_info.full then
+                return 10
+            else
+                return 0
+            end
         end
     end
 

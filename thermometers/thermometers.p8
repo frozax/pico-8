@@ -25,30 +25,27 @@ __lua__
 #include save.p8
 #include draw_level.p8
 #include levels.p8
+#include tutorial.p8
 
 function _update()
     update_animations()
-    if tutorial != 0 then
-        input_tutorial()
-    else
-        if state == "home" then
-            if btnp(buttons.b1) then
-                set_state("level_select")
-            end
-        elseif state == "level_select" then
-            level_select:input()
-        elseif state == "game" then
-            game_level:update()
-            if pause then
-                pause_menu:input()
-            elseif eol_anim then
-                particles:update()
-            elseif eol then
-                particles:update()
-                eol_menu:input()
-            else
-                input_game(game_level)
-            end
+    if state == "home" then
+        if btnp(buttons.b1) then
+            set_state("level_select")
+        end
+    elseif state == "level_select" then
+        level_select:input()
+    elseif state == "game" then
+        game_level:update()
+        if pause then
+            pause_menu:input()
+        elseif eol_anim then
+            particles:update()
+        elseif eol then
+            particles:update()
+            eol_menu:input()
+        else
+            input_game(game_level)
         end
     end
 end
@@ -78,80 +75,68 @@ end
 function _draw()
     cls(bg_col)
     pal(3, 128+12, 1)
-    if tutorial != 0 then
-        draw_tutorial(tutorial)
-    else
-        if state == "home" then
-            --if flr(time()*8) % 4 > 0 then
-            s = "press \x8e  to start"
-            y_start = title_y.value*2 + 76
-            iccol = 1
-            for ic=1,#s do
-                c = sub(s, ic, ic)
-                ioutline = (flr(time()*23) % 50) - 10
-                if abs(ioutline-ic) <= 3 then
-                    outline = 7
-                elseif abs(ioutline-ic) <= 8 then
-                    outline = light_blue
-                elseif abs(ioutline-ic) <= 11 then
-                    outline = med_blue
-                else
-                    outline = 1
-                end
-                col = outline
-                palt(1,true)
-                printo(c, 27+ic*4, y_start, col, 1)
-                palt(1,false)
-                if c != " " then
-                    iccol += 1
-                end
-            end
-            y = ad_y.value
-            printc("grids of thermometers is also", y, med_blue)
-            printc("available on mobile:", y+6, med_blue)
-            printc("www.frozax.com/the", y+16, med_blue)
-            draw_title()
-        elseif state == "level_select" then
-            printc("choose a level", 16, 7, 0)
-            level_select:draw(34)
-            draw_title()
-        elseif state == "game" then
-            if game_level.h < 9 then
-                draw_level_number(127 - level_number_w-1, 1, level_number)
-            end
-            game_level:draw()
-            if pause then
-                y = 40
-                draw_rwin(16, y, 127-32, 41, bg_col, 0)
-                pause_menu:draw(y + 8)
-            elseif eol_anim then
-                particles:draw()
-                if time() - eol_anim_start > 2 then
-                    eol_anim = false
-                    eol = true
-                end
-            elseif eol then
-                y = 40
-                draw_rwin(24, y, 127-48, 50, bg_col, 0)
-                printc("congratulations!", y + 7, 7)
-                eol_menu:draw(y + 20)
-                particles:draw()
+    if state == "home" then
+        --if flr(time()*8) % 4 > 0 then
+        s = "press \x8e  to start"
+        y_start = title_y.value*2 + 76
+        iccol = 1
+        for ic=1,#s do
+            c = sub(s, ic, ic)
+            ioutline = (flr(time()*23) % 50) - 10
+            if abs(ioutline-ic) <= 3 then
+                outline = 7
+            elseif abs(ioutline-ic) <= 8 then
+                outline = light_blue
+            elseif abs(ioutline-ic) <= 11 then
+                outline = med_blue
             else
-                draw_input()
-                completion = game_level:get_completion()
-                if completion == "success" then
-                    set_level_completed(level_number)
-                    eol_menu.selection = 1
-                    eol_anim_start = time()
-                    particles:start()
-                    eol_anim = true
-                end
+                outline = 1
             end
-            if game_level.h <= 6 then
-                -- draw input
-                printc("\x8b\x91\x94\x83: select a cell", 105, text_col)
-                printc("c/\x8e: change cell state", 111, text_col)
-                printc("v/\x97: display menu", 117, text_col)
+            col = outline
+            palt(1,true)
+            printo(c, 27+ic*4, y_start, col, 1)
+            palt(1,false)
+            if c != " " then
+                iccol += 1
+            end
+        end
+        y = ad_y.value
+        printc("grids of thermometers is also", y, med_blue)
+        printc("available on mobile:", y+6, med_blue)
+        printc("www.frozax.com/the", y+16, med_blue)
+        draw_title()
+    elseif state == "level_select" then
+        printc("choose a level", 16, 7, 0)
+        level_select:draw(34)
+        draw_title()
+    elseif state == "game" then
+        game_level:draw()
+        draw_instructions()
+        if pause then
+            y = 40
+            draw_rwin(16, y, 127-32, 41, bg_col, 0)
+            pause_menu:draw(y + 8)
+        elseif eol_anim then
+            particles:draw()
+            if time() - eol_anim_start > 2 then
+                eol_anim = false
+                eol = true
+            end
+        elseif eol then
+            y = 40
+            draw_rwin(24, y, 127-48, 50, bg_col, 0)
+            printc("congratulations!", y + 7, 7)
+            eol_menu:draw(y + 20)
+            particles:draw()
+        else
+            draw_input()
+            completion = game_level:get_completion()
+            if completion == "success" then
+                set_level_completed(level_number)
+                eol_menu.selection = 1
+                eol_anim_start = time()
+                particles:start()
+                eol_anim = true
             end
         end
     end
@@ -163,7 +148,6 @@ function _init()
     set_state("home")
     set_state("level_select")
     set_state("game")
-    tutorial = 0
     credits = false
     eol = false
     eol_anim = false
@@ -211,7 +195,7 @@ function _init()
     eol_menu.button_text_col = colors.white
 
     --level_select = create_level_select(#levels)
-    load_level(2)
+    load_level(0)
     level_select = create_level_select(25)
     --cls(1)
     --flip()

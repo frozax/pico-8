@@ -41,11 +41,9 @@ for f, istart, nb in [
                 max_x = max(max_x, max_tx)
                 max_y = max(max_y, max_ty)
 
-            show_rows_nbs = "true" if th_data[-2] == 0 else "false"
-            show_cols_nbs = "true" if th_data[-1] == 0 else "false"
             thermos_str = ",".join(thermos)
             lstr = f"""
-l = {{w={max_x+1}, h={max_y+1}, show_rows_nbs={show_rows_nbs}, show_cols_nbs={show_cols_nbs},
+l = {{w={max_x+1}, h={max_y+1}, hide_rows_nbs={th_data[-2]}, hide_cols_nbs={th_data[-1]},
     thermos={{{thermos_str}}}
 }}
 add(levels, l)"""
