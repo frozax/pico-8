@@ -5,36 +5,32 @@ end
 
 function input_game(level)
     if btnp(0) then
-        if input.pos.x > 0 then
-            input.pos.x -= 1
-            sound_move()
-        else
-            sound_move_error()
+        input.pos.x -= 1
+        if input.pos.x < 0 then
+            input.pos.x = level.w - 1
         end
+        sound_move()
     end
     if btnp(1) then
-        if input.pos.x < level.w - 1 then
-            input.pos.x += 1
-            sound_move()
-        else
-            sound_move_error()
+        input.pos.x += 1
+        if input.pos.x >= level.w then
+            input.pos.x = 0
         end
+        sound_move()
     end
     if btnp(2) then
-        if input.pos.y > 0 then
-            input.pos.y -= 1
-            sound_move()
-        else
-            sound_move_error()
+        input.pos.y -= 1
+        if input.pos.y < 0 then
+            input.pos.y = level.h - 1
         end
+        sound_move()
     end
     if btnp(3) then
-        if input.pos.y < level.h - 1 then
-            input.pos.y += 1
-            sound_move()
-        else
-            sound_move_error()
+        input.pos.y += 1
+        if input.pos.y >= level.h then
+            input.pos.y = 0
         end
+        sound_move()
     end
     if btnp(buttons.b1) then
         if level:cycle_cell(input.pos.x, input.pos.y) then

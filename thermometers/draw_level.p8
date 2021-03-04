@@ -17,7 +17,7 @@ function draw_numbers(level)
             -- rows
             ri = level:compute_row_infos(i)
             sspr(cell_size*4, level:rc_spr_y(ri), cell_size, cell_size, level.origin.x - cell_size, level.origin.y+(cell_size-1)*i + 1)
-            print(ri.expected, level.origin.x - cell_size/2 + 1, level.origin.y + (i + 0.5) * (cell_size-1) - 1, level:rc_num_color(ri))
+            print(ri.expected, level.origin.x - cell_size + 9, level.origin.y + (cell_size-1)*i + 7, level:rc_num_color(ri))
         end
     end
     for i=0, level.w-1 do
@@ -25,7 +25,7 @@ function draw_numbers(level)
             -- cols
             ri = level:compute_col_infos(i)
             sspr(cell_size*4, level:rc_spr_y(ri), cell_size, cell_size, level.origin.x + (cell_size-1) * i - 1, level.origin.y - cell_size + 2)
-            print(ri.expected, level.origin.x + (i + 0.5) * (cell_size-1), level.origin.y - cell_size*0.5 + 0, level:rc_num_color(ri))
+            print(ri.expected, level.origin.x + i*(cell_size-1) + 8, level.origin.y - cell_size + 8, level:rc_num_color(ri))
         end
     end
 end
@@ -35,8 +35,12 @@ function draw_cell_bgs(level)
     for y=0, level.h-1 do
         xs = level.origin.x+ 1
         for x=0, level.w-1 do
-            c = level:get_cell_bg_color(x, y)
+            error_cell = level:is_error(x, y)
+            if error_cell and (time()-time_since_last_move) > 1 and flr(time()*7) % 4 > 0  then
+                pal(12,9)
+            end
             sspr(0, 0, cell_size, cell_size, xs, ys)
+            pal(12,12)
             if y != 0 and x != 0 then
                 -- place pix top left
                 pset(xs, ys, med_blue)

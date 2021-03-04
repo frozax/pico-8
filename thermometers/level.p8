@@ -85,6 +85,7 @@ function load_level_from_def(ldef, reset)
         end
     end
     function level:cycle_cell(x, y)
+        time_since_last_move = time()
         stt = self.cells[x][y].state
         if stt == UNKNOWN then
             self.cells[x][y].state = FILLED
@@ -174,6 +175,22 @@ function load_level_from_def(ldef, reset)
                 return 0
             end
         end
+    end
+
+    function is_full_or_all_set(rci)
+        return rci.full or rci.expected == rci.cur
+    end
+
+    -- very very very slow
+    function level:is_error(x, y)
+        if is_full_or_all_set(self:compute_col_infos(x)) or is_full_or_all_set(self:compute_row_infos(y)) then
+            stt = self.cells[x][y].state 
+            if stt != UNKNOWN and stt != self.cells[x][y].expected then
+                error_time = time()
+                return true
+            end
+        end
+        return false
     end
 
     function level:update()

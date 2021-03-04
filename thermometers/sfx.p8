@@ -15,11 +15,11 @@ function sound_menu_move()
 end
 
 function sound_toggle()
-    sfx(56)
+    sfx(1)
 end
 
 function sound_win()
-    sfx(42)
+    sfx(0)
 end
 
 function sound_move_error()

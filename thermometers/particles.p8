@@ -3,7 +3,7 @@ particles.p = {}
 
 function particles:start()
     self.p = {}
-    for ip=1,1800 do
+    for ip=1,1100 do
         left_side = rnd(1) < 0.5
         vx = (rnd(2.5) + 1.0) * 1.5
         vy = -rnd(2) * 2 - 2
