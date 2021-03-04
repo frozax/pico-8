@@ -45,6 +45,11 @@ function _update()
         elseif eol then
             particles:update()
             eol_menu:input()
+        elseif sol_anim then
+            -- none
+            if sol_animation.value >= 128 then
+                sol_anim = false
+            end
         else
             input_game(game_level)
         end
@@ -60,6 +65,7 @@ function draw_title()
 end
 
 function set_state(stt)
+    printh("set_state"..stt)
     -- endstate
     -- setstate
     state = stt
@@ -70,6 +76,8 @@ function set_state(stt)
     elseif state == "level_select" then
         title_y = animate(0, -94, 15, ease_in_quad)
     elseif state == "game" then
+        sol_anim = true
+        sol_animation = animate(0, 128, 20)
     end
 end
 
@@ -129,6 +137,15 @@ function _draw()
             printc("congratulations!", y + 7, 7)
             eol_menu:draw(y + 20)
             particles:draw()
+        elseif sol_anim then
+            for y=0,127 do
+                c = 0
+                if y%6 < 3 then
+                    line(0, y, 127-sol_animation.value, y, c)
+                else
+                    line(sol_animation.value, y, 127, y, c)
+                end
+            end
         else
             draw_input()
             completion = game_level:get_completion()
@@ -186,6 +203,7 @@ function _init()
         printh(#levels)
         if level_number+1 < #levels then
             load_level(level_number+1)
+            set_state("game")
         else
             set_state("home")
         end
