@@ -89,15 +89,10 @@ function load_level_from_def(ldef, reset)
         stt = self.cells[x][y].state
         if stt == UNKNOWN then
             self.cells[x][y].state = FILLED
-            return true
         elseif stt == FILLED then
             self.cells[x][y].state = EMPTY
-            return true
         elseif stt == EMPTY then
             self.cells[x][y].state = UNKNOWN
-            return true
-        else
-            return false
         end
     end
     -- returns "wip", "success", "error"
