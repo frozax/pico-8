@@ -37,13 +37,11 @@ function input_game(level)
     if btn(buttons.b1) then
         if input.pos.x != input.last_tap.x or input.pos.y != input.last_tap.y then
             was_none = input.last_tap.x == -1
-            printh("b1"..tostring(input.pos).." "..tostring(input.last_tap).."was_none"..tostring(was_none))
             input.last_tap.x = input.pos.x
             input.last_tap.y = input.pos.y
             if was_none then
                 level:cycle_cell(input.pos.x, input.pos.y)
                 input.new_type = level.cells[input.pos.x][input.pos.y].state
-                printh("new_type"..input.new_type)
             else
                 level.cells[input.pos.x][input.pos.y].state = input.new_type
             end

@@ -65,7 +65,6 @@ function draw_title()
 end
 
 function set_state(stt)
-    printh("set_state"..stt)
     -- endstate
     -- setstate
     state = stt
@@ -164,7 +163,7 @@ end
 function _init()
     set_state("home")
     --set_state("level_select")
-    set_state("game")
+    --set_state("game")
     credits = false
     eol = false
     eol_anim = false
@@ -198,9 +197,6 @@ function _init()
 
     bnl = {text="next level"}
     function bnl:click()
-        printh(level_number)
-        printh(level_number+1)
-        printh(#levels)
         if level_number+1 < #levels then
             load_level(level_number+1)
             set_state("game")
