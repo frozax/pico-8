@@ -183,7 +183,6 @@ function _init()
 
     bres = {text="resume"}
     function bres:click()
-        printh("ignore!")
         input.ignore_next_input = true
         pause = false
     end

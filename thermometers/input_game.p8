@@ -35,7 +35,6 @@ function input_game(level)
         end
         sound_move()
     end
-    printh("ignore"..tostring(input.ignore_next_input))
     if btn(buttons.b1) then
         if not input.ignore_next_input then
             if input.pos.x != input.last_tap.x or input.pos.y != input.last_tap.y then
