@@ -114,15 +114,15 @@ function _draw()
         printc("www.frozax.com/the", y+16, med_blue)
         draw_title()
     elseif state == "level_select" then
-        printc("choose a level", 16, 7, 0)
-        level_select:draw(34)
+        printc("choose a level", 10, 7, 0)
+        level_select:draw(23)
         draw_title()
     elseif state == "game" then
         game_level:draw()
         draw_instructions()
         if pause then
             y = 40
-            draw_rwin(16, y, 127-32, 41, bg_col, 0)
+            draw_rwin(16, y, 127-32, 51, bg_col, 0)
             pause_menu:draw(y + 8)
         elseif eol_anim then
             particles:draw()
@@ -163,7 +163,7 @@ end
 function _init()
     set_state("home")
     --set_state("level_select")
-    set_state("game")
+    --set_state("game")
     credits = false
     eol = false
     eol_anim = false
@@ -183,8 +183,24 @@ function _init()
 
     bres = {text="resume"}
     function bres:click()
+        printh("ignore!")
+        input.ignore_next_input = true
         pause = false
     end
+    bhint = {text="show hints: on"}
+    function set_bhint_text()
+        if get_show_hint() then
+            t = "on"
+        else
+            t = "off"
+        end
+        bhint.text = "show hints: "..t
+    end
+    function bhint:click()
+        set_show_hint(not get_show_hint())
+        set_bhint_text()
+    end
+    set_bhint_text()
     bquit = {text="menu"}
     function bquit:click()
         pause = false
@@ -192,7 +208,7 @@ function _init()
         eol_anim = false
         set_state("home")
     end
-    pause_menu = create_menu({bres, bquit}, shadow_col)
+    pause_menu = create_menu({bres, bhint, bquit}, shadow_col)
     pause = false
 
     bnl = {text="next level"}
@@ -210,7 +226,7 @@ function _init()
     pause_menu.button_text_col = colors.white
     eol_menu.button_text_col = colors.white
 
-    load_level(23)
+    load_level(3)
     level_select = create_level_select(#levels)
     --cls(1)
     --flip()
