@@ -3,6 +3,7 @@ function init_input()
     input.pos = vec2(0, 0) -- lua: 0-based
     input.last_tap = vec2(-1,-1)
     input.new_type = FILLED
+    input.ignore_next_input = false
 end
 
 function input_game(level)
@@ -34,20 +35,24 @@ function input_game(level)
         end
         sound_move()
     end
+    printh("ignore"..tostring(input.ignore_next_input))
     if btn(buttons.b1) then
-        if input.pos.x != input.last_tap.x or input.pos.y != input.last_tap.y then
-            was_none = input.last_tap.x == -1
-            input.last_tap.x = input.pos.x
-            input.last_tap.y = input.pos.y
-            if was_none then
-                level:cycle_cell(input.pos.x, input.pos.y)
-                input.new_type = level.cells[input.pos.x][input.pos.y].state
-            else
-                level.cells[input.pos.x][input.pos.y].state = input.new_type
+        if not input.ignore_next_input then
+            if input.pos.x != input.last_tap.x or input.pos.y != input.last_tap.y then
+                was_none = input.last_tap.x == -1
+                input.last_tap.x = input.pos.x
+                input.last_tap.y = input.pos.y
+                if was_none then
+                    level:cycle_cell(input.pos.x, input.pos.y)
+                    input.new_type = level.cells[input.pos.x][input.pos.y].state
+                else
+                    level.cells[input.pos.x][input.pos.y].state = input.new_type
+                end
+                sound_toggle()
             end
-            sound_toggle()
         end
     else
+        input.ignore_next_input = false
         input.last_tap.x = -1
         input.last_tap.y = -1
     end

@@ -73,10 +73,6 @@ function create_menu(mis)
         end
         rectfill(x, y, x + self.item_width - 1, y + self.item_height - 1, self.button_bg_col)
         c = 0
-        --if selected then
-        --        c = 9
-        --        rect(x-1, y-1, x + self.item_width, y + self.item_height, c)
-        --end
         text_height = 5
         print(text, x + (self.item_width - text_width)/2, y + (self.item_height - text_height)/2, text_col)
     end

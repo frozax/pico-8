@@ -31,12 +31,13 @@ function draw_numbers(level)
 end
 
 function draw_cell_bgs(level)
+    show_hints = get_show_hint()
     ys = level.origin.y + 1
     for y=0, level.h-1 do
         xs = level.origin.x+ 1
         for x=0, level.w-1 do
             error_cell = level:is_error(x, y)
-            if error_cell and (time()-time_since_last_move) > 1 and flr(time()*7) % 4 > 0  then
+            if show_hints and error_cell and (time()-time_since_last_move) > 1 and flr(time()*7) % 4 > 0  then
                 pal(12,9)
             end
             sspr(0, 0, cell_size, cell_size, xs, ys)

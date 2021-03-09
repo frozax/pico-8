@@ -63,20 +63,7 @@ function draw_tutorial()
     end
 end
 
-function draw_commands()
-    if game_level.h <= 6 then
-        -- draw input
-        --printc("v/\x97: display menu", 117, text_col)
-
-
-
-
-
-    end
-end
-
 function draw_instructions()
     draw_level_number_ingame()
     draw_tutorial()
-    draw_commands()
 end
