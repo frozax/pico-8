@@ -163,7 +163,7 @@ end
 function _init()
     set_state("home")
     --set_state("level_select")
-    --set_state("game")
+    set_state("game")
     credits = false
     eol = false
     eol_anim = false
@@ -210,9 +210,8 @@ function _init()
     pause_menu.button_text_col = colors.white
     eol_menu.button_text_col = colors.white
 
-    --level_select = create_level_select(#levels)
-    load_level(3)
-    level_select = create_level_select(25)
+    load_level(23)
+    level_select = create_level_select(#levels)
     --cls(1)
     --flip()
     --extcmd("rec")

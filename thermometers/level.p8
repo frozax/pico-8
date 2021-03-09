@@ -75,15 +75,8 @@ function load_level_from_def(ldef, reset)
         end
         add(level.thermos, thermo)
     end
-    level.origin = get_level_origin()
+    level.origin = get_level_origin(ldef)
 
-    function level:get_cell_bg_color(x, y) -- lua: index is 1-based
-        if self.cells[x][y] == UNKNOWN then
-            return unknown_col
-        else
-            return grass_col
-        end
-    end
     function level:cycle_cell(x, y)
         time_since_last_move = time()
         stt = self.cells[x][y].state

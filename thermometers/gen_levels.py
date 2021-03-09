@@ -18,7 +18,8 @@ for f, istart, nb in [
     ("A", 0, 10),
     ("A", 20, 5),
     ("A", 80, 5),
-    ("B", 0, 5)]:
+    ("B", 0, 5),
+    ("B", 20, 5)]:
     fname = Path("C:\\gamedev\\games\\swg26\\LevelGenerator\\data\\levels_def\\classic-" + f + ".infos")
     count = 0
     ilevel = 0

@@ -1,15 +1,16 @@
 function draw_level_number_ingame()
     if (level_number <= 1) return -- tuto
-    if game_level.h < 9 then
+    if game_level.h < 7 then
         draw_level_number(127 - level_number_w-1, 1, level_number)
     end
 end
 
-function get_level_origin()
+function get_level_origin(ldef)
     pix_size = level.w * (cell_size)
-    origin = vec2((128 - pix_size)/2, (128 - pix_size)/2 + 2)
+    origin = vec2((128 - pix_size)/2+10, (128 - pix_size)/2 + 10)
     if (level_number == 0) origin.y = 100
     if (level_number == 3) origin.y = 60
+    if (ldef.h == 6) origin.y += 5
     return origin
 end
 
