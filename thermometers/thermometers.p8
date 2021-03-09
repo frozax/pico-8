@@ -85,7 +85,7 @@ function _draw()
     pal(3, 128+12, 1)
     if state == "home" then
         --if flr(time()*8) % 4 > 0 then
-        s = "press \x8e  to start"
+        s = "press c/\x8e  to start"
         y_start = title_y.value*2 + 76
         iccol = 1
         for ic=1,#s do
